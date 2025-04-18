@@ -23,18 +23,6 @@ def handle_errors(func):
             return None, None
     return wrapper
 
-def log_execution(func):
-    """Decorator for execution logging"""
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        print(f"\nExecuting {func.__name__}...")
-        start_time = time.time()
-        result = func(*args, **kwargs)
-        end_time = time.time()
-        print(f"Execution completed in {end_time - start_time:.4f} seconds")
-        return result
-    return wrapper
-
 def print_table_header():
     """Display the results table header"""
     print("\nCalculation progress:")
@@ -42,12 +30,11 @@ def print_table_header():
     print("|-----------|-----------|---------------|-------------|------------|")
 
 @handle_errors
-@log_execution
 def ln_1_minus_x(x, eps, max_iter=500):
     """
     Calculate ln(1-x) using power series expansion
     
-    Args:
+    Args:6
         x: Input value (|x| < 1)
         eps: Desired precision (constant)
         max_iter: Maximum iterations (default: 500)
@@ -76,7 +63,6 @@ def ln_1_minus_x(x, eps, max_iter=500):
     return result, max_iter
 
 @handle_errors
-@log_execution
 def get_user_input():
     """Get and validate user input"""
     print("\nPower Series Calculation")

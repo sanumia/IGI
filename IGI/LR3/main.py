@@ -8,7 +8,7 @@ import math
 from functools import wraps
 
 from analyze_text import count_str
-from power_row import get_user_input, handle_errors, ln_1_minus_x, log_execution
+from power_row import get_user_input, handle_errors, ln_1_minus_x
 from cycle_for import count_par
 from generator import initialize_from_generator, initialize_from_input
 from count_space import count_spaces
