@@ -44,7 +44,7 @@ class Triangle(GeometricFigure, ColorMixin):
         self.side_b = side_b
         self.angle_c = angle_c
         self.color = color
-    
+
     @property
     def side_a(self):
         return self._side_a
