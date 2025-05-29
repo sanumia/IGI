@@ -8,6 +8,8 @@ from django.conf import settings
 import matplotlib
 matplotlib.use('Agg')  # Устанавливаем бэкенд Agg до импорта pyplot
 import matplotlib.pyplot as plt
+from django.views.generic import ListView, DetailView
+from .models import Vacancy
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
@@ -83,11 +85,17 @@ def home(request):
     testimonials = Review.objects.filter(
         is_published=True
     ).select_related('author').order_by('-created_at')[:3]
+
+    # Get latest news
+    latest_news = News.objects.filter(
+        is_published=True
+    ).order_by('-created_at')[:3]
     
     context = {
         'popular_countries': popular_countries,
         'popular_tours': popular_tours,
         'testimonials': testimonials,
+        'latest_news': latest_news,  # Add latest news to context
         'total_clients': User.objects.filter(is_client=True).count(),
         'total_countries': Country.objects.count(),
         'total_hotels': Hotel.objects.count(),
@@ -779,7 +787,7 @@ def statistics_view(request):
     else:
         sales_trend_chart = None
     
-    # Готовим данные для графиков
+
     popular_countries = [item['hotel__country__name'] for item in popular]
     popular_counts = [item['count'] for item in popular]
     
@@ -881,7 +889,7 @@ def export_view(request, model_name, pk, format_type):
     model_map = {
         'country': Country,
         'hotel': Hotel,
-        # Добавьте другие модели
+
     }
     
     model_class = model_map.get(model_name.lower())
@@ -907,7 +915,7 @@ def import_view(request, model_name):
     model_map = {
         'country': Country,
         'hotel': Hotel,
-        # Добавьте другие модели
+
     }
     
     model_class = model_map.get(model_name.lower())
@@ -1433,3 +1441,19 @@ def print_order(request, pk):
     }
     
     return render(request, 'core/order_print.html', context)
+
+
+class VacancyListView(ListView):
+    model = Vacancy
+    template_name = 'core/vacancy_list.html'
+    context_object_name = 'vacancies'
+    
+    def get_queryset(self):
+        return Vacancy.objects.filter(is_published=True).order_by('-published_at')
+
+class VacancyDetailView(DetailView):
+    model = Vacancy
+    template_name = 'core/vacancy_detail.html'
+    context_object_name = 'vacancy'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'

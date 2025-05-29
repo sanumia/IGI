@@ -6,6 +6,13 @@ from core.models import Basket, Order
 
 pytestmark = pytest.mark.django_db
 
+class TestHomeView:
+    def test_home_view(self, client, country, tour_package):
+        url = reverse('core:home')
+        response = client.get(url)
+        assert response.status_code == 200
+        assert 'countries' in response.context
+        assert 'featured_tours' in response.context
 
 class TestTourViews:
     def test_tour_list_view(self, client, tour_package):
