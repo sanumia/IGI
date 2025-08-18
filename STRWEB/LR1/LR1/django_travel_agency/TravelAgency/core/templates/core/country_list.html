@@ -1,0 +1,298 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Страны | TravelDream{% endblock %}
+
+{% block extra_css %}
+<style>
+    .breadcrumb {
+        margin-bottom: 2rem;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+    
+    .breadcrumb a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    
+    .breadcrumb a:hover {
+        text-decoration: underline;
+    }
+    
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    
+    .page-header h1 {
+        margin: 0;
+        color: #333;
+        font-size: 1.8rem;
+    }
+    
+    .search-form {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .search-form input {
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        min-width: 200px;
+    }
+    
+    .btn {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn:hover {
+        background: #0056b3;
+    }
+    
+    .btn-outline {
+        background: transparent;
+        color: #007bff;
+        border: 1px solid #007bff;
+    }
+    
+    .btn-outline:hover {
+        background: #007bff;
+        color: white;
+    }
+    
+    .countries-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .country-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease;
+    }
+    
+    .country-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .country-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+    
+    .country-placeholder {
+        width: 100%;
+        height: 200px;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: #ccc;
+    }
+    
+    .country-content {
+        padding: 1.5rem;
+    }
+    
+    .country-title {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+    
+    .country-info {
+        color: #666;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .country-description {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+    
+    .country-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+    
+    .country-price {
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
+    }
+    
+    .page-link {
+        padding: 0.5rem 1rem;
+        border: 1px solid #ddd;
+        text-decoration: none;
+        color: #333;
+        border-radius: 4px;
+    }
+    
+    .page-link:hover {
+        background: #f8f9fa;
+    }
+    
+    .page-link.active {
+        background: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+    
+    .empty-countries {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+    
+    @media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: stretch;
+        }
+        
+        .search-form {
+            flex-direction: column;
+        }
+        
+        .search-form input {
+            min-width: auto;
+        }
+        
+        .countries-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .country-footer {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: stretch;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+        <a href="{% url 'core:home' %}">🏠 Главная</a>
+        <span>›</span>
+        <span>Страны</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1>Страны для путешествий</h1>
+        <form class="search-form" method="get">
+            <input type="search" name="search" placeholder="Поиск стран..." value="{{ request.GET.search }}">
+            <button class="btn btn-outline" type="submit">
+                🔍
+            </button>
+        </form>
+    </div>
+
+    <!-- Countries Grid -->
+    <div class="countries-grid">
+        {% for country in countries %}
+        <div class="country-card">
+            {% if country.image %}
+            <img src="{{ country.image.url }}" class="country-image" alt="{{ country.name }}">
+            {% else %}
+            <div class="country-placeholder">
+                🌍
+            </div>
+            {% endif %}
+            <div class="country-content">
+                <h3 class="country-title">{{ country.name }}</h3>
+                <p class="country-info">
+                    🏨 {{ country.hotel_set.count }} отелей
+                </p>
+                {% if country.description %}
+                <p class="country-description">{{ country.description|truncatewords:20 }}</p>
+                {% endif %}
+            </div>
+            <div class="country-footer">
+                <a href="{% url 'core:country_detail' country.pk %}" class="btn">
+                    📋 Подробнее
+                </a>
+                {% if country.min_price %}
+                <span class="country-price">
+                    от {{ country.min_price }} ₽
+                </span>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-countries">
+            <h3>🌍 Страны не найдены</h3>
+            <p>Попробуйте изменить параметры поиска</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="page-link">
+            « Первая
+        </a>
+        <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="page-link">
+            ‹ Предыдущая
+        </a>
+        {% endif %}
+
+        <span class="page-link active">
+            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="page-link">
+            Следующая ›
+        </a>
+        <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="page-link">
+            Последняя »
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

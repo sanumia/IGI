@@ -1,0 +1,59 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ news.title }} | TravelDream{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page { padding: 2rem 0; }
+    .breadcrumbs { margin-bottom: 1rem; color: #666; font-size: 0.95rem; }
+    .breadcrumbs a { color: #007bff; text-decoration: none; }
+    .breadcrumbs a:hover { text-decoration: underline; }
+    .meta { margin-bottom: 1rem; color: #666; font-size: 0.9rem; }
+    .pill { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 999px; background: #007bff; color: #fff; font-size: 0.85rem; }
+    .news-content { font-size: 1.1rem; line-height: 1.8; }
+    .news-content img { max-width: 100%; height: auto; border-radius: 8px; margin: 1rem 0; }
+    .top-border { border-top: 1px solid #eee; padding-top: 1rem; display:flex; justify-content: space-between; align-items: center; }
+    .btn { display:inline-block; color:#007bff; text-decoration:none; padding: .5rem 1rem; border:1px solid #007bff; border-radius: 4px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="page">
+    <div class="container">
+        <nav class="breadcrumbs">
+            <a href="{% url 'news_list' %}">Новости</a> › {{ news.title|truncatechars:30 }}
+        </nav>
+        
+        <article>
+            <div class="meta">
+                <span class="pill">{{ news.get_category_display }}</span>
+                <span style="margin-left:.5rem;">{{ news.created_at|date:"d.m.Y H:i" }}</span>
+                <span style="margin-left:.5rem;">👁️ {{ news.views }}</span>
+            </div>
+            
+            <h1 style="margin:0 0 1rem 0;">{{ news.title }}</h1>
+            
+            {% if news.image %}
+            <img src="{{ news.image.url }}" alt="{{ news.title }}" style="max-height: 400px; width: 100%; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;">
+            {% endif %}
+            
+            <div style="margin-bottom: 1rem;">
+                <p style="font-size:1.1rem;">{{ news.summary }}</p>
+            </div>
+            
+            <div class="news-content" style="margin-bottom: 1.25rem;">
+                {{ news.content|linebreaks }}
+            </div>
+            
+            <div class="top-border">
+                {% if news.author %}
+                <div>
+                    <small style="color:#666;">Автор: {{ news.author.get_full_name }}</small>
+                </div>
+                {% endif %}
+                <a href="{% url 'news_list' %}" class="btn">Назад к новостям</a>
+            </div>
+        </article>
+    </div>
+</section>
+{% endblock %}

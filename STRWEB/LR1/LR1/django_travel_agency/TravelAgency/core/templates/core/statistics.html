@@ -1,0 +1,109 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .page { padding: 1.5rem 0; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 1rem; }
+    .card.primary { background: #007bff; color: #fff; }
+    .card.success { background: #28a745; color: #fff; }
+    .card.warning { background: #ffc107; color: #333; }
+    .card.danger { background: #dc3545; color: #fff; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .muted { color: #666; }
+    .img-fluid { max-width: 100%; height: auto; }
+    h1 { margin: 0 0 1rem 0; }
+    h5 { margin: 0 0 0.75rem 0; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container page">
+    <h1>Статистика турагентства</h1>
+
+    <div class="cards">
+        <div class="card primary">
+            <h6>Всего заказов</h6>
+            <h2 style="margin:0;">{{ total_orders }}</h2>
+        </div>
+        <div class="card success">
+            <h6>Подтвержденные</h6>
+            <h2 style="margin:0;">{{ confirmed_orders }}</h2>
+        </div>
+        <div class="card warning">
+            <h6>Ожидающие</h6>
+            <h2 style="margin:0;">{{ pending_orders }}</h2>
+        </div>
+        <div class="card danger">
+            <h6>Отмененные</h6>
+            <h2 style="margin:0;">{{ cancelled_orders }}</h2>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <div class="card">
+            <h5>Финансовый обзор</h5>
+            <div class="grid-2">
+                <div>
+                    <p class="muted" style="margin:0 0 .25rem 0;">Общая выручка</p>
+                    <h3 style="margin:0;">{{ total_revenue|floatformat:2 }} BYN</h3>
+                </div>
+                <div>
+                    <p class="muted" style="margin:0 0 .25rem 0;">Средний чек</p>
+                    <h3 style="margin:0;">{{ avg_order_value|floatformat:2 }} BYN</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <div class="card" style="grid-column: 1 / -1;">
+            <h5>Динамика продаж за последние 12 месяцев</h5>
+            {% if sales_trend_chart %}
+                <img src="data:image/png;base64,{{ sales_trend_chart }}" alt="Динамика продаж" class="img-fluid">
+            {% else %}
+                <p>Нет данных для отображения</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <div class="card">
+            <h5>Популярные направления</h5>
+            {% if popular_chart %}
+                <img src="data:image/png;base64,{{ popular_chart }}" alt="График популярных стран" class="img-fluid">
+            {% else %}
+                <p>Нет данных для отображения</p>
+            {% endif %}
+        </div>
+        <div class="card">
+            <h5>Прибыльные направления</h5>
+            {% if profitable_chart %}
+                <img src="data:image/png;base64,{{ profitable_chart }}" alt="График прибыльных стран" class="img-fluid">
+            {% else %}
+                <p>Нет данных для отображения</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <div class="card">
+            <h5>Распределение сумм заказов</h5>
+            {% if amounts_chart %}
+                <img src="data:image/png;base64,{{ amounts_chart }}" alt="Распределение сумм заказов" class="img-fluid">
+            {% else %}
+                <p>Нет данных для отображения</p>
+            {% endif %}
+        </div>
+        <div class="card">
+            <h5>Распределение возрастов клиентов</h5>
+            {% if age_chart %}
+                <img src="data:image/png;base64,{{ age_chart }}" alt="Распределение возрастов" class="img-fluid">
+            {% else %}
+                <p>Нет данных для отображения</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ vacancy.title }} | TravelDream{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page { padding: 1.5rem 0; }
+    .pill { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 999px; font-size: 0.85rem; margin-right: .5rem; }
+    .pill.primary { background: #007bff; color: #fff; }
+    .pill.secondary { background: #6c757d; color: #fff; }
+    .pill.info { background: #17a2b8; color: #fff; }
+    .pill.success { background: #28a745; color: #fff; }
+    .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 1rem; }
+    .btn { display: inline-block; background: #007bff; color: #fff; text-decoration: none; padding: 0.5rem 1rem; border-radius: 4px; }
+    h1, h3 { margin-top: 0; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container page">
+    <h1>{{ vacancy.title }}</h1>
+    
+    <div style="margin-bottom: 1rem;">
+        <span class="pill primary">{{ vacancy.get_department_display }}</span>
+        <span class="pill secondary">{{ vacancy.get_job_type_display }}</span>
+        <span class="pill info">{{ vacancy.experience_required }}</span>
+        {% if vacancy.salary %}
+        <span class="pill success">{{ vacancy.salary }}</span>
+        {% endif %}
+    </div>
+    
+    <div style="margin-bottom: 1rem;">
+        <h3>Описание вакансии</h3>
+        <p>{{ vacancy.description }}</p>
+    </div>
+    
+    <div style="margin-bottom: 1rem;">
+        <h3>Обязанности</h3>
+        <p>{{ vacancy.responsibilities }}</p>
+    </div>
+    
+    <div style="margin-bottom: 1rem;">
+        <h3>Требования</h3>
+        <p>{{ vacancy.requirements }}</p>
+    </div>
+    
+    <div style="margin-bottom: 1rem;">
+        <h3>Условия работы</h3>
+        <p>{{ vacancy.conditions }}</p>
+    </div>
+    
+    <div class="card">
+        <h3>Откликнуться на вакансию</h3>
+        <p>Отправьте свое резюме на почту <strong>hr@traveldream.ru</strong></p>
+        <p>Тема письма: "Отклик на вакансию {{ vacancy.title }}"</p>
+        <a href="mailto:hr@traveldream.ru" class="btn">Отправить резюме</a>
+    </div>
+</div>
+{% endblock %}

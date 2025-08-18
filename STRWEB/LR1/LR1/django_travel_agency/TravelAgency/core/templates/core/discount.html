@@ -1,0 +1,273 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Акции и скидки | TravelDream{% endblock %}
+
+{% block extra_css %}
+<style>
+    .discounts-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .discounts-header h1 {
+        color: #333;
+        margin-bottom: 2rem;
+    }
+    
+    .status-filters {
+        margin-bottom: 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+    
+    .status-btn {
+        background: transparent;
+        color: #007bff;
+        border: 1px solid #007bff;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .status-btn:hover,
+    .status-btn.active {
+        background: #007bff;
+        color: white;
+    }
+    
+    .promos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+    
+    .promo-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease;
+        border: 2px solid transparent;
+    }
+    
+    .promo-card.active {
+        border-color: #007bff;
+    }
+    
+    .promo-card.archived {
+        border-color: #6c757d;
+    }
+    
+    .promo-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .promo-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+    
+    .promo-placeholder {
+        width: 100%;
+        height: 200px;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        color: #007bff;
+    }
+    
+    .promo-content {
+        padding: 1.5rem;
+    }
+    
+    .promo-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .status-badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: white;
+    }
+    
+    .status-active {
+        background: #28a745;
+    }
+    
+    .status-archived {
+        background: #6c757d;
+    }
+    
+    .discount-amount {
+        color: #007bff;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+    
+    .promo-code {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        color: #333;
+        font-weight: bold;
+    }
+    
+    .promo-description {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+    
+    .min-order-info {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .promo-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .expiry-date {
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    .copy-btn {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background 0.2s ease;
+    }
+    
+    .copy-btn:hover {
+        background: #0056b3;
+    }
+    
+    .copy-btn:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
+    }
+    
+    .copy-btn.copied {
+        background: #28a745;
+    }
+    
+    .empty-promos {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+    
+    @media (max-width: 768px) {
+        .status-filters {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .promos-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .promo-footer {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: stretch;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section>
+        <div class="discounts-header">
+            <h1>🏷️ Акции и скидки</h1>
+        </div>
+        
+        <!-- Фильтр по статусу -->
+        <div class="status-filters">
+            <a href="{% url 'core:discounts' %}" class="status-btn {% if not request.GET.status %}active{% endif %}">
+                Все акции
+            </a>
+            <a href="?status=active" class="status-btn {% if request.GET.status == 'active' %}active{% endif %}">
+                Активные
+            </a>
+            <a href="?status=archived" class="status-btn {% if request.GET.status == 'archived' %}active{% endif %}">
+                Архив
+            </a>
+        </div>
+        
+        <!-- Список промокодов -->
+        <div class="promos-grid">
+            {% for promo in promos %}
+            <div class="promo-card {% if promo.is_active %}active{% else %}archived{% endif %}">
+                {% if promo.image %}
+                <img src="{{ promo.image.url }}" 
+                     class="promo-image" 
+                     alt="{{ promo.code }}">
+                {% else %}
+                <div class="promo-placeholder">
+                    🏷️
+                </div>
+                {% endif %}
+                <div class="promo-content">
+                    <div class="promo-header">
+                        <span class="status-badge {% if promo.is_active %}status-active{% else %}status-archived{% endif %}">
+                            {{ promo.get_status_display }}
+                        </span>
+                        <span class="discount-amount">{{ promo.get_discount_display }}</span>
+                    </div>
+                    <h3 class="promo-code">{{ promo.code }}</h3>
+                    <p class="promo-description">{{ promo.description|truncatewords:20 }}</p>
+                    {% if promo.min_order_amount %}
+                    <div class="min-order-info">
+                        ℹ️ Минимальная сумма заказа: {{ promo.min_order_amount }} руб.
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="promo-footer">
+                    <small class="expiry-date">
+                        Действует до: {{ promo.end_date|date:"d.m.Y" }}
+                    </small>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-promos">
+                <h3>🏷️ Активные промокоды не найдены</h3>
+                <p>Попробуйте изменить параметры поиска</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+ 
+{% endblock %}

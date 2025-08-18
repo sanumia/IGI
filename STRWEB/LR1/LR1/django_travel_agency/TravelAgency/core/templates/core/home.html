@@ -1,0 +1,266 @@
+{% extends 'core/base.html' %}
+
+{% block title %}TravelDream - Ваше идеальное путешествие{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        background: #2c3e50;
+        color: white;
+        padding: 4rem 0;
+        text-align: center;
+    }
+    
+    .hero-section h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .hero-section p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .search-form {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .search-form input {
+        width: 100%;
+        padding: 0.8rem;
+        border: none;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+    }
+    
+    .search-form button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .search-form button:hover {
+        background: #0056b3;
+    }
+    
+    .features {
+        padding: 3rem 0;
+        background: #f8f9fa;
+    }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    
+    .feature-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .feature-card h3 {
+        margin-bottom: 1rem;
+        color: #333;
+    }
+    
+    .destinations {
+        padding: 3rem 0;
+    }
+    
+    .destinations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    
+    .destination-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .destination-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+    
+    .destination-info {
+        padding: 1.5rem;
+    }
+    
+    .destination-info h3 {
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+    
+    .destination-info p {
+        color: #666;
+        margin-bottom: 1rem;
+    }
+    
+    .destination-info a {
+        background: #007bff;
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        display: inline-block;
+    }
+    
+    .destination-info a:hover {
+        background: #0056b3;
+    }
+    
+    .stats-section {
+        background: #34495e;
+        color: white;
+        padding: 3rem 0;
+        text-align: center;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    
+    .stat-item {
+        padding: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: #3498db;
+    }
+    
+    .section-title {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #333;
+    }
+    
+    @media (max-width: 768px) {
+        .hero-section h1 {
+            font-size: 2rem;
+        }
+        
+        .features-grid,
+        .destinations-grid,
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <h1>Откройте мир с TravelDream</h1>
+        <p>Лучшие направления, незабываемые впечатления и комфортный отдых</p>
+        <form action="{% url 'core:tour_list' %}" method="get" class="search-form">
+            <input type="text" name="search" placeholder="Куда хотите поехать?">
+            <button type="submit">Найти туры</button>
+        </form>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+    <div class="container">
+        <h2 class="section-title">Почему выбирают нас</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>🚀 Быстрое бронирование</h3>
+                <p>Забронируйте тур за несколько минут с нашей простой системой</p>
+            </div>
+            <div class="feature-card">
+                <h3>💰 Лучшие цены</h3>
+                <p>Гарантируем самые выгодные предложения на рынке</p>
+            </div>
+            <div class="feature-card">
+                <h3>🛡️ Безопасность</h3>
+                <p>Ваши данные и платежи полностью защищены</p>
+            </div>
+            <div class="feature-card">
+                <h3>📞 Поддержка 24/7</h3>
+                <p>Наша команда всегда готова помочь вам</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Popular Destinations -->
+<section class="destinations">
+    <div class="container">
+        <h2 class="section-title">Популярные направления</h2>
+        <div class="destinations-grid">
+            <div class="destination-card">
+                <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Турция">
+                <div class="destination-info">
+                    <h3>Турция</h3>
+                    <p>Отдых на море, древние памятники и восточная экзотика</p>
+                    <a href="{% url 'core:tour_list' %}?country=Турция">Смотреть туры</a>
+                </div>
+            </div>
+            <div class="destination-card">
+                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Египет">
+                <div class="destination-info">
+                    <h3>Египет</h3>
+                    <p>Пирамиды, Красное море и загадочная история фараонов</p>
+                    <a href="{% url 'core:tour_list' %}?country=Египет">Смотреть туры</a>
+                </div>
+            </div>
+            <div class="destination-card">
+                <img src="https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Тайланд">
+                <div class="destination-info">
+                    <h3>Тайланд</h3>
+                    <p>Тропические пляжи, буддийские храмы и тайская кухня</p>
+                    <a href="{% url 'core:tour_list' %}?country=Тайланд">Смотреть туры</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="stats-section">
+    <div class="container">
+        <h2 class="section-title">Наши достижения</h2>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">10,000+</div>
+                <p>Довольных клиентов</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">50+</div>
+                <p>Стран назначения</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">15</div>
+                <p>Лет опыта</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">99%</div>
+                <p>Положительных отзывов</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 

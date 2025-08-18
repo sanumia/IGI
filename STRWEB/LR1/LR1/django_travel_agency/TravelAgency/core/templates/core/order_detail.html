@@ -1,0 +1,89 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Order #{{ order.id }} - Details{% endblock %}
+
+{% block extra_css %}
+<style>
+    .order-container { padding: 2rem 0; }
+    .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
+    .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); overflow: hidden; }
+    .card-header { background: #007bff; color: #fff; padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center; }
+    .card-body { padding: 1.25rem; }
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .badge { padding: 0.25rem 0.5rem; border-radius: 4px; }
+    .badge-warning { background: #ffc107; color: #333; }
+    .badge-success { background: #28a745; color: #fff; }
+    .badge-danger { background: #dc3545; color: #fff; }
+    .btn { background: #dc3545; color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+    .aside-card .card-header { background: #007bff; }
+    .aside-item { padding-bottom: 0.75rem; margin-bottom: 0.75rem; border-bottom: 1px solid #eee; }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } .row-2 { grid-template-columns: 1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="order-container">
+    <div class="grid">
+        <div>
+            <div class="card">
+                <div class="card-header">
+                    <h4 style="margin:0;">Order #{{ order.id }}</h4>
+                    <span class="badge {% if order.status == 'pending' %}badge-warning{% elif order.status == 'confirmed' %}badge-success{% elif order.status == 'cancelled' %}badge-danger{% endif %}">
+                        {{ order.get_status_display }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="row-2">
+                        <div>
+                            <h5>Tour Details</h5>
+                            <p><strong>Tour:</strong> {{ order.tour.name }}</p>
+                            <p><strong>Hotel:</strong> {{ order.tour.hotel.name }}</p>
+                            <p><strong>Country:</strong> {{ order.tour.hotel.country.name }}</p>
+                            <p><strong>Departure Date:</strong> {{ order.tour.departure_date|date:"d M Y" }}</p>
+                            <p><strong>Return Date:</strong> {{ order.tour.return_date|date:"d M Y" }}</p>
+                        </div>
+                        <div>
+                            <h5>Order Information</h5>
+                            <p><strong>Order Date:</strong> {{ order.created_at|date:"d M Y H:i" }}</p>
+                            <p><strong>Number of Travelers:</strong> {{ order.num_travelers }}</p>
+                            <p><strong>Total Price:</strong> {{ order.total_price }} BYN</p>
+                            {% if order.promo_code %}
+                            <p><strong>Promo Code:</strong> {{ order.promo_code.code }}</p>
+                            <p><strong>Discount:</strong> {{ order.promo_code.discount }}%</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if can_cancel %}
+                    <form method="post" action="{% url 'core:order_cancel' order.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">Cancel Order</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div>
+            {% if similar_tours %}
+            <div class="card aside-card">
+                <div class="card-header">
+                    <h5 style="margin:0;">Similar Tours</h5>
+                </div>
+                <div class="card-body">
+                    {% for similar_order in similar_tours %}
+                    <div class="aside-item{% if forloop.last %} last{% endif %}">
+                        <h6 style="margin:0 0 0.25rem 0;">{{ similar_order.tour.name }}</h6>
+                        <p style="margin:0 0 0.25rem 0;"><small>{{ similar_order.tour.hotel.name }}</small></p>
+                        <p style="margin:0 0 0.5rem 0;"><strong>{{ similar_order.tour.total_price }} BYN</strong></p>
+                        <a href="{% url 'core:tour_detail' similar_order.tour.id %}" style="text-decoration:none; color:#007bff;">View Tour</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
