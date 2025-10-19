@@ -3,346 +3,130 @@
 
 {% block title %}Корзина | TravelDream{% endblock %}
 
-{% block extra_css %}
-<style>
-    .breadcrumb {
-        margin-bottom: 2rem;
-        padding: 0;
-        list-style: none;
-        display: flex;
-        gap: 0.5rem;
-        align-items: center;
-    }
-    
-    .breadcrumb a {
-        color: #007bff;
-        text-decoration: none;
-    }
-    
-    .breadcrumb a:hover {
-        text-decoration: underline;
-    }
-    
-    .basket-layout {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 2rem;
-    }
-    
-    .card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        margin-bottom: 1.5rem;
-        overflow: hidden;
-    }
-    
-    .card-body {
-        padding: 1.5rem;
-    }
-    
-    .card-title {
-        margin-bottom: 1.5rem;
-        color: #333;
-        font-size: 1.3rem;
-    }
-    
-    .basket-item {
-        padding: 1.5rem 0;
-        border-bottom: 1px solid #eee;
-    }
-    
-    .basket-item:last-child {
-        border-bottom: none;
-    }
-    
-    .basket-item-content {
-        display: grid;
-        grid-template-columns: 120px 1fr auto;
-        gap: 1.5rem;
-        align-items: start;
-    }
-    
-    .tour-image {
-        width: 120px;
-        height: 100px;
-        object-fit: cover;
-        border-radius: 8px;
-    }
-    
-    .tour-details h6 {
-        margin-bottom: 0.5rem;
-        color: #333;
-        font-size: 1.1rem;
-    }
-    
-    .tour-details p {
-        color: #666;
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .quantity-controls {
-        margin-top: 1rem;
-    }
-    
-    .quantity-controls span {
-        color: #666;
-        margin-right: 0.5rem;
-    }
-    
-    .quantity-buttons {
-        display: inline-flex;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        overflow: hidden;
-    }
-    
-    .quantity-btn {
-        background: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        cursor: pointer;
-        color: #333;
-    }
-    
-    .quantity-btn:hover {
-        background: #f8f9fa;
-    }
-    
-    .quantity-btn:disabled {
-        color: #999;
-        cursor: not-allowed;
-    }
-    
-    .quantity-display {
-        background: #f8f9fa;
-        padding: 0.5rem 1rem;
-        border-left: 1px solid #ddd;
-        border-right: 1px solid #ddd;
-        min-width: 3rem;
-        text-align: center;
-    }
-    
-    .tour-price {
-        text-align: right;
-        color: #333;
-        font-size: 1.2rem;
-        font-weight: bold;
-        margin-bottom: 1rem;
-    }
-    
-    .remove-btn {
-        background: #dc3545;
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-block;
-    }
-    
-    .remove-btn:hover {
-        background: #c82333;
-    }
-    
-    .empty-basket {
-        text-align: center;
-        padding: 3rem 1rem;
-        color: #666;
-    }
-    
-    .empty-basket h5 {
-        margin-bottom: 1rem;
-        color: #333;
-    }
-    
-    .empty-basket p {
-        margin-bottom: 2rem;
-    }
-    
-    .btn {
-        background: #007bff;
-        color: white;
-        border: none;
-        padding: 0.8rem 1.5rem;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-block;
-        text-align: center;
-    }
-    
-    .btn:hover {
-        background: #0056b3;
-    }
-    
-    .btn-success {
-        background: #28a745;
-    }
-    
-    .btn-success:hover {
-        background: #218838;
-    }
-    
-    .order-summary {
-        background: #f8f9fa;
-        padding: 1.5rem;
-        border-radius: 8px;
-        position: sticky;
-        top: 2rem;
-    }
-    
-    .order-summary h4 {
-        margin-bottom: 1.5rem;
-        color: #333;
-    }
-    
-    .summary-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid #eee;
-    }
-    
-    .summary-row:last-child {
-        border-bottom: none;
-        font-weight: bold;
-        font-size: 1.2rem;
-        color: #333;
-    }
-    
-    .checkout-btn {
-        width: 100%;
-        margin-top: 1rem;
-    }
-    
-    @media (max-width: 768px) {
-        .basket-layout {
-            grid-template-columns: 1fr;
-        }
-        
-        .basket-item-content {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-        
-        .tour-image {
-            width: 100%;
-            height: 200px;
-        }
-        
-        .tour-price {
-            text-align: left;
-        }
-    }
-</style>
-{% endblock %}
+{% block extra_css %}{% endblock %}
 
 {% block content %}
-<div class="container">
-    <!-- Breadcrumbs -->
-    <nav class="breadcrumb">
-        <a href="{% url 'core:home' %}">🏠</a>
-        <span>›</span>
-        <span>Корзина</span>
-    </nav>
+<h1> Корзина</h1>
+<p><a href="{% url 'core:home' %}"> Главная</a> › Корзина</p>
 
-    <div class="basket-layout">
-        <div>
-            <!-- Basket Items -->
-            {% if baskets %}
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="card-title">Ваши туры</h3>
-                    {% for basket in baskets %}
-                    <div class="basket-item">
-                        <div class="basket-item-content">
-                            <!-- Tour Image -->
-                            <div>
-                                {% if basket.tour.hotel.image %}
-                                <img src="{{ basket.tour.hotel.image.url }}" alt="{{ basket.tour.hotel.name }}" class="tour-image">
-                                {% else %}
-                                <img src="{% static 'images/default-hotel.jpg' %}" alt="Default hotel image" class="tour-image">
-                                {% endif %}
-                            </div>
-                            
-                            <!-- Tour Details -->
-                            <div class="tour-details">
-                                <h6>{{ basket.tour.hotel.name }}</h6>
-                                <p>📍 {{ basket.tour.hotel.country.name }}</p>
-                                <p>✈️ {{ basket.tour.departure_date|date:"d.m.Y" }}</p>
-                                <p>📅 {{ basket.tour.duration_weeks }} {% if basket.tour.duration_weeks == 1 %}неделя{% else %}недели{% endif %}</p>
-                                
-                                <div class="quantity-controls">
-                                    <span>Количество:</span>
-                                    <div class="quantity-buttons">
-                                        <form action="{% url 'core:basket_remove' basket.id %}" method="post" style="display: inline;">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="action" value="decrease">
-                                            <button type="submit" class="quantity-btn">-</button>
-                                        </form>
-                                        <span class="quantity-display">{{ basket.quantity }}</span>
-                                        <form action="{% url 'core:basket_add' basket.tour.id %}" method="post" style="display: inline;">
-                                            {% csrf_token %}
-                                            <button type="submit" class="quantity-btn" 
-                                                    {% if basket.quantity >= 5 %}disabled{% endif %}>+</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Price and Actions -->
-                            <div>
-                                <div class="tour-price">{{ basket.total_price }} ₽</div>
-                                <form action="{% url 'core:basket_remove' basket.id %}" method="post">
-                                    {% csrf_token %}
-                                    <button type="submit" class="remove-btn">🗑️ Удалить</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
+{% if baskets %}
+<!-- Basket Items -->
+<h2> Ваши туры</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Изображение</th>
+            <th>Тур</th>
+            <th>Страна</th>
+            <th>Дата отправления</th>
+            <th>Продолжительность</th>
+            <th>Количество</th>
+            <th>Цена</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for basket in baskets %}
+        <tr>
+            <td>
+                {% if basket.tour.hotel.image %}
+                <img src="{{ basket.tour.hotel.image.url }}" alt="{{ basket.tour.hotel.name }}" style="max-width: 100px; height: auto;">
+                {% else %}
+                <img src="{% static 'images/default-hotel.jpg' %}" alt="Default hotel image" style="max-width: 100px; height: auto;">
+                {% endif %}
+            </td>
+            <td><strong>{{ basket.tour.hotel.name }}</strong></td>
+            <td> {{ basket.tour.hotel.country.name }}</td>
+            <td> {{ basket.tour.departure_date|date:"d.m.Y" }}</td>
+            <td> {{ basket.tour.duration_weeks }} {% if basket.tour.duration_weeks == 1 %}неделя{% else %}недели{% endif %}</td>
+            <td>
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <form action="{% url 'core:basket_remove' basket.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="decrease">
+                        <button type="submit" style="background: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer;">-</button>
+                    </form>
+                    <span style="background: #f8f9fa; padding: 5px 10px; border: 1px solid #ddd;">{{ basket.quantity }}</span>
+                    <form action="{% url 'core:basket_add' basket.tour.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" style="background: #28a745; color: white; border: none; padding: 5px 10px; cursor: pointer;" {% if basket.quantity >= 5 %}disabled{% endif %}>+</button>
+                    </form>
                 </div>
-            </div>
-            {% else %}
-            <!-- Empty Basket -->
-            <div class="card">
-                <div class="card-body">
-                    <div class="empty-basket">
-                        <h5>🛒 Ваша корзина пуста</h5>
-                        <p>Добавьте туры в корзину, чтобы продолжить</p>
-                        <a href="{% url 'core:tour_list' %}" class="btn">
-                            🔍 Найти туры
-                        </a>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-        </div>
+            </td>
+            <td><strong style="color: #007bff; font-size: 1.1em;">{{ basket.sum }} ₽</strong></td>
+            <td>
+                <form action="{% url 'core:basket_remove' basket.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="background: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer;"> Удалить</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
-        <!-- Order Summary -->
-        <div class="order-summary">
-            <h4>Итого заказа</h4>
-            <div class="summary-row">
-                <span>Туры:</span>
-                <span>{{ baskets|length }}</span>
-            </div>
-            <div class="summary-row">
-                <span>Общая стоимость:</span>
-                <span>{{ total_price }} ₽</span>
-            </div>
-            
-            {% if baskets %}
-            <a href="{% url 'core:checkout' %}" class="btn btn-success checkout-btn">
-                💳 Оформить заказ
-            </a>
-            {% endif %}
-        </div>
-    </div>
-</div>
+<hr>
+
+<!-- Order Summary -->
+<h2> Итого заказа</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Параметр</th>
+            <th>Значение</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Количество туров</strong></td>
+            <td>{{ baskets|length }}</td>
+        </tr>
+        <tr>
+            <td><strong>Общая стоимость</strong></td>
+            <td><strong style="color: #007bff; font-size: 1.2em;">{{ total }} ₽</strong></td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Checkout Button -->
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f5f5f5">
+            <th>Оформление заказа</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: center;">
+                <a href="{% url 'core:checkout' %}" style="background: #28a745; color: white; text-decoration: none; padding: 15px 30px; font-size: 1.1em; display: inline-block;"> Оформить заказ</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+{% else %}
+<!-- Empty Basket -->
+<h2> Ваша корзина пуста</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Состояние корзины</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: center; padding: 3rem; color: #666;">
+                <h3> Ваша корзина пуста</h3>
+                <p>Добавьте туры в корзину, чтобы продолжить</p>
+                <a href="{% url 'core:tour_list' %}" style="background: #007bff; color: white; text-decoration: none; padding: 10px 20px; display: inline-block; margin-top: 1rem;"> Найти туры</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% endif %}
+
+<hr>
+<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
 {% endblock %} 

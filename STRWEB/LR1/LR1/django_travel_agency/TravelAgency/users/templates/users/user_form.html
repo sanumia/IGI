@@ -2,115 +2,64 @@
 
 {% block title %}{% if form.instance.pk %}Редактирование{% else %}Создание{% endif %} пользователя{% endblock %}
 
+{% block title %}{% if form.instance.pk %}Редактирование{% else %}Создание{% endif %} пользователя{% endblock %}
+
 {% block content %}
-<style>
-    .user-form-container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-    
-    .user-form-title {
-        color: #333;
-        margin-bottom: 2rem;
-    }
-    
-    .user-form {
-        background: white;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
-    
-    .form-group label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: bold;
-        color: #333;
-    }
-    
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        width: 100%;
-        padding: 0.8rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 1rem;
-        box-sizing: border-box;
-    }
-    
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-        outline: none;
-        border-color: #007bff;
-        box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
-    }
-    
-    .form-buttons {
-        margin-top: 2rem;
-        display: flex;
-        gap: 1rem;
-    }
-    
-    .btn {
-        padding: 0.8rem 1.5rem;
-        border: none;
-        border-radius: 4px;
-        text-decoration: none;
-        cursor: pointer;
-        font-size: 1rem;
-    }
-    
-    .btn-primary {
-        background: #007bff;
-        color: white;
-    }
-    
-    .btn-primary:hover {
-        background: #0056b3;
-    }
-    
-    .btn-secondary {
-        background: #6c757d;
-        color: white;
-    }
-    
-    .btn-secondary:hover {
-        background: #5a6268;
-    }
-</style>
+<h1>{% if form.instance.pk %}✏️ Редактирование{% else %}➕ Создание{% endif %} пользователя</h1>
+<p><a href="{% url 'core:home' %}">🏠 Главная</a> › <a href="{% url 'users:user_list' %}">👥 Пользователи</a> › {% if form.instance.pk %}Редактирование{% else %}Создание{% endif %}</p>
 
-<div class="user-form-container">
-    <h1 class="user-form-title">{% if form.instance.pk %}Редактирование{% else %}Создание{% endif %} пользователя</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <h2>📋 Информация о пользователе</h2>
+    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+            <tr bgcolor="#f0f0f0">
+                <th>Поле</th>
+                <th>Значение</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for field in form %}
+            <tr>
+                <td><strong>{{ field.label_tag }}</strong></td>
+                <td>
+                    {{ field }}
+                    {% if field.help_text %}
+                    <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% if field.errors %}
+                    <div style="color: #dc3545; font-size: 0.8rem; margin-top: 0.25rem;">
+                        ❌ {% for error in field.errors %}{{ error }}{% endfor %}
+                    </div>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-    <form method="post" enctype="multipart/form-data" class="user-form">
-        {% csrf_token %}
-        {% for field in form %}
-        <div class="form-group">
-            {{ field.label_tag }}
-            {{ field }}
-            {% if field.help_text %}
-            <small style="color: #666; font-size: 0.8rem;">{{ field.help_text }}</small>
-            {% endif %}
-            {% if field.errors %}
-            <div style="color: #dc3545; font-size: 0.8rem; margin-top: 0.25rem;">
-                {% for error in field.errors %}
-                {{ error }}
-                {% endfor %}
-            </div>
-            {% endif %}
-        </div>
-        {% endfor %}
-        <div class="form-buttons">
-            <button type="submit" class="btn btn-primary">Сохранить</button>
-            <a href="{% url 'users:user_list' %}" class="btn btn-secondary">Отмена</a>
-        </div>
-    </form>
-</div>
+    <hr>
+
+    <!-- Actions -->
+    <h2>🎯 Действия</h2>
+    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+            <tr bgcolor="#f5f5f5">
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="text-align: center;">
+                    <button type="submit" style="background: #28a745; color: white; border: none; padding: 15px 30px; font-size: 1.1em; cursor: pointer; margin-right: 10px;">💾 Сохранить</button>
+                    <a href="{% url 'users:user_list' %}" style="background: #6c757d; color: white; text-decoration: none; padding: 15px 30px; font-size: 1.1em; display: inline-block;">❌ Отмена</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
+<hr>
+<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
 {% endblock %}

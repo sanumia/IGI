@@ -4,154 +4,149 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Заказ #{{ order.id }} - {{ company_name }}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .header {
-            text-align: center;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-        .header h1 {
-            color: #007bff;
-            margin-bottom: 10px;
-        }
-        .order-info {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-        }
-        .order-info h2 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-        .client-info, .tour-info, .notes {
-            margin-bottom: 30px;
-        }
-        .client-info h3, .tour-info h3, .notes h3 {
-            color: #007bff;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f5f5f5;
-        }
-        .footer {
-            margin-top: 50px;
-            text-align: center;
-            font-size: 0.9em;
-            color: #666;
-        }
-        .print-date {
-            margin-top: 30px;
-            text-align: right;
-            font-size: 0.8em;
-            color: #666;
-        }
-        @media print {
-            body {
-                padding: 0;
-            }
-            .header {
-                border-bottom-color: #000;
-            }
-            .order-info {
-                background: #fff;
-                border: 1px solid #000;
-            }
-            th {
-                background-color: #f0f0f0;
-            }
-        }
-        @page {
-            size: A4;
-            margin: 2cm;
-        }
-    </style>
 </head>
 <body>
-    <div class="header">
-        <h1>{{ company_name }}</h1>
-        <p>{{ company_address }}<br>
-        Тел: {{ company_phone }}<br>
-        Email: {{ company_email }}</p>
-    </div>
-
-    <div class="order-info">
-        <h2>Заказ #{{ order.id }}</h2>
-        <p><strong>Статус:</strong> {{ order.get_status_display }}</p>
-        <p><strong>Дата создания:</strong> {{ order.created_at|date:"d.m.Y H:i" }}</p>
-    </div>
-
-    <div class="client-info">
-        <h3>Информация о клиенте</h3>
-        <p><strong>ФИО:</strong> {{ order.client.get_full_name }}</p>
-        <p><strong>Email:</strong> {{ order.client.email }}</p>
-        <p><strong>Телефон:</strong> {{ order.client.phone_number|default:"Не указан" }}</p>
-    </div>
-
-    <div class="tour-info">
-        <h3>Информация о туре</h3>
-        <table>
+    <h1 style="text-align: center; color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 20px; margin-bottom: 30px;">{{ company_name }}</h1>
+    
+    <table border="1" cellpadding="8" cellspacing="0" width="100%" style="margin-bottom: 30px;">
+        <thead>
+            <tr bgcolor="#f0f0f0">
+                <th colspan="2">Контактная информация</th>
+            </tr>
+        </thead>
+        <tbody>
             <tr>
-                <th>Отель</th>
+                <td><strong>Адрес</strong></td>
+                <td>{{ company_address }}</td>
+            </tr>
+            <tr>
+                <td><strong>Телефон</strong></td>
+                <td>{{ company_phone }}</td>
+            </tr>
+            <tr>
+                <td><strong>Email</strong></td>
+                <td>{{ company_email }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 style="color: #007bff; border-bottom: 1px solid #ddd; padding-bottom: 10px;"> Заказ #{{ order.id }}</h2>
+    
+    <table border="1" cellpadding="8" cellspacing="0" width="100%" style="margin-bottom: 30px;">
+        <thead>
+            <tr bgcolor="#f0f0f0">
+                <th>Параметр</th>
+                <th>Значение</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Статус</strong></td>
+                <td>{{ order.get_status_display }}</td>
+            </tr>
+            <tr>
+                <td><strong>Дата создания</strong></td>
+                <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 style="color: #007bff; border-bottom: 1px solid #ddd; padding-bottom: 10px;"> Информация о клиенте</h3>
+    
+    <table border="1" cellpadding="8" cellspacing="0" width="100%" style="margin-bottom: 30px;">
+        <thead>
+            <tr bgcolor="#f0f0f0">
+                <th>Параметр</th>
+                <th>Значение</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>ФИО</strong></td>
+                <td>{{ order.client.get_full_name }}</td>
+            </tr>
+            <tr>
+                <td><strong>Email</strong></td>
+                <td>{{ order.client.email }}</td>
+            </tr>
+            <tr>
+                <td><strong>Телефон</strong></td>
+                <td>{{ order.client.phone_number|default:"Не указан" }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 style="color: #007bff; border-bottom: 1px solid #ddd; padding-bottom: 10px;"> Информация о туре</h3>
+    
+    <table border="1" cellpadding="8" cellspacing="0" width="100%" style="margin-bottom: 30px;">
+        <thead>
+            <tr bgcolor="#f0f0f0">
+                <th>Параметр</th>
+                <th>Значение</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Отель</strong></td>
                 <td>{{ order.tour.hotel.name }}</td>
             </tr>
             <tr>
-                <th>Страна</th>
+                <td><strong>Страна</strong></td>
                 <td>{{ order.tour.hotel.country.name }}</td>
             </tr>
             <tr>
-                <th>Дата отправления</th>
+                <td><strong>Дата отправления</strong></td>
                 <td>{{ order.tour.departure_date|date:"d.m.Y" }}</td>
             </tr>
             <tr>
-                <th>Дата возвращения</th>
+                <td><strong>Дата возвращения</strong></td>
                 <td>{{ order.tour.return_date|date:"d.m.Y" }}</td>
             </tr>
             <tr>
-                <th>Количество участников</th>
-                <td>{{ order.participants }}</td>
+                <td><strong>Количество участников</strong></td>
+                <td><strong style="color: #007bff;">{{ order.participants }}</strong></td>
             </tr>
             <tr>
-                <th>Общая стоимость</th>
-                <td>{{ order.total_price }} руб.</td>
+                <td><strong>Общая стоимость</strong></td>
+                <td><strong style="color: #007bff; font-size: 1.2em;">{{ order.total_price }} руб.</strong></td>
             </tr>
-        </table>
-    </div>
+        </tbody>
+    </table>
 
     {% if order.notes %}
-    <div class="notes">
-        <h3>Примечания</h3>
-        <p>{{ order.notes }}</p>
-    </div>
+    <h3 style="color: #007bff; border-bottom: 1px solid #ddd; padding-bottom: 10px;"> Примечания</h3>
+    
+    <table border="1" cellpadding="8" cellspacing="0" width="100%" style="margin-bottom: 30px;">
+        <thead>
+            <tr bgcolor="#f0f0f0">
+                <th>Примечания</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ order.notes }}</td>
+            </tr>
+        </tbody>
+    </table>
     {% endif %}
 
-    <div class="footer">
-        <p>Благодарим за выбор {{ company_name }}!</p>
-    </div>
+    <table border="1" cellpadding="8" cellspacing="0" width="100%" style="margin-top: 50px;">
+        <thead>
+            <tr bgcolor="#f5f5f5">
+                <th>Благодарность</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="text-align: center;">
+                    <strong>Благодарим за выбор {{ company_name }}!</strong>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-    <div class="print-date">
+    <p style="text-align: right; font-size: 0.8em; color: #666; margin-top: 30px;">
         Документ сформирован: {{ print_date|date:"d.m.Y H:i" }}
-    </div>
+    </p>
 </body>
 </html> 

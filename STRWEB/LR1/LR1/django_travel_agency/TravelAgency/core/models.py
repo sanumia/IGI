@@ -452,7 +452,7 @@ class GlossaryTerm(models.Model):
 
     def get_absolute_url(self):
         """Генерирует URL для детальной страницы термина"""
-        return reverse('glossary_term_detail', kwargs={'slug': self.slug})
+        return reverse('core:glossary_term_detail', kwargs={'slug': self.slug})
 
     def save(self, *args, **kwargs):
         """Автоматически создает slug при сохранении"""
@@ -818,3 +818,59 @@ class NewsletterSubscription(models.Model):
 
     def __str__(self):
         return self.email
+
+
+class Partner(models.Model):
+    """Модель для компаний-партнеров"""
+    name = models.CharField(
+        max_length=200,
+        verbose_name='Название компании'
+    )
+    logo = models.ImageField(
+        upload_to='partners/logos/',
+        verbose_name='Логотип',
+        help_text='Рекомендуемый размер: 200x100px'
+    )
+    website_url = models.URLField(
+        verbose_name='Ссылка на сайт',
+        help_text='Полный URL сайта партнера (например: https://example.com)'
+    )
+    description = models.TextField(
+        verbose_name='Описание',
+        blank=True,
+        help_text='Краткое описание деятельности партнера'
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name='Активный партнер',
+        help_text='Отметьте, если партнер активен и должен отображаться на сайте'
+    )
+    order = models.PositiveIntegerField(
+        default=0,
+        verbose_name='Порядок отображения',
+        help_text='Чем меньше число, тем выше в списке'
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата добавления'
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name='Дата обновления'
+    )
+
+    class Meta:
+        verbose_name = 'Партнер'
+        verbose_name_plural = 'Партнеры'
+        ordering = ['order', 'name']
+        indexes = [
+            models.Index(fields=['is_active']),
+            models.Index(fields=['order']),
+        ]
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        """Возвращает URL сайта партнера"""
+        return self.website_url

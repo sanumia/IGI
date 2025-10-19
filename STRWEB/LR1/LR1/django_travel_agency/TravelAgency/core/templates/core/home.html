@@ -1,266 +1,597 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}TravelDream - Ваше идеальное путешествие{% endblock %}
 
 {% block extra_css %}
 <style>
-    .hero-section {
-        background: #2c3e50;
-        color: white;
-        padding: 4rem 0;
-        text-align: center;
-    }
-    
-    .hero-section h1 {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-    }
-    
-    .hero-section p {
-        font-size: 1.2rem;
-        margin-bottom: 2rem;
-    }
-    
-    .search-form {
-        max-width: 500px;
-        margin: 0 auto;
-    }
-    
-    .search-form input {
-        width: 100%;
-        padding: 0.8rem;
-        border: none;
-        border-radius: 4px;
-        margin-bottom: 1rem;
-    }
-    
-    .search-form button {
-        background: #007bff;
-        color: white;
-        border: none;
-        padding: 0.8rem 2rem;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-    
-    .search-form button:hover {
-        background: #0056b3;
-    }
-    
-    .features {
-        padding: 3rem 0;
-        background: #f8f9fa;
-    }
-    
-    .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 2rem;
-        margin-top: 2rem;
-    }
-    
-    .feature-card {
-        background: white;
-        padding: 2rem;
-        border-radius: 8px;
-        text-align: center;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .feature-card h3 {
-        margin-bottom: 1rem;
-        color: #333;
-    }
-    
-    .destinations {
-        padding: 3rem 0;
-    }
-    
-    .destinations-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-        margin-top: 2rem;
-    }
-    
-    .destination-card {
-        background: white;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .destination-card img {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-    }
-    
-    .destination-info {
-        padding: 1.5rem;
-    }
-    
-    .destination-info h3 {
-        margin-bottom: 0.5rem;
-        color: #333;
-    }
-    
-    .destination-info p {
-        color: #666;
-        margin-bottom: 1rem;
-    }
-    
-    .destination-info a {
-        background: #007bff;
-        color: white;
-        text-decoration: none;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        display: inline-block;
-    }
-    
-    .destination-info a:hover {
-        background: #0056b3;
-    }
-    
-    .stats-section {
-        background: #34495e;
-        color: white;
-        padding: 3rem 0;
-        text-align: center;
-    }
-    
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 2rem;
-        margin-top: 2rem;
-    }
-    
-    .stat-item {
-        padding: 1rem;
-    }
-    
-    .stat-number {
-        font-size: 2.5rem;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-        color: #3498db;
-    }
-    
-    .section-title {
-        text-align: center;
-        margin-bottom: 2rem;
-        color: #333;
-    }
-    
-    @media (max-width: 768px) {
-        .hero-section h1 {
-            font-size: 2rem;
-        }
-        
-        .features-grid,
-        .destinations-grid,
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-    }
+  /* CSS-only staged travel animation: plane → ship → car */
+  :root{ --brand:#007bff; --skyTop:#8ec5ff; --skyBottom:#eaf6ff; --seaTop:#4bb4e6; --seaBottom:#bfe9ff; --roadTop:#87d37c; --roadBottom:#c8e6c9; --sand:#f4d7a1; --palm:#2e7d32; --trunk:#8d6e63; }
+
+  .travel-showcase{ position:relative; width:100%; height:360px; margin:28px 0; border-radius:12px; overflow:hidden; border:1px solid #e6e9ee; background:#eaf6ff; }
+  .travel-timeline{ position:absolute; inset:0; --t:0; animation:timeline 18s ease-in-out infinite; }
+
+  /* Background phases */
+  .travel-bg{ position:absolute; inset:0; z-index:1; }
+  .bg-sky{ background:linear-gradient(var(--skyTop), var(--skyBottom)); opacity:1; animation:phase-sky 18s linear infinite; }
+  .bg-sea{ background:linear-gradient(var(--seaTop), var(--seaBottom)); opacity:0; animation:phase-sea 18s linear infinite; }
+  .bg-road{ background:linear-gradient(var(--roadTop), var(--roadBottom)); opacity:0; animation:phase-road 18s linear infinite; }
+
+  @keyframes phase-sky{ 0%,29%{opacity:1} 33%,100%{opacity:0} }
+  @keyframes phase-sea{ 0%,29%{opacity:0} 33%,62%{opacity:1} 66%,100%{opacity:0} }
+  @keyframes phase-road{ 0%,62%{opacity:0} 66%,100%{opacity:1} }
+
+  /* Shared object base */
+  .obj{ position:absolute; transform:translate(-50%, -50%); will-change:transform, opacity; z-index:5; }
+  .label{ position:absolute; white-space:nowrap; font-weight:700; font-size:14px; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.35); letter-spacing:.5px; }
+
+  /* Person (head + body) reused */
+  .person{ position:absolute; width:14px; height:22px; left:50%; top:50%; transform:translate(-50%,-50%); }
+  .person::before{ content:""; display:block; width:12px; height:12px; background:#ffe0b2; border-radius:50%; margin:0 auto 2px; box-shadow:0 0 0 1px rgba(0,0,0,.08) inset; }
+  .person::after{ content:""; display:block; width:10px; height:8px; background:#37474f; border-radius:2px; margin:0 auto; }
+
+  /* Plane */
+  .plane{ left:-10%; top:35%; opacity:1; animation:plane-move 18s ease-in-out infinite; z-index:4; }
+  .plane .body{ position:relative; width:150px; height:36px; background:#ffffff; border-radius:22px 30px 30px 22px; box-shadow:0 2px 8px rgba(0,0,0,.25); }
+  .plane .nose{ position:absolute; right:-10px; top:0; width:24px; height:36px; background:#ffffff; border-radius:50% 40% 40% 50%/50% 50% 50% 50%; box-shadow:inset 0 0 0 1px rgba(0,0,0,.05); }
+  .plane .tail{ position:absolute; left:0; top:-16px; width:28px; height:24px; background:#ffffff; transform:skewX(-12deg); border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,.15); }
+  .plane .wing{ position:absolute; left:44px; top:18px; width:78px; height:14px; background:#ffffff; transform:skewX(-18deg); border-radius:0 0 12px 12px; box-shadow:0 2px 4px rgba(0,0,0,.15); }
+  .plane .wing.rear{ left:28px; top:8px; width:58px; height:12px; opacity:.9; }
+  .plane .tailplane{ position:absolute; left:6px; top:-6px; width:36px; height:10px; background:#ffffff; transform:skewX(-10deg); border-radius:6px; box-shadow:0 2px 4px rgba(0,0,0,.15); }
+  .plane .engine{ position:absolute; left:68px; top:28px; width:22px; height:12px; background:#cfd8dc; border-radius:6px; box-shadow:inset 0 0 0 1px #b0bec5; }
+  .plane .window{ position:absolute; left:24px; top:10px; width:24px; height:16px; background:#b3e5fc; border-radius:3px; box-shadow:0 0 0 2px #e1f5fe inset; }
+  .plane .portholes{ position:absolute; left:60px; top:10px; display:flex; gap:6px; }
+  .plane .portholes i{ display:block; width:8px; height:8px; background:#bbdefb; border-radius:50%; box-shadow:0 0 0 1px #e3f2fd inset; }
+  .plane .stripe{ position:absolute; right:0; top:0; bottom:0; width:46px; background:linear-gradient(90deg, transparent 0 6px, var(--brand) 6px); border-radius:0 30px 30px 0; }
+  .plane .label{ left:60px; top:-20px; color:var(--brand); text-shadow:none; }
+  .plane .person{ left:48px; top:20px; }
+  @keyframes plane-move{ /* visible 0-33% */
+    0%{ opacity:1; left:-10%; top:35%; transform:translate(-50%,-50%) rotate(-3deg); }
+    25%{ opacity:1; left:40%; top:30%; transform:translate(-50%,-50%) rotate(-2deg); }
+    33%{ opacity:1; left:105%; top:24%; transform:translate(-50%,-50%) rotate(-1deg); }
+    34%{ opacity:0; }
+    100%{ opacity:0; }
+  }
+
+  /* Sea / ship */
+  .sea-layer{ position:absolute; left:0; right:0; bottom:0; height:46%; background:linear-gradient(180deg, rgba(255,255,255,.0), rgba(0,0,0,.05)), repeating-linear-gradient( -6deg, rgba(255,255,255,.18) 0 6px, rgba(255,255,255,0) 6px 18px); opacity:0; animation:sea-vis 18s linear infinite; z-index:2; }
+  @keyframes sea-vis{ 0%,29%{opacity:0} 33%,62%{opacity:1} 66%,100%{opacity:0} }
+
+  .ship{ left:-15%; top:64%; opacity:0; animation:ship-move 18s ease-in-out infinite; z-index:4; }
+  .ship .hull{ position:relative; width:160px; height:34px; background:#455a64; border-radius:0 0 12px 12px; box-shadow:0 3px 6px rgba(0,0,0,.25); }
+  .ship .hull::after{ content:""; position:absolute; left:0; right:0; bottom:-6px; height:6px; background:linear-gradient(90deg, #263238 0 40%, #546e7a 40% 70%, #263238 70%); border-radius:0 0 12px 12px; }
+  .ship .deck{ position:absolute; left:18px; top:-22px; width:90px; height:22px; background:#eceff1; border-radius:6px 6px 0 0; box-shadow:0 2px 0 #cfd8dc inset; }
+  .ship .mast{ position:absolute; left:72px; top:-60px; width:4px; height:60px; background:#8d6e63; }
+  .ship .sail{ position:absolute; left:76px; top:-56px; width:58px; height:52px; background:linear-gradient(180deg, #fff, #e0f2f1); -webkit-clip-path:polygon(0 0, 100% 50%, 0 100%); clip-path:polygon(0 0, 100% 50%, 0 100%); box-shadow:0 0 0 1px rgba(0,0,0,.06) inset; }
+  .ship .label{ left:30px; top:-34px; color:var(--brand); text-shadow:none; }
+  .ship .person{ left:64px; top:-6px; }
+  @keyframes ship-move{ /* visible 33-66% */
+    0%,29%{ opacity:0; }
+    33%{ opacity:1; left:-15%; top:64%; }
+    50%{ opacity:1; left:48%; top:62%; }
+    62%{ opacity:1; left:110%; top:64%; }
+    66%,100%{ opacity:0; }
+  }
+
+  /* Road / car */
+  .road-wrap{ position:absolute; left:0; right:0; bottom:0; height:48%; pointer-events:none; opacity:0; animation:road-vis 18s linear infinite; z-index:3; }
+  @keyframes road-vis{ 0%,62%{opacity:0} 66%,100%{opacity:1} }
+  .road{ position:absolute; left:0; right:0; bottom:18%; height:38%; background:#455a64; box-shadow:0 -8px 0 #9ccc65 inset, 0 8px 0 #9ccc65 inset; z-index:3; }
+  .road::before{ content:""; position:absolute; left:-200%; right:-200%; top:50%; height:4px; transform:translateY(-50%); background:repeating-linear-gradient(90deg, #fff 0 24px, transparent 24px 48px); animation:dash 2s linear infinite; }
+  @keyframes dash{ to{ transform:translateY(-50%) translateX(-48px); } }
+
+.car{ left:-12%; top:76%; opacity:0; animation:car-move 18s ease-in-out infinite; z-index:5; }
+  .car .body{ position:relative; width:150px; height:42px; background:var(--brand); border-radius:10px 20px 10px 10px; box-shadow:0 2px 8px rgba(0,0,0,.28); }
+  .car .roof{ position:absolute; left:24px; top:-20px; width:76px; height:24px; background:var(--brand); border-radius:12px 12px 0 0; }
+  .car .pillar{ position:absolute; left:60px; top:-20px; width:4px; height:24px; background:#0d47a1; opacity:.25; }
+  .car .win{ position:absolute; left:30px; top:-12px; width:58px; height:16px; background:#b3e5fc; border-radius:6px; box-shadow:0 0 0 2px #e1f5fe inset; }
+  .car .bumper{ position:absolute; right:-6px; top:8px; width:10px; height:26px; background:#0d47a1; border-radius:4px; opacity:.35; }
+  .car .light{ position:absolute; right:-6px; top:10px; width:10px; height:8px; background:#ffd54f; border-radius:2px; box-shadow:0 0 6px 2px rgba(255,213,79,.6); }
+  .car .grille{ position:absolute; left:6px; top:10px; width:20px; height:12px; background:repeating-linear-gradient(0deg, #e3f2fd 0 2px, #0d47a1 2px 4px); border-radius:2px; opacity:.5; }
+  /* .car .shadow{ position:absolute; left:10px; right:10px; bottom:-16px; height:8px; background:radial-gradient(ellipse at center, rgba(0,0,0,.35), rgba(0,0,0,0)); filter:blur(2px); } */
+  .car .body .wheel{ position:absolute; bottom:-12px; width:28px; height:28px; background:#212121; border-radius:50%; box-shadow:0 0 0 4px #424242 inset; animation:wheel 1s linear infinite; }
+  .car .body .wheel.w1{ left:20px; }
+  .car .body .wheel.w2{ right:18px; }
+  .car .label{ left:58px; top:46px; }
+  .car .person{ left:64px; top:-6px; }
+  @keyframes wheel{ to{ transform:rotate(360deg); } }
+@keyframes car-move{ /* visible 66-100% */
+  0%,62%{ opacity:0; }
+  66%{ opacity:1; left:-12%; top:76%; }
+  83%{ opacity:1; left:48%; top:76%; }
+  100%{ opacity:1; left:112%; top:76%; }
+}
+
+  /* Palms */
+  .palm{ position:absolute; bottom:18%; width:8px; height:120px; background:var(--trunk); border-radius:4px; transform-origin:bottom center; filter:drop-shadow(0 2px 2px rgba(0,0,0,.2)); opacity:0; animation:palm-vis 18s linear infinite, sway 3s ease-in-out infinite; z-index:1; }
+  @keyframes palm-vis{ 0%,62%{opacity:0} 66%,100%{opacity:1} }
+  @keyframes sway{ 0%,100%{ transform:rotate(-2deg);} 50%{ transform:rotate(2deg);} }
+  .palm::before, .palm::after{ content:""; position:absolute; left:50%; top:-6px; width:0; height:0; border-left:32px solid transparent; border-right:32px solid transparent; border-bottom:26px solid var(--palm); transform:translateX(-50%) rotate(12deg); transform-origin:bottom center; }
+  .palm::after{ transform:translateX(-50%) rotate(-12deg); }
+
+  /* Timeline driver (no visual) */
+  @keyframes timeline{ to{ --t:1; } }
+
+  /* Decorative clouds during sky phase */
+  .cloud{ position:absolute; top:14%; width:120px; height:38px; background:#fff; border-radius:19px; filter:blur(.4px); box-shadow: 40px 6px 0 6px #ffffff, 80px -2px 0 10px #ffffff; opacity:.9; animation:cloud 18s linear infinite; z-index:2; }
+  .cloud.c2{ top:24%; left:30%; animation-delay:-4s; transform:scale(.9); }
+  .cloud.c3{ top:18%; left:60%; animation-delay:-8s; transform:scale(1.1); }
+  @keyframes cloud{ 0%,29%{ left:-20%; opacity:.9 } 33%,100%{ left:120%; opacity:0 } }
+
+  /* Preloader: smooth spin + pulse without snapping */
+  .preloader{ display:flex; align-items:center; justify-content:center; gap:10px; padding:16px 0; }
+  .preloader .ring{ width:40px; height:40px; border-radius:50%; box-sizing:border-box; border:3px solid rgba(0,0,0,.08); border-top-color:var(--brand); border-right-color:var(--brand); transform-origin:50% 50%; backface-visibility:hidden; will-change:transform; animation:spinPulse 1.4s linear infinite; }
+  @keyframes spinPulse{
+    0%{ transform:rotate(0deg) scale(1); }
+    50%{ transform:rotate(180deg) scale(1.12); }
+    100%{ transform:rotate(360deg) scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce){ .preloader .ring{ animation:none; } }
+
 </style>
 {% endblock %}
-
 {% block content %}
-<!-- Hero Section -->
-<section class="hero-section">
-    <div class="container">
-        <h1>Откройте мир с TravelDream</h1>
-        <p>Лучшие направления, незабываемые впечатления и комфортный отдых</p>
-        <form action="{% url 'core:tour_list' %}" method="get" class="search-form">
-            <input type="text" name="search" placeholder="Куда хотите поехать?">
-            <button type="submit">Найти туры</button>
-        </form>
-    </div>
-</section>
+<h1 id="top" class="caps">Откройте мир с TravelDream</h1>
 
-<!-- Features Section -->
-<section class="features">
-    <div class="container">
-        <h2 class="section-title">Почему выбирают нас</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <h3>🚀 Быстрое бронирование</h3>
-                <p>Забронируйте тур за несколько минут с нашей простой системой</p>
+<p>Лучшие направления, незабываемые впечатления и комфортный отдых</p>
+
+<!-- Рекламный баннер -->
+<img src="{% static 'vendor/img/banner1.jpg' %}" 
+     alt="Специальное предложение" 
+     style="max-width: 100%; height: auto;">
+
+<form action="{% url 'core:tour_list' %}" method="get">
+    <input type="text" name="search" placeholder="Куда хотите поехать?" style="width: 300px; padding: 8px; margin-right: 10px;">
+    <button type="submit" style="padding: 8px 16px; background: #007bff; color: white; border: none; cursor: pointer;">Найти туры</button>
+</form>
+
+<hr>
+
+<!-- Последняя новость -->
+{% if latest_news %}
+<section class="last-article" style="background: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 10px; border-left: 4px solid #007bff;">
+    <span class="badge-new">New</span>
+    <h2 style="color: #007bff; margin-top: 0;"> Последняя новость</h2>
+    <details>
+        <summary style="cursor: pointer; color: #007bff;">
+            <strong>{{ latest_news.title }}</strong> · {{ latest_news.get_category_display }} · {{ latest_news.created_at|date:"d.m.Y H:i" }}
+        </summary>
+        <div style="display: flex; gap: 20px; align-items: flex-start; margin-top: 12px;">
+            {% if latest_news.image %}
+            <div style="flex-shrink: 0;">
+                <img src="{{ latest_news.image.url }}" 
+                     alt="{{ latest_news.title }}" 
+                     style="width: 200px; height: 150px; object-fit: cover; border-radius: 8px;">
             </div>
-            <div class="feature-card">
-                <h3>💰 Лучшие цены</h3>
-                <p>Гарантируем самые выгодные предложения на рынке</p>
-            </div>
-            <div class="feature-card">
-                <h3>🛡️ Безопасность</h3>
-                <p>Ваши данные и платежи полностью защищены</p>
-            </div>
-            <div class="feature-card">
-                <h3>📞 Поддержка 24/7</h3>
-                <p>Наша команда всегда готова помочь вам</p>
+            {% endif %}
+            <div style="flex: 1;">
+                <p class="summary-ellipsis" style="line-height: 1.6; margin: 10px 0; color: #333;">
+                    {{ latest_news.summary }}
+                </p>
+                <a href="{% url 'core:news_detail' latest_news.slug %}" 
+                   style="background: #007bff; color: white; text-decoration: none; padding: 8px 16px; border-radius: 5px; display: inline-block; margin-top: 10px;">
+                    Читать полностью
+                </a>
             </div>
         </div>
-    </div>
+    </details>
+</section>
+{% endif %}
+
+<hr>
+<!-- Якорная навигация по странице -->
+<p><a href="#popular">Перейти к популярным направлениям</a> · <a href="#top">Вверх</a></p>
+
+<h2>Почему выбирают нас</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Преимущество</th>
+            <th>Описание</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Быстрое бронирование</strong></td>
+            <td>Забронируйте тур за несколько минут с нашей простой системой</td>
+        </tr>
+        <tr>
+            <td><strong>Лучшие цены</strong></td>
+            <td>Гарантируем самые выгодные предложения на рынке</td>
+        </tr>
+        <tr>
+            <td><strong>Безопасность</strong></td>
+            <td>Ваши данные и платежи полностью защищены</td>
+        </tr>
+        <tr>
+            <td><strong>Поддержка 24/7</strong></td>
+            <td>Наша команда всегда готова помочь вам</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<h2 id="popular"> Наши достижения</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Показатель</th>
+            <th>Значение</th>
+            <th>Описание</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Довольных клиентов</strong></td>
+            <td><strong style="color: #007bff; font-size: 1.2em;">10,000+</strong></td>
+            <td>Количество клиентов, которые доверяют нам</td>
+        </tr>
+        <tr>
+            <td><strong>Стран назначения</strong></td>
+            <td><strong style="color: #007bff; font-size: 1.2em;">50+</strong></td>
+            <td>Количество стран, куда мы организуем туры</td>
+        </tr>
+        <tr>
+            <td><strong>Лет опыта</strong></td>
+            <td><strong style="color: #007bff; font-size: 1.2em;">15</strong></td>
+            <td>Годы успешной работы в туристической сфере</td>
+        </tr>
+        <tr>
+            <td><strong>Положительных отзывов</strong></td>
+            <td><strong style="color: #007bff; font-size: 1.2em;">99%</strong></td>
+            <td>Процент довольных клиентов по отзывам</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+
+
+<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+    &lt;html lang="ru"&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;title&gt;Моя страница&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Привет, мир!&lt;/h1&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;</code></pre>
+    <p>Основой веба является <abbr title="HyperText Markup Language">HTML</abbr>.</p
+
+<section>
+    <h3>Ссылки разных типов</h3>
+    <ul>
+        <li><a href="{% url 'core:tour_list' %}">Внутренняя ссылка на туры</a></li>
+        <li><a href="https://www.booking.com" target="_blank" rel="noopener">Внешняя ссылка (открывается в новой вкладке)</a></li>
+        <li><a href="{% static 'vendor/img/banner1.jpg' %}" download>Скачать изображение</a></li>
+        <li><a href="data:text/plain;charset=utf-8,Текст для скачивания" download="example.txt">Скачать текстовый файл</a></li>
+    </ul>
 </section>
 
-<!-- Popular Destinations -->
-<section class="destinations">
-    <div class="container">
-        <h2 class="section-title">Популярные направления</h2>
-        <div class="destinations-grid">
-            <div class="destination-card">
-                <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Турция">
-                <div class="destination-info">
-                    <h3>Турция</h3>
-                    <p>Отдых на море, древние памятники и восточная экзотика</p>
-                    <a href="{% url 'core:tour_list' %}?country=Турция">Смотреть туры</a>
-                </div>
-            </div>
-            <div class="destination-card">
-                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Египет">
-                <div class="destination-info">
-                    <h3>Египет</h3>
-                    <p>Пирамиды, Красное море и загадочная история фараонов</p>
-                    <a href="{% url 'core:tour_list' %}?country=Египет">Смотреть туры</a>
-                </div>
-            </div>
-            <div class="destination-card">
-                <img src="https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Тайланд">
-                <div class="destination-info">
-                    <h3>Тайланд</h3>
-                    <p>Тропические пляжи, буддийские храмы и тайская кухня</p>
-                    <a href="{% url 'core:tour_list' %}?country=Тайланд">Смотреть туры</a>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- Контейнерные элементы -->
+<section>
+    <h3>Контейнерные элементы</h3>
+    <article style="border-left: 4px solid #007bff; padding-left: 15px; margin: 10px 0;">
+        <h4>Статья о путешествиях</h4>
+        <p>Еда во время путешествия — это не просто проба новых блюд. Это погружение в культуру, историю и истории, которые сопровождают каждый кусочек. От уличной еды на многолюдных рынках до необычных блюд в мишленовских ресторанах — в некоторых городах полным-полно гастрономических приключений, ради которых стоит отправиться в путешествие. Ниже перечислены 13 городов по всему миру, которые обязательно стоит посетить. Здесь есть ни с чем не сравнимые впечатления для тех, кто хочет отправиться в кулинарное путешествие, и блюда, которые нельзя пропустить. Приходите голодными, уходите счастливыми.</p>
+    </article>
+    
+    <aside style="background: #e7f3ff; padding: 10px; margin: 10px 0; border-radius: 5px;">
+        <h4>Дополнительная информация</h4>
+        <p>Популярное блюдо: Суши
+
+            В Токиосуши — нигири, маки-роллы, сашими и многое другое — можно приобрести в любой ценовой категории: от роллов в обычных ресторанчиках на ленте конвейера, таких как Uobei Shibuya Dogenzaka, до элитных заведений омакасе, таких как Mutsukari. Если Вы сами хотите стать суши-мастером, запишитесь на мастер-класс по приготовлению суши , чтобы узнать все о том, как готовятся Ваши любимые роллы.</p>
+    </aside>
 </section>
 
-<!-- Statistics Section -->
-<section class="stats-section">
-    <div class="container">
-        <h2 class="section-title">Наши достижения</h2>
-        <div class="stats-grid">
-            <div class="stat-item">
-                <div class="stat-number">10,000+</div>
-                <p>Довольных клиентов</p>
+<!-- Списки -->
+<section>
+    <h3>Различные типы списков</h3>
+    
+    <h4>Маркированный список</h4>
+    <ul>
+        <li>Турция - пляжный отдых</li>
+        <li>Египет - исторические памятники</li>
+        <li>Тайланд - экзотическая природа</li>
+    </ul>
+    
+    <h4>Нумерованный список</h4>
+    <ol>
+        <li>Выберите направление</li>
+        <li>Забронируйте тур</li>
+        <li>Оплатите путешествие</li>
+        <li>Получите документы</li>
+    </ol>
+    
+    <h4>Список определений</h4>
+    <!-- работает как ключ-значение -->
+    <dl>
+        <dt>Эконом класс</dt>
+        <dd>Базовый уровень комфорта с необходимыми услугами</dd>
+        <dt>Бизнес класс</dt>
+        <dd>Повышенный комфорт с дополнительными услугами</dd>
+        <dt>Люкс класс</dt>
+        <dd>Максимальный комфорт и персональный сервис</dd>
+    </dl>
+</section>
+
+
+<section>
+    <!-- Иллюстрация с необязательной подписью -->
+    <h3>Фигуры и подписи</h3>
+    <figure style="text-align: center; margin: 20px 0;">
+        <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" 
+             alt="Красивый пляж в Турции" 
+             style="max-width: 100%; height: auto; border-radius: 10px;">
+        <figcaption style="font-style: italic; color: #666; margin-top: 10px;">
+            Рис. 1. Идиллический пляж в Анталии, Турция
+        </figcaption>
+    </figure>
+</section>
+
+
+
+<!-- Формы и элементы управления -->
+<section>
+    <h3>Формы и элементы управления</h3>
+    
+    <form action="#" method="post" style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+        <fieldset style="border: 1px solid #dee2e6; padding: 15px; border-radius: 5px;">
+            <legend style="font-weight: bold; padding: 0 10px;">Персональная информация</legend>
+            
+            <div style="margin-bottom: 15px;">
+                <label for="fullname">Полное имя:</label><br>
+                <input type="text" id="fullname" name="fullname" required style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
             </div>
-            <div class="stat-item">
-                <div class="stat-number">50+</div>
-                <p>Стран назначения</p>
+            
+            <div style="margin-bottom: 15px;">
+                <label for="email">Email:</label><br>
+                <input type="email" id="email" name="email" required style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
             </div>
-            <div class="stat-item">
-                <div class="stat-number">15</div>
-                <p>Лет опыта</p>
+            
+            <div style="margin-bottom: 15px;">
+                <label for="phone">Телефон:</label><br>
+                <input type="tel" id="phone" name="phone" pattern="[0-9+\-\s()]+" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
             </div>
-            <div class="stat-item">
-                <div class="stat-number">99%</div>
-                <p>Положительных отзывов</p>
+            
+            <div style="margin-bottom: 15px;">
+                <label for="birthdate">Дата рождения:</label><br>
+                <input type="date" id="birthdate" name="birthdate" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
             </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label for="country">Страна:</label><br>
+                <select id="country" name="country" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                    <option value="">Выберите страну</option>
+                    <option value="russia">Россия</option>
+                    <option value="belarus">Беларусь</option>
+                    <option value="kazakhstan">Казахстан</option>
+                    <option value="other">Другая</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label>Интересы:</label><br>
+                <input type="checkbox" id="beach" name="interests" value="beach">
+                <label for="beach">Пляжный отдых</label><br>
+                <input type="checkbox" id="culture" name="interests" value="culture">
+                <label for="culture">Культурный туризм</label><br>
+                <input type="checkbox" id="adventure" name="interests" value="adventure">
+                <label for="adventure">Экстремальный туризм</label>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label>Бюджет:</label><br>
+                <input type="radio" id="budget-low" name="budget" value="low">
+                <label for="budget-low">До 50,000 руб.</label><br>
+                <input type="radio" id="budget-medium" name="budget" value="medium">
+                <label for="budget-medium">50,000 - 100,000 руб.</label><br>
+                <input type="radio" id="budget-high" name="budget" value="high">
+                <label for="budget-high">Свыше 100,000 руб.</label>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label for="comments">Комментарии:</label><br>
+                <textarea id="comments" name="comments" rows="4" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; resize: vertical;"></textarea>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label for="file-upload">Загрузить документы:</label><br>
+                <input type="file" id="file-upload" name="documents" multiple accept=".pdf,.jpg,.png" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <input type="range" id="satisfaction" name="satisfaction" min="1" max="10" value="5" style="width: 100%;">
+                <label for="satisfaction">Уровень удовлетворенности (1-10): <span id="satisfaction-value">5</span></label>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <input type="color" id="favorite-color" name="favorite-color" value="#007bff" style="width: 50px; height: 40px; border: none; border-radius: 4px;">
+                <label for="favorite-color">Любимый цвет</label>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <input type="checkbox" id="newsletter" name="newsletter" checked>
+                <label for="newsletter">Подписаться на рассылку</label>
+            </div>
+            
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button type="submit" style="background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Отправить</button>
+                <button type="reset" style="background: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Сбросить</button>
+                <button type="button" onclick="alert('Кнопка нажата!')" style="background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Тест</button>
+            </div>
+        </fieldset>
+    </form>
+</section>
+
+<!-- Партнеры -->
+{% if partners %}
+<section style="margin: 30px 0;">
+    <h2 style="text-align: center; color: #007bff; margin-bottom: 25px;"> Наши партнеры</h2>
+    <div class="partners" style="max-width: 1000px; margin: 0 auto;">
+        {% for partner in partners %}
+        <div class="partner-tile" title="{{ partner.name }}">
+            <a href="{{ partner.website_url }}" target="_blank" rel="noopener" style="text-decoration:none; text-align:center;">
+                <img src="{{ partner.logo.url }}" alt="{{ partner.name }}" style="width:80px; height:80px; object-fit:contain; border-radius:999px; background:#fff;">
+                <div class="partner-name" style="display:block; margin-top:8px; color:#111;">{{ partner.name }}</div>
+            </a>
         </div>
+        {% endfor %}
     </div>
 </section>
+<hr>
+{% endif %}
+
+<!-- Популярные направления (из моделей) -->
+<section>
+    <h2>Популярные направления</h2>
+    {% if popular_tours %}
+    <div class="catalog-grid">
+        {% for tour in popular_tours %}
+        <article class="card">
+            {% if tour.hotel.image %}
+            <img src="{{ tour.hotel.image.url }}" alt="{{ tour.hotel.name }}">
+            {% endif %}
+            <h3>{{ tour.hotel.country.name }} — {{ tour.hotel.name }}</h3>
+            <p class="lead">Вылет {{ tour.departure_date|date:"d.m.Y" }}, {{ tour.duration_weeks }} нед.</p>
+            <p><strong>{{ tour.total_price|floatformat:"0" }} ₽</strong></p>
+            <a class="btn" href="{% url 'core:tour_detail' tour.id %}">Подробнее</a>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p>Популярные туры пока отсутствуют.</p>
+    {% endif %}
+
+    {% if popular_countries %}
+    <h3 style="margin-top:16px;">Популярные страны</h3>
+    <table border="1" cellpadding="8" cellspacing="0" width="100%" style="border-collapse: collapse;">
+        <thead>
+            <tr style="background:#f0f0f0;">
+                <th>Страна</th>
+                <th>Кол-во отелей</th>
+                <th>Мин. цена тура</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in popular_countries %}
+            <tr>
+                <td>{{ c.name }}</td>
+                <td>{{ c.hotels_count }}</td>
+                <td>{% if c.min_price %}{{ c.min_price|floatformat:"0" }}{% else %}—{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</section>
+
+<!-- iframe -->
+<section>
+    <h3>Встроенный контент (iframe)</h3>
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2245.3713253456!2d37.6173!3d55.7558!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46b54a5a738fa419%3A0x7c347d506b52311f!2z0JzQvtGB0LrQstCw!5e0!3m2!1sru!2sru!4v1234567890" 
+            width="100%" 
+            height="300" 
+            style="border: 1px solid #dee2e6; border-radius: 5px;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+    <p><small>Карта офиса TravelDream в Москве</small></p>
+</section>
+
+<!-- Видео и аудио -->
+<section>
+    <h3>Видео и аудио контент</h3>
+    
+    
+    <p><small>Демонстрационное видео о путешествиях</small></p>
+    
+    <h4>Аудио</h4>
+    <audio controls style="width: 100%;">
+        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
+        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
+        Ваш браузер не поддерживает аудио элемент.
+    </audio>
+    <p><small>Звук уведомления о новом туре</small></p>
+</section>
+
+
+<!-- CSS-only animated travel block -->
+<section class="travel-showcase" aria-label="Путешествие с TravelDream">
+  <div class="travel-timeline">
+    <!-- Backgrounds per phase -->
+    <div class="travel-bg bg-sky"></div>
+    <div class="travel-bg bg-sea"></div>
+    <div class="travel-bg bg-road"></div>
+
+    <!-- Decorative clouds for sky phase -->
+    <div class="cloud c1" style="left:-20%"></div>
+    <div class="cloud c2"></div>
+    <div class="cloud c3"></div>
+
+    <!-- Plane phase -->
+    <div class="obj plane">
+      <div class="body">
+        <div class="tail"></div>
+        <div class="tailplane"></div>
+        <div class="wing"></div>
+        <div class="wing rear"></div>
+        <div class="engine"></div>
+        <div class="window"></div>
+        <div class="stripe"></div>
+        <div class="nose"></div>
+        <div class="portholes"><i></i><i></i><i></i><i></i></div>
+      </div>
+      <span class="label">TravelDream</span>
+      <div class="person"></div>
+    </div>
+
+    <!-- Sea surface during ship phase -->
+    <div class="sea-layer"></div>
+
+    <!-- Ship phase -->
+    <div class="obj ship">
+      <div class="hull"></div>
+      <div class="deck"></div>
+      <div class="mast"></div>
+      <div class="sail"></div>
+      <span class="label">TravelDream</span>
+      <div class="person"></div>
+    </div>
+
+    <!-- Road and palms during car phase -->
+    <div class="road-wrap">
+    <div class="road"></div>
+    </div>
+    <div class="obj car">
+      <div class="body">
+        <div class="wheel w1"></div>
+        <div class="wheel w2"></div>
+      </div>
+      <div class="roof"></div>
+      <div class="win"></div>
+      <span class="label">TravelDream</span>
+      <div class="person"></div>
+      <div class="pillar"></div>
+      <div class="bumper"></div>
+      <div class="light"></div>
+      <div class="grille"></div>
+      <div class="shadow"></div>
+    </div>
+
+    <!-- Palms (visible only in road phase) -->
+    <div class="palm" style="left:8%; height:110px;"></div>
+    <div class="palm" style="left:18%; transform:scale(.9);"></div>
+    <div class="palm" style="left:28%; transform:scale(1.05);"></div>
+    <div class="palm" style="left:72%; transform:scale(1.1);"></div>
+    <div class="palm" style="left:84%; height:130px; transform:scale(1.15);"></div>
+  </div>
+ </section>
+
+<!-- Preloader moved to base template for global usage -->
+
 {% endblock %} 

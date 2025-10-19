@@ -3,87 +3,159 @@
 
 {% block title %}Order #{{ order.id }} - Details{% endblock %}
 
-{% block extra_css %}
-<style>
-    .order-container { padding: 2rem 0; }
-    .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
-    .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); overflow: hidden; }
-    .card-header { background: #007bff; color: #fff; padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center; }
-    .card-body { padding: 1.25rem; }
-    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-    .badge { padding: 0.25rem 0.5rem; border-radius: 4px; }
-    .badge-warning { background: #ffc107; color: #333; }
-    .badge-success { background: #28a745; color: #fff; }
-    .badge-danger { background: #dc3545; color: #fff; }
-    .btn { background: #dc3545; color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
-    .aside-card .card-header { background: #007bff; }
-    .aside-item { padding-bottom: 0.75rem; margin-bottom: 0.75rem; border-bottom: 1px solid #eee; }
-    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } .row-2 { grid-template-columns: 1fr; } }
-</style>
-{% endblock %}
+{% block extra_css %}{% endblock %}
 
 {% block content %}
-<div class="order-container">
-    <div class="grid">
-        <div>
-            <div class="card">
-                <div class="card-header">
-                    <h4 style="margin:0;">Order #{{ order.id }}</h4>
-                    <span class="badge {% if order.status == 'pending' %}badge-warning{% elif order.status == 'confirmed' %}badge-success{% elif order.status == 'cancelled' %}badge-danger{% endif %}">
-                        {{ order.get_status_display }}
-                    </span>
-                </div>
-                <div class="card-body">
-                    <div class="row-2">
-                        <div>
-                            <h5>Tour Details</h5>
-                            <p><strong>Tour:</strong> {{ order.tour.name }}</p>
-                            <p><strong>Hotel:</strong> {{ order.tour.hotel.name }}</p>
-                            <p><strong>Country:</strong> {{ order.tour.hotel.country.name }}</p>
-                            <p><strong>Departure Date:</strong> {{ order.tour.departure_date|date:"d M Y" }}</p>
-                            <p><strong>Return Date:</strong> {{ order.tour.return_date|date:"d M Y" }}</p>
-                        </div>
-                        <div>
-                            <h5>Order Information</h5>
-                            <p><strong>Order Date:</strong> {{ order.created_at|date:"d M Y H:i" }}</p>
-                            <p><strong>Number of Travelers:</strong> {{ order.num_travelers }}</p>
-                            <p><strong>Total Price:</strong> {{ order.total_price }} BYN</p>
-                            {% if order.promo_code %}
-                            <p><strong>Promo Code:</strong> {{ order.promo_code.code }}</p>
-                            <p><strong>Discount:</strong> {{ order.promo_code.discount }}%</p>
-                            {% endif %}
-                        </div>
-                    </div>
+<h1> Заказ #{{ order.id }}</h1>
+<p><a href="{% url 'core:home' %}"> Главная</a> › <a href="{% url 'core:order_list' %}"> Мои заказы</a> › Заказ #{{ order.id }}</p>
 
-                    {% if can_cancel %}
-                    <form method="post" action="{% url 'core:order_cancel' order.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn">Cancel Order</button>
-                    </form>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+<!-- Order Status -->
+<h2> Статус заказа</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Параметр</th>
+            <th>Значение</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Номер заказа</strong></td>
+            <td><strong style="color: #007bff; font-size: 1.2em;">#{{ order.id }}</strong></td>
+        </tr>
+        <tr>
+            <td><strong>Статус</strong></td>
+            <td>
+                <span style="background: {% if order.status == 'pending' %}#ffc107{% elif order.status == 'confirmed' %}#28a745{% elif order.status == 'cancelled' %}#dc3545{% else %}#6c757d{% endif %}; color: {% if order.status == 'pending' %}#333{% else %}white{% endif %}; padding: 5px 10px; font-size: 0.9rem;">
+                    {{ order.get_status_display }}
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Дата создания</strong></td>
+            <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
+        </tr>
+    </tbody>
+</table>
 
-        <div>
-            {% if similar_tours %}
-            <div class="card aside-card">
-                <div class="card-header">
-                    <h5 style="margin:0;">Similar Tours</h5>
-                </div>
-                <div class="card-body">
-                    {% for similar_order in similar_tours %}
-                    <div class="aside-item{% if forloop.last %} last{% endif %}">
-                        <h6 style="margin:0 0 0.25rem 0;">{{ similar_order.tour.name }}</h6>
-                        <p style="margin:0 0 0.25rem 0;"><small>{{ similar_order.tour.hotel.name }}</small></p>
-                        <p style="margin:0 0 0.5rem 0;"><strong>{{ similar_order.tour.total_price }} BYN</strong></p>
-                        <a href="{% url 'core:tour_detail' similar_order.tour.id %}" style="text-decoration:none; color:#007bff;">View Tour</a>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
-        </div>
-    </div>
-</div>
+<hr>
+
+<!-- Tour Details -->
+<h2> Детали тура</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Параметр</th>
+            <th>Значение</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Название тура</strong></td>
+            <td><strong>{{ order.tour.name }}</strong></td>
+        </tr>
+        <tr>
+            <td><strong>Отель</strong></td>
+            <td>{{ order.tour.hotel.name }}</td>
+        </tr>
+        <tr>
+            <td><strong>Страна</strong></td>
+            <td>{{ order.tour.hotel.country.name }}</td>
+        </tr>
+        <tr>
+            <td><strong>Дата отправления</strong></td>
+            <td>{{ order.tour.departure_date|date:"d.m.Y" }}</td>
+        </tr>
+        <tr>
+            <td><strong>Дата возвращения</strong></td>
+            <td>{{ order.tour.return_date|date:"d.m.Y" }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Order Information -->
+<h2> Информация о заказе</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Параметр</th>
+            <th>Значение</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Количество путешественников</strong></td>
+            <td><strong style="color: #007bff;">{{ order.num_travelers }}</strong></td>
+        </tr>
+        <tr>
+            <td><strong>Общая стоимость</strong></td>
+            <td><strong style="color: #007bff; font-size: 1.2em;">{{ order.total_price }} BYN</strong></td>
+        </tr>
+        {% if order.promo_code %}
+        <tr>
+            <td><strong>Промокод</strong></td>
+            <td><strong style="color: #28a745;">{{ order.promo_code.code }}</strong></td>
+        </tr>
+        <tr>
+            <td><strong>Скидка</strong></td>
+            <td><strong style="color: #28a745;">{{ order.promo_code.discount }}%</strong></td>
+        </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Actions -->
+{% if can_cancel %}
+<h2> Действия</h2>
+<form method="post" action="{% url 'core:order_cancel' order.id %}">
+    {% csrf_token %}
+    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+            <tr bgcolor="#f5f5f5">
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="text-align: center;">
+                    <button type="submit" style="background: #dc3545; color: white; border: none; padding: 15px 30px; font-size: 1.1em; cursor: pointer;"> Отменить заказ</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+<hr>
+{% endif %}
+
+<!-- Similar Tours -->
+{% if similar_tours %}
+<h2> Похожие туры</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Тур</th>
+            <th>Отель</th>
+            <th>Цена</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for similar_order in similar_tours %}
+        <tr>
+            <td><strong>{{ similar_order.tour.name }}</strong></td>
+            <td>{{ similar_order.tour.hotel.name }}</td>
+            <td><strong style="color: #007bff;">{{ similar_order.tour.total_price }} BYN</strong></td>
+            <td><a href="{% url 'core:tour_detail' similar_order.tour.id %}" style="background: #007bff; color: white; text-decoration: none; padding: 5px 10px;"> Посмотреть</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+<hr>
+<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
 {% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Промокоды и купоны{% endblock %}
+
+{% block extra_css %}{% endblock %}
+
+{% block content %}
+<h1>Промокоды и купоны</h1>
+<p>Специальные предложения и скидки для наших клиентов</p>
+
+<h2> Действующие промокоды</h2>
+{% if active_promos %}
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Промокод</th>
+            <th>Описание акции</th>
+            <th>Размер скидки</th>
+            <th>Период действия</th>
+            <th>Ограничения</th>
+            <th>Использования</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for promo in active_promos %}
+        <tr>
+            <td><strong>{{ promo.code }}</strong></td>
+            <td>{{ promo.description }}</td>
+            <td>
+                {% if promo.discount_type == 'percentage' %}
+                    <span style="color: green; font-weight: bold;">-{{ promo.discount_value }}%</span>
+                {% else %}
+                    <span style="color: green; font-weight: bold;">-{{ promo.discount_value }} руб.</span>
+                {% endif %}
+            </td>
+            <td>
+                <small>{{ promo.start_date|date:"d.m.Y" }} — {{ promo.end_date|date:"d.m.Y" }}</small>
+            </td>
+            <td>
+                {% if promo.min_order_amount %}
+                    <small>Мин. сумма: {{ promo.min_order_amount }} руб.</small>
+                {% else %}
+                    <small>Без ограничений</small>
+                {% endif %}
+            </td>
+            <td>
+                {% if promo.max_uses %}
+                    <small>{{ promo.current_uses }}/{{ promo.max_uses }}</small>
+                {% else %}
+                    <small>{{ promo.current_uses }} использований</small>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p><em>В данный момент нет действующих промокодов.</em></p>
+{% endif %}
+
+<h2> Архив промокодов</h2>
+{% if archived_promos %}
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f5f5f5">
+            <th>Промокод</th>
+            <th>Описание акции</th>
+            <th>Размер скидки</th>
+            <th>Период действия</th>
+            <th>Использования</th>
+            <th>Статус</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for promo in archived_promos %}
+        <tr>
+            <td><strong>{{ promo.code }}</strong></td>
+            <td>{{ promo.description }}</td>
+            <td>
+                {% if promo.discount_type == 'percentage' %}
+                    <span style="color: #666;">-{{ promo.discount_value }}%</span>
+                {% else %}
+                    <span style="color: #666;">-{{ promo.discount_value }} руб.</span>
+                {% endif %}
+            </td>
+            <td>
+                <small>{{ promo.start_date|date:"d.m.Y" }} — {{ promo.end_date|date:"d.m.Y" }}</small>
+            </td>
+            <td>
+                {% if promo.max_uses %}
+                    <small>{{ promo.current_uses }}/{{ promo.max_uses }}</small>
+                {% else %}
+                    <small>{{ promo.current_uses }} использований</small>
+                {% endif %}
+            </td>
+            <td>
+                <small style="color: #999;">{{ promo.get_status_display }}</small>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p><em>Архив промокодов пуст.</em></p>
+{% endif %}
+
+<hr>
+<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
+{% endblock %}
+
+

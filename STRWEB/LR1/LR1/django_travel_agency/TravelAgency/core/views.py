@@ -48,7 +48,9 @@ from .models import (
     News,
     PromoCode,
     Review,
-    NewsletterSubscription
+    NewsletterSubscription,
+    GlossaryTerm,
+    Partner
 )
 from .forms import OrderStatusForm, ReviewForm, TourPackageForm
 from users.models import User
@@ -86,16 +88,22 @@ def home(request):
         is_published=True
     ).select_related('author').order_by('-created_at')[:3]
 
-    # Get latest news
+    # Get latest news (only the most recent one)
     latest_news = News.objects.filter(
         is_published=True
-    ).order_by('-created_at')[:3]
+    ).order_by('-created_at').first()
+    
+    # Get active partners
+    partners = Partner.objects.filter(
+        is_active=True
+    ).order_by('order', 'name')
     
     context = {
         'popular_countries': popular_countries,
         'popular_tours': popular_tours,
         'testimonials': testimonials,
         'latest_news': latest_news,  # Add latest news to context
+        'partners': partners,  # Add partners to context
         'total_clients': User.objects.filter(is_client=True).count(),
         'total_countries': Country.objects.count(),
         'total_hotels': Hotel.objects.count(),
@@ -195,8 +203,18 @@ def basket_add(request, tour_id):
 @login_required
 def basket_remove(request, basket_id):
     basket = get_object_or_404(Basket, id=basket_id, user=request.user)
-    basket.delete()
-    messages.success(request, 'Тур удален из корзины')
+    # Поддержка уменьшения количества через POST action=decrease
+    if request.method == 'POST' and request.POST.get('action') == 'decrease':
+        if basket.quantity > 1:
+            basket.quantity -= 1
+            basket.save(update_fields=['quantity'])
+            messages.info(request, 'Количество тура уменьшено')
+        else:
+            basket.delete()
+            messages.success(request, 'Тур удален из корзины')
+    else:
+        basket.delete()
+        messages.success(request, 'Тур удален из корзины')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 @login_required
@@ -642,9 +660,14 @@ class AboutView(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['employees'] = Employee.objects.all().order_by('order')
+        context['employees'] = Employee.objects.filter(is_active=True).order_by('order')
         context['reviews'] = Review.objects.filter(is_published=True).order_by('-created_at')
         context['review_form'] = ReviewForm()
+        
+        # Получаем данные агентства из базы данных
+        from .models import AgencyDetails
+        context['agency'] = AgencyDetails.objects.first()
+        
         return context
 
 class AddReviewView(CreateView):
@@ -1055,47 +1078,47 @@ class FAQView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['faq_categories'] = [
-            {
-                'name': 'Общие вопросы',
-                'questions': [
-                    {
-                        'q': 'Как забронировать тур?',
-                        'a': 'Выберите интересующий тур, добавьте его в корзину и следуйте инструкциям по оформлению заказа.'
-                    },
-                    {
-                        'q': 'Какие способы оплаты вы принимаете?',
-                        'a': 'Мы принимаем оплату банковскими картами, банковским переводом и наличными в офисе.'
-                    },
-                ]
-            },
-            {
-                'name': 'Визы и документы',
-                'questions': [
-                    {
-                        'q': 'Нужна ли виза?',
-                        'a': 'Необходимость визы зависит от страны назначения. Наши менеджеры помогут вам с оформлением необходимых документов.'
-                    },
-                    {
-                        'q': 'Какие документы нужны для поездки?',
-                        'a': 'Необходим действующий загранпаспорт, виза (если требуется), медицинская страховка и ваучер на проживание.'
-                    },
-                ]
-            },
-            {
-                'name': 'Отмена и изменения',
-                'questions': [
-                    {
-                        'q': 'Можно ли отменить бронирование?',
-                        'a': 'Да, но условия отмены зависят от конкретного тура и времени до начала поездки.'
-                    },
-                    {
-                        'q': 'Как изменить даты поездки?',
-                        'a': 'Свяжитесь с нашими менеджерами для обсуждения возможности изменения дат.'
-                    },
-                ]
-            },
-        ]
+        
+        # Получаем FAQ из базы данных, сгруппированные по категориям
+        faq_terms = GlossaryTerm.objects.filter(is_faq=True).order_by('category', 'term')
+        
+        # Группируем по категориям
+        faq_categories = []
+        current_category = None
+        current_questions = []
+        
+        for term in faq_terms:
+            category_display = term.get_category_display()
+            
+            if current_category != category_display:
+                # Сохраняем предыдущую категорию, если есть
+                if current_category and current_questions:
+                    faq_categories.append({
+                        'name': current_category,
+                        'questions': current_questions
+                    })
+                
+                # Начинаем новую категорию
+                current_category = category_display
+                current_questions = []
+            
+            current_questions.append({
+                'q': term.term,
+                'a': term.definition,
+                'url': term.get_absolute_url(),
+                'created_at': term.created_at
+            })
+        
+        # Добавляем последнюю категорию
+        if current_category and current_questions:
+            faq_categories.append({
+                'name': current_category,
+                'questions': current_questions
+            })
+        
+        context['faq_categories'] = faq_categories
+        context['total_faq_count'] = faq_terms.count()
+        
         return context
 
 @login_required
@@ -1457,3 +1480,66 @@ class VacancyDetailView(DetailView):
     context_object_name = 'vacancy'
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
+
+
+def agency_certificate(request):
+    """Страница сертификата без CSS. Показывает все поля AgencyDetails."""
+    from .models import AgencyDetails
+    agency = AgencyDetails.objects.first()
+    return render(request, 'core/certificate.html', {'agency': agency})
+
+
+def promos_plain(request):
+    """Простая страница без CSS: действующие и архивные промокоды."""
+    active_promos = PromoCode.objects.filter(status='active').order_by('-start_date')
+    archived_promos = PromoCode.objects.filter(status='archived').order_by('-end_date')
+    return render(request, 'core/promocodes_plain.html', {
+        'active_promos': active_promos,
+        'archived_promos': archived_promos,
+    })
+
+
+class GlossaryListView(ListView):
+    model = GlossaryTerm
+    template_name = 'core/glossary.html'
+    context_object_name = 'terms'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        
+        # Фильтрация по категории
+        category = self.request.GET.get('category')
+        if category:
+            queryset = queryset.filter(category=category)
+            
+        return queryset.order_by('term')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['term_categories'] = GlossaryTerm.TERM_CATEGORIES
+        return context
+
+
+class GlossaryDetailView(DetailView):
+    model = GlossaryTerm
+    template_name = 'core/glossary_detail.html'
+    context_object_name = 'term'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset=queryset)
+        obj.increment_views()
+        return obj
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        term = self.object
+        
+        # Получаем похожие термины из той же категории
+        context['related_terms'] = GlossaryTerm.objects.filter(
+            category=term.category
+        ).exclude(pk=term.pk)[:5]
+        
+        return context

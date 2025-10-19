@@ -2,56 +2,58 @@
 
 {% block title %}Вакансии | TravelDream{% endblock %}
 
-{% block extra_css %}
-<style>
-    .page { padding: 1.5rem 0; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
-    .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); height: 100%; display: flex; flex-direction: column; }
-    .card-body { padding: 1rem; flex: 1; }
-    .card-footer { padding: 0.75rem 1rem; border-top: 1px solid #eee; }
-    .muted { color: #666; }
-    .pill { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 999px; font-size: 0.85rem; }
-    .pill.primary { background: #007bff; color: #fff; }
-    .pill.success { background: #28a745; color: #fff; }
-    .btn { display: inline-block; background: #007bff; color: #fff; text-decoration: none; padding: 0.5rem 1rem; border-radius: 4px; }
-    .title-link { text-decoration: none; color: #333; }
-    .title-link:hover { text-decoration: underline; }
-    .notice { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; padding: 0.75rem 1rem; border-radius: 4px; }
-</style>
-{% endblock %}
+{% block extra_css %}{% endblock %}
 
 {% block content %}
-<div class="container page">
-    <h1>Вакансии в TravelDream</h1>
-    
-    <div class="grid">
-        {% for vacancy in vacancies %}
-        <div class="card">
-            <div class="card-body">
-                <h3 style="margin-top:0;">
-                    <a href="{{ vacancy.get_absolute_url }}" class="title-link">{{ vacancy.title }}</a>
-                    {% if vacancy.is_new %}
-                        <span class="pill success" style="margin-left: .5rem;">Новая</span>
-                    {% endif %}
-                </h3>
-                <div class="muted" style="margin-bottom: .5rem;">
-                    {{ vacancy.get_department_display }} • {{ vacancy.get_job_type_display }}
-                </div>
-                <p>{{ vacancy.short_description }}</p>
-                <div style="display:flex; justify-content: space-between; align-items: center;">
-                    <span class="pill primary">{{ vacancy.experience_required }}</span>
-                    {% if vacancy.salary %}
-                        <span style="color:#28a745; font-weight:600;">{{ vacancy.salary }}</span>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="card-footer">
-                <a href="{{ vacancy.get_absolute_url }}" class="btn">Подробнее</a>
-            </div>
+<h1> Вакансии в TravelDream</h1>
+<p><a href="{% url 'core:home' %}"> Главная</a> › Вакансии</p>
+
+{% if vacancies %}
+<h2> Список вакансий</h2>
+<div>
+    {% for vacancy in vacancies %}
+    <div class="float-card">
+        <div class="caps"><strong>{{ vacancy.title }}</strong></div>
+        <div style="color:#64748b; font-size:.9rem;">{{ vacancy.get_department_display }} • {{ vacancy.get_job_type_display }}</div>
+        <div style="margin:.25rem 0;">
+            <span class="btn" style="padding:2px 8px; font-size:.8rem;">{{ vacancy.experience_required }}</span>
+            {% if vacancy.is_new %}<span class="btn" style="background:#10b981; padding:2px 8px; font-size:.8rem;">Новая</span>{% endif %}
         </div>
-        {% empty %}
-        <div class="notice">В данный момент открытых вакансий нет.</div>
-        {% endfor %}
+        <div>
+            {% if vacancy.salary %}
+            <strong style="color:#16a34a;">{{ vacancy.salary }}</strong>
+            {% else %}
+            <span style="color:#666;">По договоренности</span>
+            {% endif %}
+        </div>
+        <div style="margin-top:8px;">
+            <span style="background:{% if vacancy.is_active %}#28a745{% else %}#6c757d{% endif %}; color:#fff; padding:2px 8px; border-radius:6px; font-size:.8rem;">{% if vacancy.is_active %}Активна{% else %}Закрыта{% endif %}</span>
+        </div>
+        <a href="{{ vacancy.get_absolute_url }}" class="btn" style="margin-top:10px;">Подробнее</a>
     </div>
-</div>
+    {% endfor %}
+    <div class="float-clear"></div>
+ </div>
+{% else %}
+<!-- Empty Vacancies -->
+<h2> Вакансии не найдены</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Состояние вакансий</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: center; padding: 3rem; color: #666;">
+                <h3> В данный момент открытых вакансий нет</h3>
+                <p>Следите за обновлениями на нашем сайте</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% endif %}
+
+<hr>
+<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
 {% endblock %}

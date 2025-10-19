@@ -1,0 +1,154 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Сертификат агентства{% endblock %}
+
+{% block content %}
+<div class="certificate">
+<h1>Сертификат агентства</h1>
+<p class="meta">Официальные реквизиты и документы турагентства TravelDream</p>
+
+{% if agency %}
+<h2> Общая информация</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Параметр</th>
+            <th>Значение</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Название агентства</strong></td>
+            <td>{{ agency.agency_name }}</td>
+        </tr>
+        <tr>
+            <td><strong>Юридическое название</strong></td>
+            <td>{{ agency.legal_name }}</td>
+        </tr>
+        <tr>
+            <td><strong>ИНН</strong></td>
+            <td>{{ agency.tax_id }}</td>
+        </tr>
+        <tr>
+            <td><strong>ОГРН</strong></td>
+            <td>{{ agency.registration_number }}</td>
+        </tr>
+        <tr>
+            <td><strong>Адрес</strong></td>
+            <td>{{ agency.address }}</td>
+        </tr>
+        <tr>
+            <td><strong>Телефон</strong></td>
+            <td>{{ agency.phone_number }}</td>
+        </tr>
+        <tr>
+            <td><strong>Email</strong></td>
+            <td>{{ agency.email }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2> Банковские реквизиты</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Параметр</th>
+            <th>Значение</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Банк</strong></td>
+            <td>{{ agency.bank_name }}</td>
+        </tr>
+        <tr>
+            <td><strong>Расчетный счет</strong></td>
+            <td>{{ agency.bank_account_number }}</td>
+        </tr>
+        <tr>
+            <td><strong>Корреспондентский счет</strong></td>
+            <td>{{ agency.correspondent_account }}</td>
+        </tr>
+        <tr>
+            <td><strong>БИК</strong></td>
+            <td>{{ agency.bic }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2> Ответственные лица</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Должность</th>
+            <th>ФИО</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Директор</strong></td>
+            <td>{{ agency.director_name }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2> Лицензия</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Параметр</th>
+            <th>Значение</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Номер лицензии</strong></td>
+            <td>{{ agency.license_number }}</td>
+        </tr>
+        <tr>
+            <td><strong>Кем выдана</strong></td>
+            <td>{{ agency.license_issued_by }}</td>
+        </tr>
+        <tr>
+            <td><strong>Дата выдачи</strong></td>
+            <td>{{ agency.license_issue_date|date:"d.m.Y" }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2> Логотип</h2>
+{% if agency.logo %}
+    <p><img src="{{ agency.logo.url }}" alt="Логотип" style="max-width: 200px; height: auto;"></p>
+{% else %}
+    <p><em>Логотип не загружен</em></p>
+{% endif %}
+
+<h2> Служебная информация</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f5f5f5">
+            <th>Параметр</th>
+            <th>Значение</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Создано</strong></td>
+            <td>{{ agency.created_at|date:"d.m.Y H:i" }}</td>
+        </tr>
+        <tr>
+            <td><strong>Обновлено</strong></td>
+            <td>{{ agency.updated_at|date:"d.m.Y H:i" }}</td>
+        </tr>
+    </tbody>
+</table>
+{% else %}
+<p><em>Данные агентства отсутствуют.</em></p>
+{% endif %}
+
+<hr>
+<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
+</div>
+{% endblock %}
+
+

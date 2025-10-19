@@ -2,413 +2,219 @@
 
 {% block title %}{{ country.name }} - TravelDream{% endblock %}
 
-{% block extra_css %}
-<style>
-    .country-header {
-        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-        color: white;
-        padding: 3rem 0;
-        margin-bottom: 3rem;
-        text-align: center;
-    }
-    
-    .country-header h1 {
-        margin-bottom: 1rem;
-        font-size: 2.5rem;
-    }
-    
-    .country-header p {
-        font-size: 1.2rem;
-        opacity: 0.9;
-        max-width: 600px;
-        margin: 0 auto;
-    }
-    
-    .country-layout {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 2rem;
-        margin-bottom: 3rem;
-    }
-    
-    .country-image {
-        width: 100%;
-        height: 400px;
-        object-fit: cover;
-        border-radius: 8px;
-        margin-bottom: 2rem;
-    }
-    
-    .country-placeholder {
-        width: 100%;
-        height: 400px;
-        background: #f8f9fa;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 5rem;
-        color: #ccc;
-        border-radius: 8px;
-        margin-bottom: 2rem;
-    }
-    
-    .card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        margin-bottom: 2rem;
-        overflow: hidden;
-    }
-    
-    .card-body {
-        padding: 1.5rem;
-    }
-    
-    .card-title {
-        margin-bottom: 1rem;
-        color: #333;
-        font-size: 1.3rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .hotels-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 1.5rem;
-    }
-    
-    .hotel-card {
-        background: white;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        transition: transform 0.2s ease;
-    }
-    
-    .hotel-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
-    
-    .hotel-image {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-    }
-    
-    .hotel-content {
-        padding: 1.5rem;
-    }
-    
-    .hotel-title {
-        font-size: 1.2rem;
-        margin-bottom: 0.5rem;
-        color: #333;
-    }
-    
-    .hotel-location {
-        color: #666;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .hotel-stars {
-        margin-bottom: 1rem;
-    }
-    
-    .star {
-        color: #ffc107;
-        font-size: 1.2rem;
-    }
-    
-    .hotel-description {
-        color: #666;
-        line-height: 1.6;
-        margin-bottom: 1.5rem;
-    }
-    
-    .hotel-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-    }
-    
-    .price-block {
-        color: #666;
-    }
-    
-    .price-block small {
-        display: block;
-        margin-bottom: 0.25rem;
-    }
-    
-    .price-amount {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #333;
-        margin: 0;
-    }
-    
-    .btn {
-        background: #007bff;
-        color: white;
-        border: none;
-        padding: 0.8rem 1.5rem;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-block;
-    }
-    
-    .btn:hover {
-        background: #0056b3;
-    }
-    
-    .btn-light {
-        background: white;
-        color: #007bff;
-    }
-    
-    .btn-light:hover {
-        background: #f8f9fa;
-    }
-    
-    .weather-section {
-        background: #f8f9fa;
-        padding: 1.5rem;
-        border-radius: 8px;
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-    
-    .weather-icon {
-        width: 64px;
-        height: 64px;
-        margin-bottom: 1rem;
-    }
-    
-    .weather-temp {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 1rem;
-    }
-    
-    .weather-details {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        margin-top: 1rem;
-    }
-    
-    .weather-detail {
-        color: #666;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .stats-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-    
-    .stats-list li {
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #666;
-    }
-    
-    .stats-list li:last-child {
-        margin-bottom: 0;
-    }
-    
-    .cta-section {
-        background: #007bff;
-        color: white;
-        padding: 2rem;
-        border-radius: 8px;
-        text-align: center;
-    }
-    
-    .cta-section h5 {
-        margin-bottom: 1rem;
-        color: white;
-    }
-    
-    .cta-section p {
-        margin-bottom: 1.5rem;
-        opacity: 0.9;
-    }
-    
-    .empty-hotels {
-        text-align: center;
-        padding: 3rem;
-        color: #666;
-        background: #f8f9fa;
-        border-radius: 8px;
-    }
-    
-    .empty-hotels h3 {
-        margin-bottom: 1rem;
-        color: #333;
-    }
-    
-    @media (max-width: 768px) {
-        .country-layout {
-            grid-template-columns: 1fr;
-        }
-        
-        .hotels-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .weather-details {
-            grid-template-columns: 1fr;
-        }
-    }
-</style>
-{% endblock %}
+{% block extra_css %}{% endblock %}
 
 {% block content %}
-<div class="country-header">
-    <div class="container">
-        <h1>{{ country.name }}</h1>
-        {% if country.description %}
-        <p>{{ country.description }}</p>
+<h1> {{ country.name }}</h1>
+<p><a href="{% url 'core:home' %}"> Главная</a> › <a href="{% url 'core:country_list' %}"> Страны</a> › {{ country.name }}</p>
+
+<!-- Country Information -->
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th colspan="2">Информация о стране</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Изображение</strong></td>
+            <td>
+                {% if country.image %}
+                <img src="{{ country.image.url }}" alt="{{ country.name }}" style="max-width: 300px; height: auto;">
+                {% else %}
+                <div style="width: 300px; height: 200px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #ccc;"></div>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Название</strong></td>
+            <td><strong>{{ country.name }}</strong></td>
+        </tr>
+        <tr>
+            <td><strong>Описание</strong></td>
+            <td>
+                {% if country.description %}
+                {{ country.description }}
+                {% else %}
+                <span style="color: #999;">Описание не указано</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Климат</strong></td>
+            <td>
+                 <strong>Зимой:</strong> {{ country.winter_climate }}<br>
+                 <strong>Летом:</strong> {{ country.summer_climate }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Weather Information -->
+<h2> Текущая погода</h2>
+{% with weather=country.get_current_weather %}
+{% if weather %}
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th colspan="2">Погодные условия</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Температура</strong></td>
+            <td><strong style="font-size: 1.5em; color: #007bff;">{{ weather.temp }}°C</strong></td>
+        </tr>
+        <tr>
+            <td><strong>Описание</strong></td>
+            <td>{{ weather.description|capfirst }}</td>
+        </tr>
+        <tr>
+            <td><strong>Ощущается как</strong></td>
+            <td>{{ weather.feels_like }}°C</td>
+        </tr>
+        <tr>
+            <td><strong>Влажность</strong></td>
+            <td> {{ weather.humidity }}%</td>
+        </tr>
+        <tr>
+            <td><strong>Ветер</strong></td>
+            <td> {{ weather.wind_speed }} м/с</td>
+        </tr>
+        <tr>
+            <td><strong>Обновлено</strong></td>
+            <td> {{ weather.last_updated|date:"d.m.Y H:i" }}</td>
+        </tr>
+    </tbody>
+</table>
+{% else %}
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <tbody>
+        <tr>
+            <td style="text-align: center; padding: 2rem; color: #666;">
+                <p>Информация о погоде недоступна</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% endif %}
+{% endwith %}
+
+<hr>
+
+<!-- Statistics -->
+<h2> Статистика</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Показатель</th>
+            <th>Значение</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong> Отелей</strong></td>
+            <td><strong style="color: #007bff;">{{ hotels|length }}</strong></td>
+        </tr>
+        <tr>
+            <td><strong> Туров</strong></td>
+            <td><strong style="color: #007bff;">{{ tours|length }}</strong></td>
+        </tr>
+        {% if country.min_price %}
+        <tr>
+            <td><strong> Цены от</strong></td>
+            <td><strong style="color: #007bff;">{{ country.min_price }} ₽</strong></td>
+        </tr>
         {% endif %}
-    </div>
-</div>
+    </tbody>
+</table>
 
-<div class="container">
-    <div class="country-layout">
-        <!-- Main Content -->
-        <div>
-            <!-- Country Image -->
-            {% if country.image %}
-            <img src="{{ country.image.url }}" class="country-image" alt="{{ country.name }}">
-            {% else %}
-            <div class="country-placeholder">
-                🌍
-            </div>
-            {% endif %}
+<hr>
 
-            <!-- Hotels Section -->
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="card-title">🏨 Отели в {{ country.name }}</h3>
-                    
-                    {% if hotels %}
-                    <div class="hotels-grid">
-                        {% for hotel in hotels %}
-                        <div class="hotel-card">
-                            {% if hotel.image %}
-                            <img src="{{ hotel.image.url }}" class="hotel-image" alt="{{ hotel.name }}">
-                            {% else %}
-                            <img src="{% static 'images/default-hotel.jpg' %}" class="hotel-image" alt="Default hotel image">
-                            {% endif %}
-                            <div class="hotel-content">
-                                <h4 class="hotel-title">{{ hotel.name }}</h4>
-                                <p class="hotel-location">
-                                    📍 {{ hotel.address|default:"Адрес не указан" }}
-                                </p>
-                                <div class="hotel-stars">
-                                    {% for i in "12345"|make_list %}
-                                    {% if forloop.counter <= hotel.stars %}
-                                    <span class="star">★</span>
-                                    {% else %}
-                                    <span class="star" style="color: #ddd;">☆</span>
-                                    {% endif %}
-                                    {% endfor %}
-                                </div>
-                                {% if hotel.description %}
-                                <p class="hotel-description">{{ hotel.description|truncatewords:20 }}</p>
-                                {% endif %}
-                                <div class="hotel-footer">
-                                    <div class="price-block">
-                                        <small>Цена за день</small>
-                                        <p class="price-amount">{{ hotel.price_per_day }} BYN</p>
-                                    </div>
-                                    <a href="{% url 'core:hotel_detail' hotel.pk %}" class="btn">
-                                        📋 Подробнее
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
+<!-- Hotels -->
+<h2> Отели в {{ country.name }}</h2>
+{% if hotels %}
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Изображение</th>
+            <th>Название</th>
+            <th>Адрес</th>
+            <th>Звезды</th>
+            <th>Описание</th>
+            <th>Цена за день</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for hotel in hotels %}
+        <tr>
+            <td>
+                {% if hotel.image %}
+                <img src="{{ hotel.image.url }}" alt="{{ hotel.name }}" style="max-width: 100px; height: auto;">
+                {% else %}
+                <img src="{% static 'images/default-hotel.jpg' %}" alt="Default hotel image" style="max-width: 100px; height: auto;">
+                {% endif %}
+            </td>
+            <td><strong>{{ hotel.name }}</strong></td>
+            <td> {{ hotel.address|default:"Адрес не указан" }}</td>
+            <td>
+                {% for i in "12345"|make_list %}
+                    {% if forloop.counter <= hotel.stars %}
+                        <span style="color: #ffc107;"></span>
                     {% else %}
-                    <div class="empty-hotels">
-                        <h3>🏨 Отели не найдены</h3>
-                        <p>В данной стране пока нет доступных отелей</p>
-                    </div>
+                        <span style="color: #ddd;"></span>
                     {% endif %}
-                </div>
-            </div>
-        </div>
+                {% endfor %}
+            </td>
+            <td>
+                {% if hotel.description %}
+                {{ hotel.description|truncatewords:20 }}
+                {% else %}
+                <span style="color: #999;">Нет описания</span>
+                {% endif %}
+            </td>
+            <td><strong style="color: #007bff; font-size: 1.1em;">{{ hotel.price_per_day }} BYN</strong></td>
+            <td><a href="{% url 'core:hotel_detail' hotel.pk %}" style="background: #007bff; color: white; text-decoration: none; padding: 5px 10px;"> Подробнее</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <tbody>
+        <tr>
+            <td style="text-align: center; padding: 3rem; color: #666;">
+                <h3> Отели не найдены</h3>
+                <p>В данной стране пока нет доступных отелей</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% endif %}
 
-        <!-- Sidebar -->
-        <div>
-            <!-- Weather Section -->
-            <div class="weather-section">
-                <h5 class="card-title">🌤️ Погода</h5>
-                <div class="text-center py-3">
-                    {% with weather=country.get_current_weather %}
-                    {% if weather %}
-                        <img src="http://openweathermap.org/img/w/{{ weather.icon }}.png" alt="Weather" class="weather-icon">
-                        <div class="weather-temp">{{ weather.temp }}°C</div>
-                        <p>{{ weather.description }}</p>
-                        <div class="weather-details">
-                            <div class="weather-detail">
-                                💧 {{ weather.humidity }}%
-                            </div>
-                            <div class="weather-detail">
-                                💨 {{ weather.wind_speed }} м/с
-                            </div>
-                        </div>
-                    {% else %}
-                        <p>Информация о погоде недоступна</p>
-                    {% endif %}
-                    {% endwith %}
-                </div>
-            </div>
+<hr>
 
-            <!-- Quick Stats -->
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">📊 Статистика</h5>
-                    <ul class="stats-list">
-                        <li>
-                            🏨 <strong>Отелей:</strong> {{ hotels|length }}
-                        </li>
-                        <li>
-                            🧳 <strong>Туров:</strong> {{ tours|length }}
-                        </li>
-                        {% if country.min_price %}
-                        <li>
-                            🏷️ <strong>Цены от:</strong> {{ country.min_price }} ₽
-                        </li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
+<!-- Call to Action -->
+<h2> Хотите посетить {{ country.name }}?</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f5f5f5">
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: center;">
+                <p><strong>Забронируйте тур прямо сейчас!</strong></p>
+                <a href="{% url 'core:tour_list' %}?country={{ country.id }}" style="background: #28a745; color: white; text-decoration: none; padding: 15px 30px; font-size: 1.1em; display: inline-block;"> Найти тур</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
-            <!-- Call to Action -->
-            <div class="cta-section">
-                <h5>Хотите посетить {{ country.name }}?</h5>
-                <p>Забронируйте тур прямо сейчас!</p>
-                <a href="{% url 'core:tour_list' %}?country={{ country.id }}" class="btn btn-light">
-                    🔍 Найти тур
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
+<hr>
+<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
 {% endblock %} 

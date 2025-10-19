@@ -1,0 +1,95 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ term.term }} | Словарь терминов | TravelDream{% endblock %}
+
+{% block extra_css %}{% endblock %}
+
+{% block content %}
+<h1> {{ term.term }}</h1>
+<p><a href="{% url 'core:glossary' %}">← Назад к словарю терминов</a></p>
+
+<!-- Term Details -->
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th colspan="2">Информация о термине</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Термин/Вопрос</strong></td>
+            <td><strong>{{ term.term }}</strong></td>
+        </tr>
+        <tr>
+            <td><strong>Категория</strong></td>
+            <td><span style="background: #007bff; color: white; padding: 2px 6px; font-size: 0.8em;">{{ term.get_category_display }}</span></td>
+        </tr>
+        <tr>
+            <td><strong>Тип</strong></td>
+            <td>
+                {% if term.is_faq %}
+                    <span style="background: #28a745; color: white; padding: 2px 6px; font-size: 0.8em;">Частый вопрос</span>
+                {% else %}
+                    <span style="background: #6c757d; color: white; padding: 2px 6px; font-size: 0.8em;">Термин</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Дата добавления</strong></td>
+            <td>{{ term.created_at|date:"d.m.Y H:i" }}</td>
+        </tr>
+        <tr>
+            <td><strong>Последнее обновление</strong></td>
+            <td>{{ term.updated_at|date:"d.m.Y H:i" }}</td>
+        </tr>
+        <tr>
+            <td><strong>Просмотры</strong></td>
+            <td>{{ term.views }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Definition -->
+<h2> Определение/Ответ</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Полное объяснение</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="padding: 20px; line-height: 1.6;">{{ term.definition|linebreaks }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Related Terms -->
+{% if related_terms %}
+<hr>
+<h2> Похожие термины</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Термин</th>
+            <th>Категория</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for related in related_terms %}
+        <tr>
+            <td><strong>{{ related.term }}</strong></td>
+            <td><span style="background: #6c757d; color: white; padding: 2px 6px; font-size: 0.8em;">{{ related.get_category_display }}</span></td>
+            <td><a href="{{ related.get_absolute_url }}" style="background: #007bff; color: white; text-decoration: none; padding: 5px 10px;"> Читать</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+<hr>
+<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
+{% endblock %}

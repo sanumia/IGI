@@ -1,279 +1,192 @@
 {% extends 'core/base.html' %}
 {% load static %}
 {% block content %}
-<style>
-    .profile-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-    
-    .profile-layout {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 2rem;
-    }
-    
-    .profile-section {
-        background: white;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .profile-title {
-        margin-bottom: 2rem;
-        color: #333;
-        font-size: 1.5rem;
-    }
-    
-    .avatar-container {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-    
-    .avatar {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        border: 3px solid #007bff;
-        object-fit: cover;
-    }
-    
-    .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        margin-bottom: 1rem;
-    }
-    
-    .form-group {
-        margin-bottom: 1rem;
-    }
-    
-    .form-group label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: bold;
-        color: #333;
-        font-size: 0.9rem;
-    }
-    
-    .form-group input,
-    .form-group select {
-        width: 100%;
-        padding: 0.8rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 1rem;
-        box-sizing: border-box;
-    }
-    
-    .form-group input:focus,
-    .form-group select:focus {
-        outline: none;
-        border-color: #007bff;
-        box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
-    }
-    
-    .form-text {
-        font-size: 0.8rem;
-        color: #666;
-        margin-top: 0.25rem;
-    }
-    
-    .file-input {
-        margin-bottom: 1rem;
-    }
-    
-    .file-input input[type="file"] {
-        padding: 0.5rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        background: #f8f9fa;
-    }
-    
-    .alert {
-        padding: 1rem;
-        margin-bottom: 1rem;
-        border-radius: 4px;
-        border: 1px solid transparent;
-    }
-    
-    .alert-secondary {
-        background: #e9ecef;
-        color: #495057;
-        border-color: #dee2e6;
-    }
-    
-    .alert-info {
-        background: #d1ecf1;
-        color: #0c5460;
-        border-color: #bee5eb;
-    }
-    
-    .checkbox-group {
-        margin: 1rem 0;
-    }
-    
-    .checkbox-group input[type="checkbox"] {
-        margin-right: 0.5rem;
-    }
-    
-    .submit-btn {
-        background: #007bff;
-        color: white;
-        border: none;
-        padding: 0.8rem 2rem;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 1rem;
-        width: 100%;
-        margin-top: 1rem;
-    }
-    
-    .submit-btn:hover {
-        background: #0056b3;
-    }
-    
-    .basket-section {
-        background: white;
-        padding: 1rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    @media (max-width: 768px) {
-        .profile-layout {
-            grid-template-columns: 1fr;
-        }
-        
-        .form-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-</style>
+<h1>👤 Профиль пользователя</h1>
+<p><a href="{% url 'core:home' %}">🏠 Главная</a> › Профиль</p>
 
-<div class="profile-container">
-  <div class="profile-layout">
-    <div class="profile-section">
-      <h4 class="profile-title">Профиль</h4>
-      <div class="avatar-container">
-        <img
-          class="avatar"
-          src="{% if user.image %}{{ user.image.url }}{% else %}{% static 'vendor/img/users/default_avatar.jpg' %}{% endif %}"
-          alt="Аватар пользователя"
-        />
-      </div>
-      <form
-        action="{% url 'users:profile' %}"
-        method="post"
-        enctype="multipart/form-data"
-      >
-        {% csrf_token %}
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="{{ form.first_name.id_for_label }}">Имя</label>
-            {{ form.first_name }}
-          </div>
-          <div class="form-group">
-            <label for="{{ form.last_name.id_for_label }}">Фамилия</label>
-            {{ form.last_name }}
-          </div>
-        </div>
+<!-- Avatar -->
+<h2>🖼️ Аватар</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Изображение профиля</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: center;">
+                <img src="{% if user.image %}{{ user.image.url }}{% else %}{% static 'vendor/img/users/default_avatar.jpg' %}{% endif %}" alt="Аватар пользователя" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid #007bff; object-fit: cover;">
+            </td>
+        </tr>
+    </tbody>
+</table>
 
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="{{ form.phone_number.id_for_label }}">Телефон</label>
-            {{ form.phone_number }}
-            <div class="form-text">Формат: +375 (29) XXX-XX-XX</div>
-          </div>
-          <div class="form-group">
-            <label for="{{ form.birth_date.id_for_label }}">Дата рождения</label>
-            {{ form.birth_date }}
-          </div>
-        </div>
+<hr>
 
-        <!-- Добавлен блок для временной зоны -->
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="{{ form.timezone.id_for_label }}">Часовой пояс</label>
-            {{ form.timezone }}
-            <div class="form-text">
-              Автоматически определен как: {{ form.initial.timezone }}
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Текущая дата</label>
-            <input
-              type="text"
-              value="{{ user.get_current_date_for_user }}"
-              readonly
-            />
-          </div>
-        </div>
+<!-- Personal Information -->
+<h2>👤 Личная информация</h2>
+<form action="{% url 'users:profile' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+            <tr bgcolor="#f0f0f0">
+                <th>Поле</th>
+                <th>Значение</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Имя</strong></td>
+                <td>{{ form.first_name }}</td>
+            </tr>
+            <tr>
+                <td><strong>Фамилия</strong></td>
+                <td>{{ form.last_name }}</td>
+            </tr>
+            <tr>
+                <td><strong>Телефон</strong></td>
+                <td>
+                    {{ form.phone_number }}
+                    <div style="font-size: 0.8rem; color: #666; margin-top: 0.25rem;">Формат: +375 (29) XXX-XX-XX</div>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Дата рождения</strong></td>
+                <td>{{ form.birth_date }}</td>
+            </tr>
+            <tr>
+                <td><strong>Часовой пояс</strong></td>
+                <td>
+                    {{ form.timezone }}
+                    <div style="font-size: 0.8rem; color: #666; margin-top: 0.25rem;">
+                        Автоматически определен как: {{ form.initial.timezone }}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Текущая дата</strong></td>
+                <td>
+                    <input type="text" value="{{ user.get_current_date_for_user }}" readonly style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; background: #f8f9fa;">
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Изображение</strong></td>
+                <td>{{ form.image }}</td>
+            </tr>
+        </tbody>
+    </table>
 
-        <div class="file-input">
-          <div class="form-group">
-            <label for="{{ form.image.id_for_label }}">Выберите изображение</label>
-            {{ form.image }}
-          </div>
-        </div>
+    <hr>
 
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="{{ form.username.id_for_label }}">Имя пользователя</label>
-            {{ form.username }}
-          </div>
-          <div class="form-group">
-            <label for="{{ form.email.id_for_label }}">Email</label>
-            {{ form.email }}
-          </div>
-        </div>
+    <!-- Account Information -->
+    <h2>🔐 Информация об аккаунте</h2>
+    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+            <tr bgcolor="#f0f0f0">
+                <th>Поле</th>
+                <th>Значение</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Имя пользователя</strong></td>
+                <td>{{ form.username }}</td>
+            </tr>
+            <tr>
+                <td><strong>Email</strong></td>
+                <td>{{ form.email }}</td>
+            </tr>
+            <tr>
+                <td><strong>Дата регистрации</strong></td>
+                <td>
+                    <div style="background: #e9ecef; padding: 0.5rem; border-radius: 4px; font-size: 0.9rem;">
+                        UTC: {{ user.date_joined|date:"d/m/Y H:i:s" }}<br>
+                        Ваше время: {{ user.get_local_created_at }}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Дата обновления</strong></td>
+                <td>
+                    <div style="background: #e9ecef; padding: 0.5rem; border-radius: 4px; font-size: 0.9rem;">
+                        UTC: {{ user.get_utc_updated_at }}<br>
+                        Ваше время: {{ user.get_local_updated_at }}
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-        <!-- Блок с информацией о датах -->
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Дата регистрации</label>
-            <div class="alert alert-secondary">
-              UTC: {{ user.date_joined|date:"d/m/Y H:i:s" }}<br />
-              Ваше время: {{ user.get_local_created_at }}
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Дата обновления</label>
-            <div class="alert alert-secondary">
-              UTC: {{ user.get_utc_updated_at }}<br />
-              Ваше время: {{ user.get_local_updated_at }}
-            </div>
-          </div>
-        </div>
+    <hr>
 
-        <!-- Календарь -->
-        <div class="form-group">
-          <label>Календарь</label>
-          <pre class="alert alert-info">{{ user.get_text_calendar }}</pre>
-        </div>
+    <!-- Calendar -->
+    <h2>📅 Календарь</h2>
+    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+            <tr bgcolor="#f0f0f0">
+                <th>Календарь</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <pre style="background: #d1ecf1; padding: 1rem; border-radius: 4px; font-size: 0.9rem; margin: 0;">{{ user.get_text_calendar }}</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-        {% if user.is_staff %}
-        <div class="checkbox-group">
-          <div class="form-group">
-            {{ form.is_client }}
-            <label for="{{ form.is_client.id_for_label }}">Клиент</label>
-          </div>
-        </div>
-        {% endif %}
+    <hr>
 
-        <input
-          class="submit-btn"
-          type="submit"
-          value="Сохранить"
-        />
-      </form>
-    </div>
-    <div class="basket-section">
-      {% include 'core/baskets.html' %}
-    </div>
-  </div>
-</div>
+    <!-- Staff Options -->
+    {% if user.is_staff %}
+    <h2>👨‍💼 Настройки персонала</h2>
+    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+            <tr bgcolor="#f0f0f0">
+                <th>Опция</th>
+                <th>Значение</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Клиент</strong></td>
+                <td>
+                    {{ form.is_client }}
+                    <label for="{{ form.is_client.id_for_label }}" style="margin-left: 5px;">Клиент</label>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+    {% endif %}
+
+    <!-- Save Button -->
+    <h2>💾 Сохранение</h2>
+    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+            <tr bgcolor="#f5f5f5">
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="text-align: center;">
+                    <button type="submit" style="background: #28a745; color: white; border: none; padding: 15px 30px; font-size: 1.1em; cursor: pointer;">💾 Сохранить</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
+<hr>
+
+<!-- Basket Section -->
+<h2>🛒 Корзина</h2>
+{% include 'core/baskets.html' %}
+
+<hr>
+<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
 {% endblock %}

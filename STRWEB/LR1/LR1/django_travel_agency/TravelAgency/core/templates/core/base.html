@@ -1,245 +1,195 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}TravelDream{% endblock %}</title>
+    <meta name="description" content="{{ agency.agency_name|default:'TravelDream' }} — туры, отели и лучшие направления. Бронируйте онлайн с выгодой.">
+    <meta name="keywords" content="тур, туры, отели, путешествия, бронирование, {{ agency.agency_name|default:'TravelDream' }}">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ agency.agency_name|default:'TravelDream' }}">
+    <meta property="og:description" content="Путешествия и туры от {{ agency.agency_name|default:'TravelDream' }}. Выгодные предложения и быстрая бронь.">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    {% if agency and agency.logo %}
+    <meta property="og:image" content="{{ agency.logo.url }}">
+    {% endif %}
+
+
+    {# Favicon / Site icon #}
+    {% if agency and agency.logo %}
+    <link rel="icon" href="{{ agency.logo.url }}" type="image/png">
+    {% else %}
+    <link rel="icon" href="{% static 'vendor/img/products/1.png' %}" type="image/png">
+    {% endif %}
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'vendor/css/app.css' %}">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        /* Навигация */
-        .navbar {
-            background: #007bff;
-            padding: 1rem 0;
-            color: white;
-        }
-        
-        .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: white;
-            text-decoration: none;
-        }
-        
-        .navbar-nav {
-            list-style: none;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        
-        .nav-link {
-            color: white;
-            text-decoration: none;
-            padding: 0.5rem;
-        }
-        
-        .nav-link:hover {
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
-        }
-        
-        .dropdown {
-            position: relative;
-        }
-        
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            min-width: 200px;
-            z-index: 1000;
-        }
-        
-        .dropdown:hover .dropdown-menu {
-            display: block;
-        }
-        
-        .dropdown-item {
-            display: block;
-            padding: 0.5rem 1rem;
-            color: #333;
-            text-decoration: none;
-        }
-        
-        .dropdown-item:hover {
-            background: #f8f9fa;
-        }
-        
-        .badge {
-            background: white;
-            color: #333;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-        }
-        
-        /* Основной контент */
-        main {
-            padding: 2rem 0;
-            min-height: 70vh;
-        }
-        
-        /* Сообщения */
-        .alert {
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 4px;
-        }
-        
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .alert-info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-        
-        .btn-close {
-            float: right;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        
-        /* Футер */
-        footer {
-            background: #f8f9fa;
-            padding: 2rem 0;
-            margin-top: 2rem;
-        }
-        
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-        
-        .footer-section h5 {
-            margin-bottom: 1rem;
-            color: #333;
-        }
-        
-        .footer-section p, .footer-section li {
-            margin-bottom: 0.5rem;
-        }
-        
-        .footer-section a {
-            color: #333;
-            text-decoration: none;
-        }
-        
-        .footer-section a:hover {
-            text-decoration: underline;
-        }
-        
-        .social-links a {
-            margin-right: 1rem;
-            font-size: 1.5rem;
-        }
-        
-        .footer-divider {
-            border-top: 1px solid #ddd;
-            margin: 2rem 0 1rem 0;
-        }
-        
-        .text-center {
-            text-align: center;
-        }
-        
-        /* Адаптивность */
-        @media (max-width: 768px) {
-            .navbar-nav {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .dropdown-menu {
-                position: static;
-                display: block;
-                background: transparent;
-                border: none;
-                margin-left: 1rem;
-            }
-            
-            .dropdown-item {
-                color: white;
-            }
-        }
+      /* Global preloader overlay and smooth spinner */
+      .preloader-overlay{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; gap:10px; background:rgba(255,255,255,.92); z-index:9999; opacity:1; transition:opacity .5s ease; will-change:opacity; }
+      .preloader-overlay .ring{ width:40px; height:40px; border-radius:50%; box-sizing:border-box; border:3px solid rgba(0,0,0,.08); border-top-color:#007bff; border-right-color:#007bff; transform-origin:50% 50%; backface-visibility:hidden; will-change:transform; animation:spinPulse 1.4s linear infinite; }
+      @keyframes spinPulse{ 0%{ transform:rotate(0deg) scale(1);} 50%{ transform:rotate(180deg) scale(1.12);} 100%{ transform:rotate(360deg) scale(1);} }
+      @media (prefers-reduced-motion: reduce){ .preloader-overlay .ring{ animation:none; } }
+
+      /* Base typography and background */
+      :root{ --text:#111827; --muted:#6b7280; --brand:#007bff; }
+      body{ font-family:'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; color:var(--text); background:linear-gradient(180deg,#ffffff 0,#f7fbff 100%); line-height:1.6; }
+      .caps{ font-variant-caps: all-small-caps; letter-spacing:.04em; }
+      h1,h2,h3{ text-transform:capitalize; letter-spacing:.02em; }
+      .lead{ letter-spacing:.2px; word-spacing:.6px; }
+      .narrow{ text-indent:1.25rem; }
+      .selection-demo::selection{ background:#ffecb3; color:#000; }
+
+      /* Sticky navigation */
+      .site-nav{ position:sticky; top:0; z-index:1000; background:#fff; box-shadow:0 1px 0 rgba(0,0,0,.06); }
+
+      /* Partners: round tiles, border and shadow; kerning for name */
+      .partners{ display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:16px; }
+      .partner-tile{ background:#fff; border:2px solid #e5e7eb; border-radius:999px; box-shadow:0 6px 14px rgba(0,0,0,.06); padding:16px; display:flex; align-items:center; justify-content:center; }
+      .partner-name{ font-weight:600; letter-spacing:.04em; }
+
+      /* Last article badge positioned */
+      .last-article{ position:relative; }
+      .last-article .badge-new{ position:absolute; right:10px; top:10px; background:#ff1744; color:#fff; padding:2px 8px; border-radius:999px; font-size:.75rem; }
+
+      /* Catalog grid (Grid Layout) */
+      .catalog-grid{ display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; }
+      .catalog-grid .card{ background:#fff; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; display:flex; flex-direction:column; }
+      .catalog-grid .card img{ width:100%; height:140px; object-fit:cover; }
+      .catalog-grid .card .btn{ margin:8px 12px 12px; }
+
+      /* Float layout for vacancies */
+      .float-card{ float:left; width:calc(50% - 16px); margin:8px; border:1px solid #e5e7eb; border-radius:10px; padding:12px; background:#fff; }
+      .float-clear{ clear:both; }
+
+      /* Link states and focus */
+      a:link{ color:#0d6efd; }
+      a:visited{ color:#6f42c1; }
+      a:hover{ color:#084298; text-decoration:underline; }
+      a:active{ color:#0a58ca; }
+      a:focus{ outline:2px dashed #94a3b8; outline-offset:2px; }
+
+      /* Attribute selectors */
+      a[href^="http"]::after{ content:"↗"; margin-left:4px; font-size:.85em; }
+      a[href$=".pdf"]{ color:#b91c1c; }
+      input[type="email"][required]{ border-color:#0ea5e9; }
+
+      /* Combination selectors */
+      nav.site-nav ul.nav-links > li > a.nav-link{ padding:8px 10px; }
+      .footer-section ul li{ margin-bottom:6px; }
+
+      /* Lists and tables nth selectors */
+      table{ border-collapse:collapse; width:100%; }
+      td,th{ vertical-align:middle; padding:8px; }
+      tbody tr:nth-child(even){ background:#f9fafb; }
+      tbody tr:first-child td{ border-top:1px solid #e5e7eb; }
+      tbody tr:last-child td{ border-bottom:1px solid #e5e7eb; }
+      td:empty{ background:#fffbe6; }
+
+      /* Form states */
+      input:required, select:required, textarea:required{ box-shadow:0 0 0 2px rgba(13,110,253,.15) inset; }
+      input:optional{ box-shadow:none; }
+      input:disabled, select:disabled{ background:#f3f4f6; color:#9ca3af; }
+      input:out-of-range{ border:2px solid #ef4444; }
+      input[type="checkbox"]:checked + label, input[type="radio"]:checked + label{ color:#16a34a; font-weight:600; }
+
+      /* Quotes per language */
+      q:lang(ru){ quotes:"\00AB" "\00BB" "\201E" "\201C"; }
+      q:lang(en){ quotes:"\201C" "\201D" "\2018" "\2019"; }
+      blockquote:lang(ru){ border-left:4px solid #60a5fa; padding-left:10px; }
+
+      /* Pseudo-elements */
+      .article-columns p.lede::first-letter{ font-size:2.6rem; font-weight:700; float:left; line-height:1; margin:.1rem .4rem 0 0; color:#007bff; }
+      .quote blockquote::before{ content:"“"; color:#cbd5e1; font-size:2rem; margin-right:.25rem; }
+      .quote blockquote::after{ content:"”"; color:#cbd5e1; font-size:2rem; margin-left:.25rem; }
+      ul.unicode-markers li::marker{ content:"\2713  "; color:#10b981; }
+
+      /* Ellipsis for summaries */
+      .summary-ellipsis{ display:-webkit-box; -webkit-line-clamp:2; line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; text-overflow:ellipsis; }
+
+      /* Multi-column article text */
+      .article-columns{ column-count:2; column-gap:28px; }
+
+      /* Buttons and cursors */
+      .btn, button, [type="button"], [type="submit"], [type="reset"], a[role="button"]{ cursor:pointer; }
+
+      /* Media queries */
+      @media (max-width: 1024px){ .catalog-grid{ grid-template-columns:repeat(3, 1fr);} }
+      @media (max-width: 768px){ .catalog-grid{ grid-template-columns:repeat(2, 1fr);} .float-card{ width:100%; float:none; } }
+      @media (max-width: 480px){ .catalog-grid{ grid-template-columns:1fr;} }
+      @media (max-height: 640px){ .preloader-overlay{ background:rgba(255,255,255,.98); } }
+    </style>
     </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar">
+    <div id="preloader-overlay" class="preloader-overlay" aria-hidden="true" role="status">
+        <div class="ring"></div>
+        <span class="caps" style="color:var(--muted)">Загрузка...</span>
+    </div>
+    <nav class="navbar site-nav" role="navigation" aria-label="Главная навигация">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'core:home' %}">
-                ✈️ TravelDream
+            <a class="navbar-brand" href="{% url 'core:home' %}" style="display: flex; align-items: center; gap: 10px;">
+                <span itemscope itemtype="https://schema.org/Organization" style="display:flex; align-items:center; gap:10px;">
+                    {% if agency and agency.logo %}
+                        <img itemprop="logo" src="{{ agency.logo.url }}" alt="{{ agency.agency_name|default:'TravelDream' }}" style="height: 40px; width: auto;">
+                    {% endif %}
+                    <span itemprop="name">{{ agency.agency_name|default:'TravelDream' }}</span>
+                </span>
             </a>
-            <ul class="navbar-nav">
+            <ul class="navbar-nav nav-links">
                 <li>
                     <a class="nav-link" href="{% url 'core:country_list' %}">
-                        🌍 Страны
+                        Страны
                     </a>
                 </li>
                 <li>
                     <a class="nav-link" href="{% url 'core:hotel_list' %}">
-                        🏨 Отели
+                        Отели
                     </a>
                 </li>
                 <li>
                     <a class="nav-link" href="{% url 'core:tour_list' %}">
-                        🧳 Туры
+                        Туры
                     </a>
                 </li>
                 <li>
                     <a class="nav-link" href="{% url 'core:news_list' %}">
-                        📰 Новости
+                        Новости
                     </a>
                 </li>
                 <li>
                     <a class="nav-link" href="{% url 'core:about' %}">
-                        ℹ️ О нас
+                        О нас
                     </a>
                 </li>
                 <li>
                     <a class="nav-link" href="{% url 'core:vacancy_list' %}">
-                        💼 Вакансии
+                        Вакансии
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" href="{% url 'core:faq' %}">
+                        FAQ
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" href="{% url 'core:glossary' %}">
+                        Словарь
                     </a>
                 </li>
                 
                 {% if user.is_authenticated %}
                     <li>
                         <a class="nav-link" href="{% url 'core:basket_detail' %}">
-                            🛒 Корзина
+                            Корзина
                             {% if basket_count %}
                             <span class="badge">{{ basket_count }}</span>
                             {% endif %}
@@ -247,39 +197,39 @@
                     </li>
                     <li class="dropdown">
                         <a class="nav-link" href="#">
-                            👤 {{ user.username }}
+                            {{ user.username }}
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a class="dropdown-item" href="{% url 'users:profile' %}">
-                                    👤 Профиль
+                                    Профиль
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="{% url 'core:order_list' %}">
-                                    📋 Мои заказы
+                                    Мои заказы
                                 </a>
                             </li>
                             {%if user.is_superuser%}
                             <li>
                                 <a class="dropdown-item" href="{% url 'admin:index' %}">
-                                    ⚙️ Админ-панель
+                                    Админ-панель
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="{% url 'core:statistics' %}">
-                                    📊 Статистика
+                                    Статистика
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="{% url 'core:order_manage' %}">
-                                    🎯 Управление заказами
+                                    Управление заказами
                                 </a>
                             </li>
                             {%endif%}
                             <li>
                                 <a class="dropdown-item" href="{% url 'users:logout' %}">
-                                    🚪 Выход
+                                    Выход
                                 </a>
                             </li>
                         </ul>
@@ -287,19 +237,19 @@
                 {% else %}
                     <li>
                         <a class="nav-link" href="{% url 'users:login' %}">
-                            🔑 Вход
+                            Вход
                         </a>
                     </li>
                     <li>
                         <a class="nav-link" href="{% url 'users:registration' %}">
-                            ➕ Регистрация
+                            Регистрация
                         </a>
                     </li>
                 {% endif %}
             </ul>
         </div>
     </nav>
-
+    
     <main class="container">
         {% if messages %}
             {% for message in messages %}
@@ -318,21 +268,27 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h5>Контакты</h5>
-                    <p>📞 +375 44 323-23-23</p>
-                    <p>✉️ info@traveldream.ru</p>
-                    <p>📍 г. Минск, ул. Городецкая, 123</p>
+                    {% if agency %}
+                        <p>Телефон: {{ agency.phone_number }}</p>
+                        <p>Email: {{ agency.email }}</p>
+                        <p>Адрес: {{ agency.address }}</p>
+                    {% else %}
+                        <p>Телефон: +375 44 323-23-23</p>
+                        <p>Email: info@traveldream.ru</p>
+                        <p>Адрес: г. Минск, ул. Городецкая, 123</p>
+                    {% endif %}
                 </div>
                 <div class="footer-section">
                     <h5>Полезные ссылки</h5>
                     <ul style="list-style: none;">
                         <li>
                             <a href="{% url 'core:terms' %}">
-                                📄 Условия использования
+                                Условия использования
                             </a>
                         </li>
                         <li>
                             <a href="{% url 'core:privacy_policy' %}">
-                                🛡️ Политика конфиденциальности
+                                Политика конфиденциальности
                             </a>
                         </li>
                     </ul>
@@ -340,17 +296,27 @@
                 <div class="footer-section">
                     <h5>Мы в соцсетях</h5>
                     <div class="social-links">
-                        <a href="#">📘</a>
-                        <a href="#">📱</a>
-                        <a href="#">💬</a>
+                        <a href="#">Facebook</a>
+                        <a href="#">Instagram</a>
+                        <a href="#">Telegram</a>
                     </div>
                 </div>
             </div>
             <div class="footer-divider"></div>
             <div class="text-center">
-                <p>&copy; {% now "Y" %} TravelDream. Все права защищены.</p>
+                <p>&copy; {% now "Y" %} {{ agency.agency_name|default:'TravelDream' }}. Все права защищены.</p>
             </div>
         </div>
     </footer>
 </body>
+<script>
+  (function(){
+    var hide = function(){
+      var el = document.getElementById('preloader-overlay');
+      if(el){ el.style.opacity = '0'; el.style.pointerEvents = 'none'; setTimeout(function(){ el.parentNode && el.parentNode.removeChild(el); }, 500); }
+    };
+    if(document.readyState === 'complete') { hide(); }
+    else { window.addEventListener('load', hide, { once: true }); }
+  })();
+</script>
 </html> 

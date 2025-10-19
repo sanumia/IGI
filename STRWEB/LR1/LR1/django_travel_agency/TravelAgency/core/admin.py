@@ -473,3 +473,41 @@ class NewsletterSubscriptionAdmin(admin.ModelAdmin):
     search_fields = ('email',)
     readonly_fields = ('created_at',)
     list_editable = ('is_active',)
+
+# Партнеры
+@admin.register(Partner)
+class PartnerAdmin(admin.ModelAdmin):
+    list_display = ('name', 'display_logo', 'website_url', 'is_active', 'order', 'created_at')
+    list_filter = ('is_active', 'created_at')
+    search_fields = ('name', 'description', 'website_url')
+    list_editable = ('is_active', 'order')
+    readonly_fields = ('created_at', 'updated_at', 'display_logo_large')
+    ordering = ('order', 'name')
+
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('name', 'description', 'website_url')
+        }),
+        ('Изображение', {
+            'fields': ('logo', 'display_logo_large')
+        }),
+        ('Настройки отображения', {
+            'fields': ('is_active', 'order')
+        }),
+        ('Даты', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def display_logo(self, obj):
+        if obj.logo:
+            return format_html('<img src="{}" width="50" height="30" style="object-fit: contain;" />', obj.logo.url)
+        return "-"
+    display_logo.short_description = 'Логотип'
+
+    def display_logo_large(self, obj):
+        if obj.logo:
+            return format_html('<img src="{}" width="200" height="100" style="object-fit: contain; border: 1px solid #ddd;" />', obj.logo.url)
+        return "Логотип не загружен"
+    display_logo_large.short_description = 'Текущий логотип'

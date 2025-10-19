@@ -22,6 +22,8 @@ from .views import (
     FAQView,
     VacancyDetailView,
     VacancyListView,
+    GlossaryListView,
+    GlossaryDetailView,
     basket_add,
     basket_detail_view,
     basket_remove,
@@ -33,6 +35,8 @@ from .views import (
     order_update_status,
     tour_create,
     tour_update,
+    agency_certificate,
+    promos_plain,
     # basket_view
 )
 
@@ -85,6 +89,8 @@ urlpatterns = [
     path('add-review/', AddReviewView.as_view(), name='add_review'),
     path('terms/', TermsView.as_view(), name='terms'),
     path('privacy-policy/', PrivacyPolicyView.as_view(), name='privacy_policy'),
+    path('certificate/', agency_certificate, name='certificate'),
+    path('promos/plain/', promos_plain, name='promos_plain'),
     path('faq/', FAQView.as_view(), name='faq'),
 
     #Новости
@@ -104,5 +110,9 @@ urlpatterns = [
     # В urlpatterns добавьте:
     path('vacancies/', VacancyListView.as_view(), name='vacancy_list'),
     path('vacancies/<slug:slug>/', VacancyDetailView.as_view(), name='vacancy_detail'),
+    
+    # Словарь терминов
+    path('glossary/', views.GlossaryListView.as_view(), name='glossary'),
+    path('glossary/<slug:slug>/', views.GlossaryDetailView.as_view(), name='glossary_term_detail'),
     # path('contacts/', views.contacts, name='contacts'),
 ]

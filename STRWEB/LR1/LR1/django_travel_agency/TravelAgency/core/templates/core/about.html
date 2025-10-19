@@ -3,355 +3,336 @@
 
 {% block title %}О нашем турагенстве | TravelDream{% endblock %}
 
-{% block extra_css %}
-<style>
-    .hero-section-about {
-        background: #2c3e50;
-        color: white;
-        padding: 4rem 0;
-        text-align: center;
-    }
-    
-    .hero-section-about h1 {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-    }
-    
-    .hero-section-about p {
-        font-size: 1.2rem;
-        opacity: 0.9;
-    }
-    
-    .section {
-        padding: 3rem 0;
-    }
-    
-    .section-light {
-        background: #f8f9fa;
-    }
-    
-    .section-title {
-        text-align: center;
-        margin-bottom: 3rem;
-        color: #333;
-    }
-    
-    .about-content {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 3rem;
-        align-items: center;
-        margin-bottom: 2rem;
-    }
-    
-    .about-text h2 {
-        margin-bottom: 1.5rem;
-        color: #333;
-    }
-    
-    .about-text .lead {
-        font-size: 1.2rem;
-        color: #666;
-        margin-bottom: 1rem;
-    }
-    
-    .about-text p {
-        line-height: 1.6;
-        color: #666;
-        margin-bottom: 1rem;
-    }
-    
-    .stats-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 2rem;
-        margin-top: 2rem;
-    }
-    
-    .stat-item {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-    
-    .stat-icon {
-        background: #007bff;
-        color: white;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-    }
-    
-    .stat-content h4 {
-        margin: 0;
-        color: #333;
-        font-size: 1.5rem;
-    }
-    
-    .stat-content p {
-        margin: 0;
-        color: #666;
-    }
-    
-    .about-image {
-        width: 100%;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    
-    .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-    }
-    
-    .feature-card {
-        background: white;
-        padding: 2rem;
-        border-radius: 8px;
-        text-align: center;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .feature-card h4 {
-        margin-bottom: 1rem;
-        color: #333;
-    }
-    
-    .feature-card p {
-        color: #666;
-        line-height: 1.6;
-    }
-    
-    .team-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 2rem;
-    }
-    
-    .team-card {
-        background: white;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        text-align: center;
-    }
-    
-    .team-photo {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-    }
-    
-    .team-info {
-        padding: 1.5rem;
-    }
-    
-    .team-info h4 {
-        margin-bottom: 0.5rem;
-        color: #333;
-    }
-    
-    .team-info p {
-        color: #666;
-        margin-bottom: 0.5rem;
-    }
-    
-    .team-position {
-        color: #007bff;
-        font-weight: bold;
-    }
-    
-    .contact-info {
-        background: white;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        margin-top: 2rem;
-    }
-    
-    .contact-info h3 {
-        margin-bottom: 1.5rem;
-        color: #333;
-        text-align: center;
-    }
-    
-    .contact-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-    }
-    
-    .contact-item {
-        text-align: center;
-        padding: 1rem;
-    }
-    
-    .contact-item h5 {
-        margin-bottom: 0.5rem;
-        color: #333;
-    }
-    
-    .contact-item p {
-        color: #666;
-        margin: 0;
-    }
-    
-    @media (max-width: 768px) {
-        .about-content {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-        
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .features-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .team-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .contact-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-</style>
-{% endblock %}
+{% block extra_css %}{% endblock %}
 
 {% block content %}
-<!-- Герой-секция -->
-<section class="hero-section-about">
-    <div class="container">
-        <h1>О нашем турагенстве</h1>
-        <p>15 лет создаём незабываемые путешествия</p>
-    </div>
-</section>
+<h1>О нашем турагенстве</h1>
+<p>15 лет создаём незабываемые путешествия</p>
 
-<!-- О компании -->
-<section class="section">
-    <div class="container">
-        <div class="about-content">
-            <div class="about-text">
-                <h2>Наша история</h2>
-                <p class="lead">TravelDream - это команда профессиональных путешественников</p>
-                <p>Основанное в 2008 году, наше агентство начинало с небольших групповых туров по Европе. Сегодня мы предлагаем более 500 направлений по всему миру.</p>
-                <p>За эти годы мы организовали путешествия для более чем 50,000 клиентов, многие из которых стали нашими постоянными гостями.</p>
-                
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-icon">🌍</div>
-                        <div class="stat-content">
-                            <h4>50+</h4>
-                            <p>Стран</p>
-                        </div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-icon">👥</div>
-                        <div class="stat-content">
-                            <h4>50,000+</h4>
-                            <p>Клиентов</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
-                     alt="Наша команда" 
-                     class="about-image">
-            </div>
+    {% if agency and agency.logo %}
+    <div style="text-align:center;margin:16px 0;">
+        <img src="{{ agency.logo.url }}" alt="Логотип" style="height:80px; transform: rotate(-2deg) scale(1.02); transition: transform .3s ease;">
+    </div>
+    {% endif %}
+
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/Xj4E0Zry6K4?si=K3ISLfKf21JKSAml" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <section>
+        <h2>О нашей компании</h2>
+        <p>Добро пожаловать в турагентство <abbr title="Туристическое агентство">ТА</abbr> "Вокруг света"! Мы являемся ведущим поставщиком туристических услуг на рынке с <time datetime="2005">2005 года</time>.</p>
+        <p>Наша миссия — делать путешествия доступными, комфортными и незабываемыми для каждого клиента.</p>
+    </section>
+
+    <section>
+        <h2>Наши услуги</h2>
+        <dl>
+            <dt><strong>PIT (Package Inclusive Tour)</strong></dt>
+            <dd>Полный пакетный тур, включающий перелет, проживание, питание и трансферы</dd>
+            
+            <dt><strong>FIT (Foreign Independent Tour)</strong></dt>
+            <dd>Индивидуальный тур, разработанный согласно персональным предпочтениям клиента</dd>
+            
+            <dt><strong>ALL (All Inclusive)</strong></dt>
+            <dd>Система обслуживания в отелях, включающая питание, напитки и дополнительные услуги</dd>
+        </dl>
+    </section>
+
+    <section class="quote" lang="ru">
+        <h2>Почему выбирают нас</h2>
+        <blockquote>
+            "Путешествовать — значит жить полной жизнью. Один раз увидеть значит больше, чем сто раз услышать."
+            <cite>— Ханс Кристиан Андерсен</cite>
+        </blockquote>
+        <p>Мы предлагаем только проверенные направления и отели, сотрудничаем с надежными туроператорами и всегда предоставляем полную информацию о туре.</p>
+    </section>
+
+    <section>
+        <h2>Специальное предложение</h2>
+        <div>
+            Акция действует до <time datetime="2023-12-31T23:59"><strong>31 декабря 2023 года, 23:59</strong></time>
+        </div>
+        <p>При бронировании тура до указанной даты вы получаете <strong>скидку 15%</strong> на любую экскурсию в выбранной стране.</p>
+    </section>
+
+    <section>
+        <h2>Поэзия путешествий</h2>
+        <div>
+            <p>Открой для себя дальние страны,<br>
+            Где солнце ласкает лазурные глади.<br>
+            Позволь мечте увести в океаны,<br>
+            Где счастье находят в безлюдном сафари.</p>
+        </div>
+        <p>Это четверостишие отражает наше отношение к путешествиям — как к возможности открыть не только новые места, но и себя.</p>
+    </section>
+<!-- Company Information -->
+<h2>Наша история</h2>
+{% if agency %}
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th colspan="2">О компании {{ agency.agency_name }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Название</strong></td>
+            <td><strong>{{ agency.agency_name }}</strong></td>
+        </tr>
+        <tr>
+            <td><strong>Юридическое название</strong></td>
+            <td>{{ agency.legal_name }}</td>
+        </tr>
+        <tr>
+            <td><strong>ИНН</strong></td>
+            <td>{{ agency.tax_id }}</td>
+        </tr>
+        <tr>
+            <td><strong>ОГРН</strong></td>
+            <td>{{ agency.registration_number }}</td>
+        </tr>
+        <tr>
+            <td><strong>Директор</strong></td>
+            <td>{{ agency.director_name }}</td>
+        </tr>
+        <tr>
+            <td><strong>Лицензия</strong></td>
+            <td>{{ agency.license_number }} (выдана {{ agency.license_issued_by }})</td>
+        </tr>
+        <tr>
+            <td><strong>Дата выдачи лицензии</strong></td>
+            <td>{{ agency.license_issue_date|date:"d.m.Y" }}</td>
+        </tr>
+    </tbody>
+</table>
+{% else %}
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th colspan="2">О компании TravelDream</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Название</strong></td>
+            <td><strong>TravelDream</strong></td>
+        </tr>
+        <tr>
+            <td><strong>Основание</strong></td>
+            <td>2008 год</td>
+        </tr>
+        <tr>
+            <td><strong>Описание</strong></td>
+            <td>Команда профессиональных путешественников</td>
+        </tr>
+        <tr>
+            <td><strong>Начало деятельности</strong></td>
+            <td>Небольшие групповые туры по Европе</td>
+        </tr>
+        <tr>
+            <td><strong>Сегодня</strong></td>
+            <td>Более 500 направлений по всему миру</td>
+        </tr>
+        <tr>
+            <td><strong>Клиенты</strong></td>
+            <td>Более 50,000 клиентов за годы работы</td>
+        </tr>
+    </tbody>
+</table>
+{% endif %}
+
+<hr>
+
+<!-- Statistics -->
+<h2>Наша статистика</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Показатель</th>
+            <th>Значение</th>
+            <th>Описание</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Страны</td>
+            <td><strong style="color: #007bff; font-size: 1.2em;">50+</strong></td>
+            <td>Направления по всему миру</td>
+        </tr>
+        <tr>
+            <td>Клиенты</td>
+            <td><strong style="color: #007bff; font-size: 1.2em;">50,000+</strong></td>
+            <td>Довольных путешественников</td>
+        </tr>
+        <tr>
+            <td>Отели</td>
+            <td><strong style="color: #007bff; font-size: 1.2em;">500+</strong></td>
+            <td>Проверенных партнеров</td>
+        </tr>
+        <tr>
+            <td>Туры</td>
+            <td><strong style="color: #007bff; font-size: 1.2em;">1000+</strong></td>
+            <td>Успешно организованных поездок</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Certificate Link -->
+<h2>Сертификаты и лицензии</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Документы</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: center;">
+                <a href="{% url 'core:certificate' %}" style="background: #007bff; color: white; text-decoration: none; padding: 10px 20px; display: inline-block;">Сертификат агентства</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Advantages -->
+<h2>Почему выбирают нас</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Преимущество</th>
+            <th>Описание</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Безопасность</strong></td>
+            <td>Все отели проходят строгий отбор. Мы работаем только с проверенными перевозчиками и страховыми компаниями.</td>
+        </tr>
+        <tr>
+            <td><strong>Лучшие цены</strong></td>
+            <td>Прямые контракты с отелями и авиакомпаниями позволяют предлагать вам самые выгодные условия.</td>
+        </tr>
+        <tr>
+            <td><strong>Поддержка 24/7</strong></td>
+            <td>Наша служба поддержки всегда на связи, чтобы помочь в любой ситуации во время вашего путешествия.</td>
+        </tr>
+        <tr>
+            <td><strong>Индивидуальный подход</strong></td>
+            <td>Каждый тур разрабатывается с учетом ваших пожеланий и предпочтений.</td>
+        </tr>
+        <tr>
+            <td><strong>Полный пакет услуг</strong></td>
+            <td>От бронирования до возвращения домой - мы заботимся о всех деталях вашего путешествия.</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Team -->
+<h2>Наша команда</h2>
+{% if employees %}
+<div style="display:flex; flex-wrap:wrap; gap:16px;">
+    {% for employee in employees %}
+    <div style="flex:1 1 260px; background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:12px; display:flex; gap:12px; align-items:flex-start;">
+        {% if employee.photo %}
+        <img src="{{ employee.photo.url }}" alt="{{ employee.name }}" style="width:88px; height:88px; object-fit:cover; border-radius:10px;">
+        {% else %}
+        <div style="width:88px; height:88px; background:#f8f9fa; display:flex; align-items:center; justify-content:center; font-size:1.5rem; color:#ccc; border-radius:10px;">Фото</div>
+        {% endif %}
+        <div>
+            <div class="caps"><strong>{{ employee.name }}</strong></div>
+            <div style="color:#007bff; font-weight:600;">{{ employee.position }}</div>
+            <p class="narrow lead" style="margin:.25rem 0 0;">{{ employee.description }}</p>
         </div>
     </div>
-</section>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card">
+    <h3>Наша команда</h3>
+    <p><strong>Профессионалы</strong></p>
+    <p>Мы - команда опытных специалистов, готовых помочь вам организовать идеальное путешествие.</p>
+</div>
+{% endif %}
 
-<!-- Наши преимущества -->
-<section class="section section-light">
-    <div class="container">
-        <h2 class="section-title">Почему выбирают нас</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <h4>🛡️ Безопасность</h4>
-                <p>Все отели проходят строгий отбор. Мы работаем только с проверенными перевозчиками и страховыми компаниями.</p>
-            </div>
-            <div class="feature-card">
-                <h4>💰 Лучшие цены</h4>
-                <p>Прямые контракты с отелями и авиакомпаниями позволяют предлагать вам самые выгодные условия.</p>
-            </div>
-            <div class="feature-card">
-                <h4>📞 Поддержка 24/7</h4>
-                <p>Наша служба поддержки всегда на связи, чтобы помочь в любой ситуации во время вашего путешествия.</p>
-            </div>
-        </div>
-    </div>
-</section>
+<hr>
 
-<!-- Наша команда -->
-<section class="section">
-    <div class="container">
-        <h2 class="section-title">Наша команда</h2>
-        <div class="team-grid">
-            {% for employee in employees %}
-            <div class="team-card">
-                {% if employee.photo %}
-                <img src="{{ employee.photo.url }}" alt="{{ employee.name }}" class="team-photo">
-                {% else %}
-                <div class="team-photo" style="background: #f8f9fa; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #ccc;">
-                    👤
-                </div>
-                {% endif %}
-                <div class="team-info">
-                    <h4>{{ employee.name }}</h4>
-                    <p class="team-position">{{ employee.position }}</p>
-                    <p>{{ employee.description }}</p>
-                </div>
-            </div>
-            {% empty %}
-            <div class="team-card">
-                <div class="team-photo" style="background: #f8f9fa; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #ccc;">
-                    👥
-                </div>
-                <div class="team-info">
-                    <h4>Наша команда</h4>
-                    <p class="team-position">Профессионалы</p>
-                    <p>Мы - команда опытных специалистов, готовых помочь вам организовать идеальное путешествие.</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
+<!-- Contact Information -->
+<h2>Свяжитесь с нами</h2>
+{% if agency %}
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Контакт</th>
+            <th>Информация</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Телефон</strong></td>
+            <td>{{ agency.phone_number }}</td>
+        </tr>
+        <tr>
+            <td><strong>Email</strong></td>
+            <td>{{ agency.email }}</td>
+        </tr>
+        <tr>
+            <td><strong>Адрес</strong></td>
+            <td>{{ agency.address }}</td>
+        </tr>
+        <tr>
+            <td><strong>Банк</strong></td>
+            <td>{{ agency.bank_name }}</td>
+        </tr>
+        <tr>
+            <td><strong>Расчетный счет</strong></td>
+            <td>{{ agency.bank_account_number }}</td>
+        </tr>
+        <tr>
+            <td><strong>БИК</strong></td>
+            <td>{{ agency.bic }}</td>
+        </tr>
+    </tbody>
+</table>
+{% else %}
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Контакт</th>
+            <th>Информация</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Телефон</strong></td>
+            <td>+375 44 323-23-23</td>
+        </tr>
+        <tr>
+            <td><strong>Email</strong></td>
+            <td>info@traveldream.ru</td>
+        </tr>
+        <tr>
+            <td><strong>Адрес</strong></td>
+            <td>г. Минск, ул. Городецкая, 123</td>
+        </tr>
+        <tr>
+            <td><strong>Режим работы</strong></td>
+            <td>
+                Пн-Пт: 9:00-18:00<br>
+                Сб: 10:00-16:00
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Веб-сайт</strong></td>
+            <td>www.traveldream.ru</td>
+        </tr>
+    </tbody>
+</table>
+{% endif %}
 
-<!-- Контактная информация -->
-<section class="section section-light">
-    <div class="container">
-        <div class="contact-info">
-            <h3>Свяжитесь с нами</h3>
-            <div class="contact-grid">
-                <div class="contact-item">
-                    <h5>📞 Телефон</h5>
-                    <p>+375 44 323-23-23</p>
-                </div>
-                <div class="contact-item">
-                    <h5>✉️ Email</h5>
-                    <p>info@traveldream.ru</p>
-                </div>
-                <div class="contact-item">
-                    <h5>📍 Адрес</h5>
-                    <p>г. Минск, ул. Городецкая, 123</p>
-                </div>
-                <div class="contact-item">
-                    <h5>🕒 Режим работы</h5>
-                    <p>Пн-Пт: 9:00-18:00<br>Сб: 10:00-16:00</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<hr>
+<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
 {% endblock %}

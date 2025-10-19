@@ -3,377 +3,211 @@
 
 {% block title %}{{ tour.hotel.name }} - {{ tour.departure_date|date:"d.m.Y" }} | TravelDream{% endblock %}
 
-{% block extra_css %}
-<style>
-    .breadcrumb {
-        margin-bottom: 2rem;
-        padding: 0;
-        list-style: none;
-        display: flex;
-        gap: 0.5rem;
-        align-items: center;
-    }
-    
-    .breadcrumb-item {
-        color: #666;
-    }
-    
-    .breadcrumb-item a {
-        color: #007bff;
-        text-decoration: none;
-    }
-    
-    .breadcrumb-item a:hover {
-        text-decoration: underline;
-    }
-    
-    .breadcrumb-item.active {
-        color: #333;
-    }
-    
-    .breadcrumb-separator {
-        color: #999;
-    }
-    
-    .tour-layout {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 2rem;
-        margin-bottom: 2rem;
-    }
-    
-    .hotel-image {
-        width: 100%;
-        height: 400px;
-        object-fit: cover;
-        border-radius: 8px;
-        margin-bottom: 1rem;
-    }
-    
-    .card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        margin-bottom: 1.5rem;
-        overflow: hidden;
-    }
-    
-    .card-body {
-        padding: 1.5rem;
-    }
-    
-    .card-title {
-        margin-bottom: 1rem;
-        color: #333;
-    }
-    
-    .hotel-stars {
-        margin-bottom: 1rem;
-    }
-    
-    .star {
-        color: #ffc107;
-        font-size: 1.2rem;
-    }
-    
-    .hotel-location {
-        color: #666;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .hotel-description {
-        line-height: 1.6;
-        color: #333;
-    }
-    
-    .amenities-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-    }
-    
-    .amenity-item {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #333;
-    }
-    
-    .tour-info {
-        background: #f8f9fa;
-        padding: 1.5rem;
-        border-radius: 8px;
-        margin-bottom: 1.5rem;
-    }
-    
-    .tour-info h3 {
-        margin-bottom: 1rem;
-        color: #333;
-    }
-    
-    .info-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 0.5rem;
-        padding: 0.5rem 0;
-        border-bottom: 1px solid #eee;
-    }
-    
-    .info-row:last-child {
-        border-bottom: none;
-    }
-    
-    .info-label {
-        color: #666;
-    }
-    
-    .info-value {
-        font-weight: bold;
-        color: #333;
-    }
-    
-    .price-section {
-        background: #007bff;
-        color: white;
-        padding: 1.5rem;
-        border-radius: 8px;
-        text-align: center;
-        margin-bottom: 1.5rem;
-    }
-    
-    .price-amount {
-        font-size: 2rem;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-    }
-    
-    .price-per-person {
-        font-size: 0.9rem;
-        opacity: 0.9;
-    }
-    
-    .action-buttons {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .btn {
-        background: #007bff;
-        color: white;
-        border: none;
-        padding: 1rem;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
-        text-align: center;
-        font-size: 1rem;
-        transition: background 0.2s ease;
-    }
-    
-    .btn:hover {
-        background: #0056b3;
-    }
-    
-    .btn-outline {
-        background: transparent;
-        color: #007bff;
-        border: 1px solid #007bff;
-    }
-    
-    .btn-outline:hover {
-        background: #007bff;
-        color: white;
-    }
-    
-    .btn-success {
-        background: #28a745;
-    }
-    
-    .btn-success:hover {
-        background: #218838;
-    }
-    
-    .divider {
-        border-top: 1px solid #eee;
-        margin: 1.5rem 0;
-    }
-    
-    @media (max-width: 768px) {
-        .tour-layout {
-            grid-template-columns: 1fr;
-        }
-        
-        .amenities-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-</style>
-{% endblock %}
+{% block extra_css %}{% endblock %}
 
 {% block content %}
-<div class="container">
-    <!-- Breadcrumbs -->
-    <nav class="breadcrumb">
-        <a href="{% url 'core:home' %}">🏠</a>
-        <span class="breadcrumb-separator">›</span>
-        <a href="{% url 'core:tour_list' %}">Туры</a>
-        <span class="breadcrumb-separator">›</span>
-        <a href="{% url 'core:country_detail' tour.hotel.country.id %}">{{ tour.hotel.country.name }}</a>
-        <span class="breadcrumb-separator">›</span>
-        <span class="breadcrumb-item active">{{ tour.hotel.name }}</span>
-    </nav>
+<h1> {{ tour.hotel.name }}</h1>
+<p><a href="{% url 'core:home' %}"> Главная</a> › <a href="{% url 'core:tour_list' %}">Туры</a> › <a href="{% url 'core:country_detail' tour.hotel.country.id %}">{{ tour.hotel.country.name }}</a> › {{ tour.hotel.name }}</p>
 
-    <div class="tour-layout">
-        <!-- Main Content -->
-        <div>
-            <!-- Hotel Image -->
-            <div class="card">
-                {% if tour.hotel.image %}
-                <img src="{{ tour.hotel.image.url }}" class="hotel-image" alt="{{ tour.hotel.name }}">
-                {% else %}
-                <img src="{% static 'images/default-hotel.jpg' %}" class="hotel-image" alt="Default hotel image">
-                {% endif %}
-            </div>
+<!-- Hotel Image -->
+{% if tour.hotel.image %}
+<img src="{{ tour.hotel.image.url }}" alt="{{ tour.hotel.name }}" style="max-width: 100%; height: 300px; object-fit: cover; margin-bottom: 20px;">
+{% else %}
+<img src="{% static 'images/default-hotel.jpg' %}" alt="Default hotel image" style="max-width: 100%; height: 300px; object-fit: cover; margin-bottom: 20px;">
+{% endif %}
 
-            <!-- Hotel Information -->
-            <div class="card">
-                <div class="card-body">
-                    <h1 class="card-title">{{ tour.hotel.name }}</h1>
-                    <div class="hotel-stars">
-                        {% for i in "12345"|make_list %}
-                        {% if forloop.counter <= tour.hotel.stars %}
-                        <span class="star">★</span>
-                        {% else %}
-                        <span class="star" style="color: #ddd;">☆</span>
-                        {% endif %}
-                        {% endfor %}
-                    </div>
-                    <p class="hotel-location">
-                        📍 {{ tour.hotel.address }}, {{ tour.hotel.country.name }}
-                    </p>
-                    <div class="divider"></div>
-                    <h3>Об отеле</h3>
-                    <p class="hotel-description">{{ tour.hotel.description }}</p>
-                </div>
-            </div>
+<hr>
 
-            <!-- Hotel Amenities -->
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="card-title">Удобства и услуги</h3>
-                    <div class="amenities-grid">
-                        {% if tour.hotel.has_pool %}
-                        <div class="amenity-item">
-                            🏊 Бассейн
-                        </div>
-                        {% endif %}
-                        {% if tour.hotel.has_restaurant %}
-                        <div class="amenity-item">
-                            🍽️ Ресторан
-                        </div>
-                        {% endif %}
-                        {% if tour.hotel.has_spa %}
-                        <div class="amenity-item">
-                            💆 СПА
-                        </div>
-                        {% endif %}
-                        {% if tour.hotel.has_beach_access %}
-                        <div class="amenity-item">
-                            🏖️ Пляж
-                        </div>
-                        {% endif %}
-                        {% if tour.hotel.has_wifi %}
-                        <div class="amenity-item">
-                            📶 Wi-Fi
-                        </div>
-                        {% endif %}
-                        {% if tour.hotel.has_gym %}
-                        <div class="amenity-item">
-                            💪 Тренажерный зал
-                        </div>
-                        {% endif %}
-                        {% if tour.hotel.has_transfer %}
-                        <div class="amenity-item">
-                            🚐 Трансфер
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
+<!-- Hotel Information -->
+<h2> Информация об отеле</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Параметр</th>
+            <th>Значение</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Название отеля</strong></td>
+            <td>{{ tour.hotel.name }}</td>
+        </tr>
+        <tr>
+            <td><strong>Звезды</strong></td>
+            <td>
+                {% for i in "12345"|make_list %}
+                    {% if forloop.counter <= tour.hotel.stars %}
+                        <span style="color: #ffc107;"></span>
+                    {% else %}
+                        <span style="color: #ddd;"></span>
+                    {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Адрес</strong></td>
+            <td> {{ tour.hotel.address }}, {{ tour.hotel.country.name }}</td>
+        </tr>
+        <tr>
+            <td><strong>Описание</strong></td>
+            <td>{{ tour.hotel.description }}</td>
+        </tr>
+    </tbody>
+</table>
 
-            <!-- Tour Details -->
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="card-title">Детали тура</h3>
-                    <div class="tour-info">
-                        <div class="info-row">
-                            <span class="info-label">Дата вылета:</span>
-                            <span class="info-value">{{ tour.departure_date|date:"d.m.Y" }}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Длительность:</span>
-                            <span class="info-value">{{ tour.duration_weeks }} {% if tour.duration_weeks == 1 %}неделя{% else %}недели{% endif %}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Количество мест:</span>
-                            <span class="info-value">{{ tour.available_places }}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Тип питания:</span>
-                            <span class="info-value">{{ tour.get_meal_type_display }}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Тип номера:</span>
-                            <span class="info-value">{{ tour.get_room_type_display }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<hr>
 
-        <!-- Sidebar -->
-        <div>
-            <!-- Price and Booking -->
-            <div class="price-section">
-                <div class="price-amount">{{ tour.total_price }} BYN</div>
-                <div class="price-per-person">за человека</div>
-            </div>
+<!-- Hotel Amenities -->
+<h2> Удобства и услуги</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Удобство</th>
+            <th>Статус</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td> Бассейн</td>
+            <td>{% if tour.hotel.has_pool %} Да{% else %} Нет{% endif %}</td>
+        </tr>
+        <tr>
+            <td> Ресторан</td>
+            <td>{% if tour.hotel.has_restaurant %} Да{% else %} Нет{% endif %}</td>
+        </tr>
+        <tr>
+            <td> СПА</td>
+            <td>{% if tour.hotel.has_spa %} Да{% else %} Нет{% endif %}</td>
+        </tr>
+        <tr>
+            <td> Пляж</td>
+            <td>{% if tour.hotel.has_beach_access %} Да{% else %} Нет{% endif %}</td>
+        </tr>
+        <tr>
+            <td> Wi-Fi</td>
+            <td>{% if tour.hotel.has_wifi %} Да{% else %} Нет{% endif %}</td>
+        </tr>
+        <tr>
+            <td> Тренажерный зал</td>
+            <td>{% if tour.hotel.has_gym %} Да{% else %} Нет{% endif %}</td>
+        </tr>
+        <tr>
+            <td> Трансфер</td>
+            <td>{% if tour.hotel.has_transfer %} Да{% else %} Нет{% endif %}</td>
+        </tr>
+    </tbody>
+</table>
 
-            <!-- Action Buttons -->
-            <div class="action-buttons">
+<hr>
+
+<!-- Tour Details -->
+<h2> Детали тура</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Параметр</th>
+            <th>Значение</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Дата вылета</strong></td>
+            <td>{{ tour.departure_date|date:"d.m.Y" }}</td>
+        </tr>
+        <tr>
+            <td><strong>Длительность</strong></td>
+            <td>{{ tour.duration_weeks }} {% if tour.duration_weeks == 1 %}неделя{% else %}недели{% endif %}</td>
+        </tr>
+        <tr>
+            <td><strong>Количество мест</strong></td>
+            <td>{{ tour.available_places }}</td>
+        </tr>
+        <tr>
+            <td><strong>Тип питания</strong></td>
+            <td>{{ tour.get_meal_type_display }}</td>
+        </tr>
+        <tr>
+            <td><strong>Тип номера</strong></td>
+            <td>{{ tour.get_room_type_display }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Price and Booking -->
+<h2> Цена и бронирование</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#007bff" style="color: white;">
+            <th>Цена</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong style="font-size: 1.5em; color: #007bff;">{{ tour.total_price }} BYN</strong><br><small>за человека</small></td>
+            <td>
                 {% if tour.is_available %}
-                <a href="{% url 'core:basket_add' tour.id %}" class="btn btn-success">
-                    🛒 Добавить в корзину
-                </a>
+                <a href="{% url 'core:basket_add' tour.id %}" style="background: #28a745; color: white; text-decoration: none; padding: 10px 20px; display: inline-block;"> Добавить в корзину</a>
                 {% else %}
-                <button class="btn" disabled style="background: #6c757d; cursor: not-allowed;">
-                    ❌ Нет мест
-                </button>
+                <button disabled style="background: #6c757d; color: white; padding: 10px 20px; border: none; cursor: not-allowed;"> Нет мест</button>
                 {% endif %}
-                
-                <a href="{% url 'core:country_detail' tour.hotel.country.id %}" class="btn btn-outline">
-                    🌍 Больше туров в {{ tour.hotel.country.name }}
-                </a>
-                
-                <a href="{% url 'core:tour_list' %}" class="btn btn-outline">
-                    🧳 Все туры
-                </a>
-            </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
-            <!-- Additional Information -->
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="card-title">Дополнительно</h3>
-                    <p>Страховка включена в стоимость</p>
-                    <p>Бесплатный трансфер от аэропорта</p>
-                    <p>Поддержка 24/7 во время путешествия</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<hr>
+
+<!-- Additional Information -->
+<h2> Дополнительная информация</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Услуга</th>
+            <th>Описание</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Страховка</strong></td>
+            <td> Включена в стоимость</td>
+        </tr>
+        <tr>
+            <td><strong>Трансфер</strong></td>
+            <td> Бесплатный трансфер от аэропорта</td>
+        </tr>
+        <tr>
+            <td><strong>Поддержка</strong></td>
+            <td> Поддержка 24/7 во время путешествия</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Navigation -->
+<h2> Навигация</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f5f5f5">
+            <th>Действие</th>
+            <th>Ссылка</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Больше туров в {{ tour.hotel.country.name }}</strong></td>
+            <td><a href="{% url 'core:country_detail' tour.hotel.country.id %}" style="background: #007bff; color: white; text-decoration: none; padding: 5px 10px;"> Перейти</a></td>
+        </tr>
+        <tr>
+            <td><strong>Все туры</strong></td>
+            <td><a href="{% url 'core:tour_list' %}" style="background: #6c757d; color: white; text-decoration: none; padding: 5px 10px;"> Перейти</a></td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
 {% endblock %} 

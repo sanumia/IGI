@@ -2,58 +2,156 @@
 
 {% block title %}{{ vacancy.title }} | TravelDream{% endblock %}
 
-{% block extra_css %}
-<style>
-    .page { padding: 1.5rem 0; }
-    .pill { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 999px; font-size: 0.85rem; margin-right: .5rem; }
-    .pill.primary { background: #007bff; color: #fff; }
-    .pill.secondary { background: #6c757d; color: #fff; }
-    .pill.info { background: #17a2b8; color: #fff; }
-    .pill.success { background: #28a745; color: #fff; }
-    .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 1rem; }
-    .btn { display: inline-block; background: #007bff; color: #fff; text-decoration: none; padding: 0.5rem 1rem; border-radius: 4px; }
-    h1, h3 { margin-top: 0; }
-</style>
-{% endblock %}
+{% block extra_css %}{% endblock %}
 
 {% block content %}
-<div class="container page">
-    <h1>{{ vacancy.title }}</h1>
-    
-    <div style="margin-bottom: 1rem;">
-        <span class="pill primary">{{ vacancy.get_department_display }}</span>
-        <span class="pill secondary">{{ vacancy.get_job_type_display }}</span>
-        <span class="pill info">{{ vacancy.experience_required }}</span>
-        {% if vacancy.salary %}
-        <span class="pill success">{{ vacancy.salary }}</span>
-        {% endif %}
-    </div>
-    
-    <div style="margin-bottom: 1rem;">
-        <h3>Описание вакансии</h3>
-        <p>{{ vacancy.description }}</p>
-    </div>
-    
-    <div style="margin-bottom: 1rem;">
-        <h3>Обязанности</h3>
-        <p>{{ vacancy.responsibilities }}</p>
-    </div>
-    
-    <div style="margin-bottom: 1rem;">
-        <h3>Требования</h3>
-        <p>{{ vacancy.requirements }}</p>
-    </div>
-    
-    <div style="margin-bottom: 1rem;">
-        <h3>Условия работы</h3>
-        <p>{{ vacancy.conditions }}</p>
-    </div>
-    
-    <div class="card">
-        <h3>Откликнуться на вакансию</h3>
-        <p>Отправьте свое резюме на почту <strong>hr@traveldream.ru</strong></p>
-        <p>Тема письма: "Отклик на вакансию {{ vacancy.title }}"</p>
-        <a href="mailto:hr@traveldream.ru" class="btn">Отправить резюме</a>
-    </div>
-</div>
+<h1> {{ vacancy.title }}</h1>
+<p><a href="{% url 'core:home' %}"> Главная</a> › <a href="{% url 'core:vacancy_list' %}"> Вакансии</a> › {{ vacancy.title }}</p>
+
+<!-- Vacancy Info -->
+<h2> Информация о вакансии</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Параметр</th>
+            <th>Значение</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Должность</strong></td>
+            <td><strong>{{ vacancy.title }}</strong></td>
+        </tr>
+        <tr>
+            <td><strong>Отдел</strong></td>
+            <td>
+                <span style="background: #007bff; color: white; padding: 2px 6px; font-size: 0.8rem;">{{ vacancy.get_department_display }}</span>
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Тип работы</strong></td>
+            <td>
+                <span style="background: #6c757d; color: white; padding: 2px 6px; font-size: 0.8rem;">{{ vacancy.get_job_type_display }}</span>
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Опыт работы</strong></td>
+            <td>
+                <span style="background: #17a2b8; color: white; padding: 2px 6px; font-size: 0.8rem;">{{ vacancy.experience_required }}</span>
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Зарплата</strong></td>
+            <td>
+                {% if vacancy.salary %}
+                <span style="background: #28a745; color: white; padding: 2px 6px; font-size: 0.8rem;"><strong>{{ vacancy.salary }}</strong></span>
+                {% else %}
+                <span style="color: #666;">По договоренности</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Статус</strong></td>
+            <td>
+                <span style="background: {% if vacancy.is_active %}#28a745{% else %}#6c757d{% endif %}; color: white; padding: 2px 6px; font-size: 0.8rem;">
+                    {% if vacancy.is_active %}Активна{% else %}Закрыта{% endif %}
+                </span>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Description -->
+<h2> Описание вакансии</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Описание</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="font-size: 1.1rem; line-height: 1.6;">{{ vacancy.description }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Responsibilities -->
+<h2> Обязанности</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Обязанности</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="font-size: 1.1rem; line-height: 1.6;">{{ vacancy.responsibilities }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Requirements -->
+<h2> Требования</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Требования</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="font-size: 1.1rem; line-height: 1.6;">{{ vacancy.requirements }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Conditions -->
+<h2> Условия работы</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Условия работы</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="font-size: 1.1rem; line-height: 1.6;">{{ vacancy.conditions }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Application -->
+<h2> Откликнуться на вакансию</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f5f5f5">
+            <th>Как откликнуться</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <p><strong>Отправьте свое резюме на почту:</strong> <strong style="color: #007bff;">hr@traveldream.ru</strong></p>
+                <p><strong>Тема письма:</strong> "Отклик на вакансию {{ vacancy.title }}"</p>
+                <p style="text-align: center; margin-top: 1rem;">
+                    <a href="mailto:hr@traveldream.ru" style="background: #28a745; color: white; text-decoration: none; padding: 15px 30px; font-size: 1.1em; display: inline-block;"> Отправить резюме</a>
+                </p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
 {% endblock %}

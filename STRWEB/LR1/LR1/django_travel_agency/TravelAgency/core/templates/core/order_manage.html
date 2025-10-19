@@ -2,415 +2,194 @@
 
 {% block title %}Управление заказами | TravelDream{% endblock %}
 
-{% block extra_css %}
-<style>
-    .page-header {
-        margin-bottom: 2rem;
-    }
-    
-    .page-header h1 {
-        color: #333;
-        margin-bottom: 0.5rem;
-    }
-    
-    .page-header p {
-        color: #666;
-        margin: 0;
-    }
-    
-    .filters-section {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-    }
-    
-    .filters-section h3 {
-        margin-bottom: 1rem;
-        color: #333;
-        font-size: 1.2rem;
-    }
-    
-    .filters-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-bottom: 1rem;
-    }
-    
-    .filter-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .filter-group label {
-        font-weight: bold;
-        color: #333;
-        font-size: 0.9rem;
-    }
-    
-    .filter-group input,
-    .filter-group select {
-        padding: 0.5rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 0.9rem;
-    }
-    
-    .filter-actions {
-        display: flex;
-        gap: 1rem;
-        align-items: center;
-    }
-    
-    .btn {
-        background: #007bff;
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 0.9rem;
-    }
-    
-    .btn:hover {
-        background: #0056b3;
-    }
-    
-    .btn-outline {
-        background: transparent;
-        color: #6c757d;
-        border: 1px solid #6c757d;
-    }
-    
-    .btn-outline:hover {
-        background: #6c757d;
-        color: white;
-    }
-    
-    .btn-sm {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.8rem;
-    }
-    
-    .btn-danger {
-        background: #dc3545;
-    }
-    
-    .btn-danger:hover {
-        background: #c82333;
-    }
-    
-    .orders-table {
-        width: 100%;
-        border-collapse: collapse;
-        background: white;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        margin-bottom: 2rem;
-    }
-    
-    .orders-table th {
-        background: #f8f9fa;
-        padding: 1rem;
-        text-align: left;
-        font-weight: bold;
-        color: #333;
-        border-bottom: 1px solid #dee2e6;
-    }
-    
-    .orders-table td {
-        padding: 1rem;
-        border-bottom: 1px solid #dee2e6;
-        vertical-align: middle;
-    }
-    
-    .orders-table tr:hover {
-        background: #f8f9fa;
-    }
-    
-    .order-id {
-        font-weight: bold;
-        color: #007bff;
-    }
-    
-    .client-info h6 {
-        margin: 0;
-        color: #333;
-        font-size: 1rem;
-    }
-    
-    .client-info small {
-        color: #666;
-    }
-    
-    .tour-info h6 {
-        margin: 0;
-        color: #333;
-        font-size: 1rem;
-    }
-    
-    .tour-info small {
-        color: #666;
-    }
-    
-    .status-badge {
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        font-size: 0.8rem;
-        font-weight: bold;
-        color: white;
-    }
-    
-    .status-pending {
-        background: #6c757d;
-    }
-    
-    .status-confirmed {
-        background: #28a745;
-    }
-    
-    .status-paid {
-        background: #007bff;
-    }
-    
-    .status-cancelled {
-        background: #dc3545;
-    }
-    
-    .order-actions {
-        display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-    }
-    
-    .pagination {
-        display: flex;
-        justify-content: center;
-        gap: 0.5rem;
-        margin-top: 2rem;
-    }
-    
-    .page-link {
-        padding: 0.5rem 1rem;
-        border: 1px solid #ddd;
-        text-decoration: none;
-        color: #333;
-        border-radius: 4px;
-    }
-    
-    .page-link:hover {
-        background: #f8f9fa;
-    }
-    
-    .page-link.active {
-        background: #007bff;
-        color: white;
-        border-color: #007bff;
-    }
-    
-    .empty-orders {
-        text-align: center;
-        padding: 3rem;
-        color: #666;
-        background: #f8f9fa;
-        border-radius: 8px;
-    }
-    
-    .empty-orders h3 {
-        margin-bottom: 1rem;
-        color: #333;
-    }
-    
-    @media (max-width: 768px) {
-        .filters-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .filter-actions {
-            flex-direction: column;
-            align-items: stretch;
-        }
-        
-        .orders-table {
-            font-size: 0.9rem;
-        }
-        
-        .orders-table th,
-        .orders-table td {
-            padding: 0.5rem;
-        }
-        
-        .order-actions {
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-    }
-</style>
-{% endblock %}
+{% block extra_css %}{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="page-header">
-        <h1>📋 Управление заказами</h1>
-        <p>Просмотр и управление всеми заказами в системе</p>
-    </div>
-
-    <!-- Filters Section -->
-    <div class="filters-section">
-        <h3>🔍 Фильтры</h3>
-        <form method="get" id="filterForm">
-            <div class="filters-grid">
-                <div class="filter-group">
-                    <label for="status">Статус:</label>
-                    <select name="status" id="status">
+<h1> Управление заказами</h1>
+<p><a href="{% url 'core:home' %}"> Главная</a> › Управление заказами</p>
+<p>Просмотр и управление всеми заказами в системе</p>
+<!-- Кнопка экспорта всех заказов в PDF -->
+<div style="margin-bottom: 20px; text-align: right;">
+    <a href="{% url 'core:export_orders_pdf' %}?{{ request.GET.urlencode }}" 
+       style="background: #dc3545; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; display: inline-block;">
+        📄 Экспорт всех заказов в PDF
+    </a>
+</div>
+<!-- Filters Section -->
+<h2> Фильтры</h2>
+<form method="get" id="filterForm">
+    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+            <tr bgcolor="#f0f0f0">
+                <th>Параметр</th>
+                <th>Значение</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Статус</strong></td>
+                <td>
+                    <select name="status" id="status" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
                         <option value="">Все статусы</option>
                         <option value="pending" {% if request.GET.status == 'pending' %}selected{% endif %}>Ожидает</option>
                         <option value="confirmed" {% if request.GET.status == 'confirmed' %}selected{% endif %}>Подтвержден</option>
                         <option value="paid" {% if request.GET.status == 'paid' %}selected{% endif %}>Оплачен</option>
                         <option value="cancelled" {% if request.GET.status == 'cancelled' %}selected{% endif %}>Отменен</option>
                     </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label for="date_from">Дата от:</label>
-                    <input type="date" name="date_from" id="date_from" value="{{ request.GET.date_from }}">
-                </div>
-                
-                <div class="filter-group">
-                    <label for="date_to">Дата до:</label>
-                    <input type="date" name="date_to" id="date_to" value="{{ request.GET.date_to }}">
-                </div>
-                
-                <div class="filter-group">
-                    <label for="search">Поиск:</label>
-                    <input type="text" name="search" id="search" placeholder="ID заказа, клиент..." value="{{ request.GET.search }}">
-                </div>
-            </div>
-            
-            <div class="filter-actions">
-                <button type="submit" class="btn">🔍 Применить фильтры</button>
-                <a href="{% url 'core:order_manage' %}" class="btn btn-outline">🔄 Сбросить</a>
-            </div>
-        </form>
-    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Дата от</strong></td>
+                <td>
+                    <input type="date" name="date_from" id="date_from" value="{{ request.GET.date_from }}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Дата до</strong></td>
+                <td>
+                    <input type="date" name="date_to" id="date_to" value="{{ request.GET.date_to }}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Поиск</strong></td>
+                <td>
+                    <input type="text" name="search" id="search" placeholder="ID заказа, клиент..." value="{{ request.GET.search }}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-    <!-- Orders Table -->
-    {% if orders %}
-    <div class="orders-table">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Клиент</th>
-                    <th>Тур</th>
-                    <th>Дата</th>
-                    <th>Статус</th>
-                    <th>Сумма</th>
-                    <th>Действия</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in orders %}
-                <tr>
-                    <td>
-                        <span class="order-id">#{{ order.id }}</span>
-                    </td>
-                    <td>
-                        <div class="client-info">
-                            <h6>{{ order.client.get_full_name }}</h6>
-                            <small>{{ order.client.email }}</small>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="tour-info">
-                            <h6>{{ order.tour.hotel.name }}</h6>
-                            <small>{{ order.tour.hotel.country.name }}</small>
-                        </div>
-                    </td>
-                    <td>
-                        {{ order.created_at|date:"d.m.Y" }}<br>
-                        <small>{{ order.created_at|date:"H:i" }}</small>
-                    </td>
-                    <td>
-                        <span class="status-badge 
-                            {% if order.status == 'pending' %}status-pending
-                            {% elif order.status == 'confirmed' %}status-confirmed
-                            {% elif order.status == 'paid' %}status-paid
-                            {% else %}status-cancelled{% endif %}">
-                            {{ order.get_status_display }}
-                        </span>
-                    </td>
-                    <td>
-                        <strong>{{ order.total_price }} ₽</strong>
-                    </td>
-                    <td>
-                        <div class="order-actions">
-                            <a href="{% url 'core:order_detail' order.id %}" class="btn btn-sm" title="Подробнее">
-                                👁️
-                            </a>
-                            <a href="{% url 'core:print_order' order.id %}" class="btn btn-sm btn-outline" target="_blank" title="Печать">
-                                🖨️
-                            </a>
-                            {% if order.status == 'pending' %}
-                            <form action="{% url 'core:order_cancel' order.id %}" method="post" style="display: inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-danger" 
-                                        title="Отменить">
-                                    ❌
-                                </button>
-                            </form>
-                            {% endif %}
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% else %}
-    <div class="empty-orders">
-        <h3>📋 Заказы не найдены</h3>
-        <p>Попробуйте изменить параметры фильтрации</p>
-    </div>
-    {% endif %}
+    <hr>
 
-    <!-- Pagination -->
-    {% if is_paginated %}
-    <div class="pagination">
-        {% if page_obj.has_previous %}
-            <a href="?page=1{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}" class="page-link">
-                « Первая
-            </a>
-            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}" class="page-link">
-                ‹ Предыдущая
-            </a>
-        {% endif %}
+    <!-- Filter Actions -->
+    <h3> Действия с фильтрами</h3>
+    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+            <tr bgcolor="#f5f5f5">
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="text-align: center;">
+                    <button type="submit" style="background: #007bff; color: white; border: none; padding: 10px 20px; margin-right: 10px; cursor: pointer;"> Применить фильтры</button>
+                    <a href="{% url 'core:order_manage' %}" style="background: #6c757d; color: white; text-decoration: none; padding: 10px 20px; display: inline-block;"> Сбросить</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
 
-        {% for num in page_obj.paginator.page_range %}
-            {% if page_obj.number == num %}
-                <span class="page-link active">{{ num }}</span>
-            {% else %}
-                <a href="?page={{ num }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}" class="page-link">
-                    {{ num }}
-                </a>
-            {% endif %}
+<hr>
+
+<!-- Orders Table -->
+{% if orders %}
+<h2> Список заказов</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>ID</th>
+            <th>Клиент</th>
+            <th>Тур</th>
+            <th>Дата</th>
+            <th>Статус</th>
+            <th>Сумма</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td><strong style="color: #007bff;">#{{ order.id }}</strong></td>
+            <td>
+                <strong>{{ order.client.get_full_name }}</strong><br>
+                <small style="color: #666;">{{ order.client.email }}</small>
+            </td>
+            <td>
+                <strong>{{ order.tour.hotel.name }}</strong><br>
+                <small style="color: #666;">{{ order.tour.hotel.country.name }}</small>
+            </td>
+            <td>
+                {{ order.created_at|date:"d.m.Y" }}<br>
+                <small>{{ order.created_at|date:"H:i" }}</small>
+            </td>
+            <td>
+                <span style="background: {% if order.status == 'pending' %}#6c757d{% elif order.status == 'confirmed' %}#28a745{% elif order.status == 'paid' %}#007bff{% else %}#dc3545{% endif %}; color: white; padding: 2px 6px; font-size: 0.8rem;">
+                    {{ order.get_status_display }}
+                </span>
+            </td>
+            <td><strong style="color: #007bff;">{{ order.total_price }} ₽</strong></td>
+            <td>
+                <a href="{% url 'core:order_detail' order.id %}" style="background: #007bff; color: white; text-decoration: none; padding: 5px 10px; margin-right: 5px; display: inline-block;"> Подробнее</a>
+                <a href="{% url 'core:print_order' order.id %}" style="background: #6c757d; color: white; text-decoration: none; padding: 5px 10px; margin-right: 5px; display: inline-block;" target="_blank"> Печать</a>
+                {% if order.status == 'pending' %}
+                <form action="{% url 'core:order_cancel' order.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="background: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer;"> Отменить</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
         {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<!-- Empty Orders -->
+<h2> Заказы не найдены</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Состояние заказов</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: center; padding: 3rem; color: #666;">
+                <h3> Заказы не найдены</h3>
+                <p>Попробуйте изменить параметры фильтрации</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% endif %}
 
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}" class="page-link">
-                Следующая ›
-            </a>
-            <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}" class="page-link">
-                Последняя »
-            </a>
-        {% endif %}
-    </div>
-    {% endif %}
-</div>
+<hr>
+
+<!-- Pagination -->
+{% if is_paginated %}
+<h2> Навигация по страницам</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Навигация</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: center;">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}" style="background: #007bff; color: white; text-decoration: none; padding: 5px 10px; margin-right: 5px; display: inline-block;">« Первая</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}" style="background: #007bff; color: white; text-decoration: none; padding: 5px 10px; margin-right: 5px; display: inline-block;">‹ Предыдущая</a>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <span style="background: #28a745; color: white; padding: 5px 10px; margin-right: 5px; display: inline-block;">{{ num }}</span>
+                    {% else %}
+                        <a href="?page={{ num }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}" style="background: #6c757d; color: white; text-decoration: none; padding: 5px 10px; margin-right: 5px; display: inline-block;">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}" style="background: #007bff; color: white; text-decoration: none; padding: 5px 10px; margin-right: 5px; display: inline-block;">Следующая ›</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}" style="background: #007bff; color: white; text-decoration: none; padding: 5px 10px; display: inline-block;">Последняя »</a>
+                {% endif %}
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% endif %}
+
+<hr>
+<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
 {% endblock %} 

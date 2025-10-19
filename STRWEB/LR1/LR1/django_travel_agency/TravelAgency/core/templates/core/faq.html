@@ -1,0 +1,84 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Часто задаваемые вопросы | TravelDream{% endblock %}
+
+{% block extra_css %}{% endblock %}
+
+{% block content %}
+<h1> Часто задаваемые вопросы</h1>
+<p>Ответы на самые популярные вопросы о наших услугах</p>
+
+{% if faq_categories %}
+    <p><strong>Всего вопросов: {{ total_faq_count }}</strong></p>
+    
+    <!-- FAQ Categories -->
+    {% for category in faq_categories %}
+    <h2> {{ category.name }}</h2>
+    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+            <tr bgcolor="#f0f0f0">
+                <th>Вопрос</th>
+                <th>Краткий ответ</th>
+                <th>Дата добавления</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for qa in category.questions %}
+            <tr>
+                <td><strong>{{ qa.q }}</strong></td>
+                <td>{{ qa.a|truncatewords:20 }}</td>
+                <td>{{ qa.created_at|date:"d.m.Y" }}</td>
+                <td>
+                    <a href="{{ qa.url }}" style="background: #007bff; color: white; text-decoration: none; padding: 5px 10px; border-radius: 3px;">
+                        Читать полностью
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+    {% endfor %}
+{% else %}
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 5px; text-align: center; margin: 20px 0;">
+        <h3>Вопросы пока не добавлены</h3>
+        <p>Часто задаваемые вопросы будут добавлены администратором в ближайшее время.</p>
+        <p><a href="{% url 'core:glossary' %}" style="background: #007bff; color: white; text-decoration: none; padding: 8px 16px; border-radius: 5px;">
+            Посмотреть словарь терминов
+        </a></p>
+    </div>
+{% endif %}
+
+<!-- Contact for More Questions -->
+<h2> Не нашли ответ на свой вопрос?</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Способы связи</th>
+            <th>Контакты</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong> Телефон</strong></td>
+            <td>+375 44 323-23-23</td>
+        </tr>
+        <tr>
+            <td><strong> Email</strong></td>
+            <td>info@traveldream.ru</td>
+        </tr>
+        <tr>
+            <td><strong> Онлайн-чат</strong></td>
+            <td>Доступен на главной странице</td>
+        </tr>
+        <tr>
+            <td><strong> Офис</strong></td>
+            <td>г. Минск, ул. Городецкая, 123</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
+{% endblock %}

@@ -1,109 +1,188 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block extra_css %}
-<style>
-    .page { padding: 1.5rem 0; }
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-    .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 1rem; }
-    .card.primary { background: #007bff; color: #fff; }
-    .card.success { background: #28a745; color: #fff; }
-    .card.warning { background: #ffc107; color: #333; }
-    .card.danger { background: #dc3545; color: #fff; }
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-    .muted { color: #666; }
-    .img-fluid { max-width: 100%; height: auto; }
-    h1 { margin: 0 0 1rem 0; }
-    h5 { margin: 0 0 0.75rem 0; }
-</style>
-{% endblock %}
+{% block extra_css %}{% endblock %}
 
 {% block content %}
-<div class="container page">
-    <h1>Статистика турагентства</h1>
+<h1> Статистика турагентства</h1>
+<p><a href="{% url 'core:home' %}"> Главная</a> › Статистика</p>
 
-    <div class="cards">
-        <div class="card primary">
-            <h6>Всего заказов</h6>
-            <h2 style="margin:0;">{{ total_orders }}</h2>
-        </div>
-        <div class="card success">
-            <h6>Подтвержденные</h6>
-            <h2 style="margin:0;">{{ confirmed_orders }}</h2>
-        </div>
-        <div class="card warning">
-            <h6>Ожидающие</h6>
-            <h2 style="margin:0;">{{ pending_orders }}</h2>
-        </div>
-        <div class="card danger">
-            <h6>Отмененные</h6>
-            <h2 style="margin:0;">{{ cancelled_orders }}</h2>
-        </div>
-    </div>
+<!-- Orders Statistics -->
+<h2> Статистика заказов</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Тип заказа</th>
+            <th>Количество</th>
+            <th>Процент</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Всего заказов</strong></td>
+            <td><strong style="color: #007bff; font-size: 1.2em;">{{ total_orders }}</strong></td>
+            <td>100%</td>
+        </tr>
+        <tr>
+            <td><strong> Подтвержденные</strong></td>
+            <td><strong style="color: #28a745; font-size: 1.2em;">{{ confirmed_orders }}</strong></td>
+            <td>{% if total_orders > 0 %}{{ confirmed_orders|floatformat:0|add:0|mul:100|div:total_orders|floatformat:1 }}%{% else %}0%{% endif %}</td>
+        </tr>
+        <tr>
+            <td><strong>⏳ Ожидающие</strong></td>
+            <td><strong style="color: #ffc107; font-size: 1.2em;">{{ pending_orders }}</strong></td>
+            <td>{% if total_orders > 0 %}{{ pending_orders|floatformat:0|add:0|mul:100|div:total_orders|floatformat:1 }}%{% else %}0%{% endif %}</td>
+        </tr>
+        <tr>
+            <td><strong> Отмененные</strong></td>
+            <td><strong style="color: #dc3545; font-size: 1.2em;">{{ cancelled_orders }}</strong></td>
+            <td>{% if total_orders > 0 %}{{ cancelled_orders|floatformat:0|add:0|mul:100|div:total_orders|floatformat:1 }}%{% else %}0%{% endif %}</td>
+        </tr>
+    </tbody>
+</table>
 
-    <div class="grid-2">
-        <div class="card">
-            <h5>Финансовый обзор</h5>
-            <div class="grid-2">
-                <div>
-                    <p class="muted" style="margin:0 0 .25rem 0;">Общая выручка</p>
-                    <h3 style="margin:0;">{{ total_revenue|floatformat:2 }} BYN</h3>
-                </div>
-                <div>
-                    <p class="muted" style="margin:0 0 .25rem 0;">Средний чек</p>
-                    <h3 style="margin:0;">{{ avg_order_value|floatformat:2 }} BYN</h3>
-                </div>
-            </div>
-        </div>
-    </div>
+<hr>
 
-    <div class="grid-2">
-        <div class="card" style="grid-column: 1 / -1;">
-            <h5>Динамика продаж за последние 12 месяцев</h5>
-            {% if sales_trend_chart %}
-                <img src="data:image/png;base64,{{ sales_trend_chart }}" alt="Динамика продаж" class="img-fluid">
-            {% else %}
-                <p>Нет данных для отображения</p>
-            {% endif %}
-        </div>
-    </div>
+<!-- Financial Overview -->
+<h2> Финансовый обзор</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Показатель</th>
+            <th>Значение</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Общая выручка</strong></td>
+            <td><strong style="color: #28a745; font-size: 1.3em;">{{ total_revenue|floatformat:2 }} BYN</strong></td>
+        </tr>
+        <tr>
+            <td><strong>Средний чек</strong></td>
+            <td><strong style="color: #007bff; font-size: 1.3em;">{{ avg_order_value|floatformat:2 }} BYN</strong></td>
+        </tr>
+        <tr>
+            <td><strong>Конверсия</strong></td>
+            <td><strong style="color: #6c757d; font-size: 1.3em;">{% if total_orders > 0 %}{{ confirmed_orders|floatformat:0|add:0|mul:100|div:total_orders|floatformat:1 }}%{% else %}0%{% endif %}</strong></td>
+        </tr>
+    </tbody>
+</table>
 
-    <div class="grid-2">
-        <div class="card">
-            <h5>Популярные направления</h5>
-            {% if popular_chart %}
-                <img src="data:image/png;base64,{{ popular_chart }}" alt="График популярных стран" class="img-fluid">
-            {% else %}
-                <p>Нет данных для отображения</p>
-            {% endif %}
-        </div>
-        <div class="card">
-            <h5>Прибыльные направления</h5>
-            {% if profitable_chart %}
-                <img src="data:image/png;base64,{{ profitable_chart }}" alt="График прибыльных стран" class="img-fluid">
-            {% else %}
-                <p>Нет данных для отображения</p>
-            {% endif %}
-        </div>
-    </div>
+<hr>
 
-    <div class="grid-2">
-        <div class="card">
-            <h5>Распределение сумм заказов</h5>
-            {% if amounts_chart %}
-                <img src="data:image/png;base64,{{ amounts_chart }}" alt="Распределение сумм заказов" class="img-fluid">
-            {% else %}
-                <p>Нет данных для отображения</p>
-            {% endif %}
-        </div>
-        <div class="card">
-            <h5>Распределение возрастов клиентов</h5>
-            {% if age_chart %}
-                <img src="data:image/png;base64,{{ age_chart }}" alt="Распределение возрастов" class="img-fluid">
-            {% else %}
-                <p>Нет данных для отображения</p>
-            {% endif %}
-        </div>
-    </div>
-</div>
+<!-- Sales Trend Chart -->
+<h2> Динамика продаж за последние 12 месяцев</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>График динамики продаж</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: center;">
+                {% if sales_trend_chart %}
+                <img src="data:image/png;base64,{{ sales_trend_chart }}" alt="Динамика продаж" style="max-width: 100%; height: auto;">
+                {% else %}
+                <p style="color: #666; padding: 2rem;">Нет данных для отображения</p>
+                {% endif %}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Popular Destinations -->
+<h2> Популярные направления</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>График популярных стран</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: center;">
+                {% if popular_chart %}
+                <img src="data:image/png;base64,{{ popular_chart }}" alt="График популярных стран" style="max-width: 100%; height: auto;">
+                {% else %}
+                <p style="color: #666; padding: 2rem;">Нет данных для отображения</p>
+                {% endif %}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Profitable Destinations -->
+<h2> Прибыльные направления</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>График прибыльных стран</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: center;">
+                {% if profitable_chart %}
+                <img src="data:image/png;base64,{{ profitable_chart }}" alt="График прибыльных стран" style="max-width: 100%; height: auto;">
+                {% else %}
+                <p style="color: #666; padding: 2rem;">Нет данных для отображения</p>
+                {% endif %}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Order Amounts Distribution -->
+<h2> Распределение сумм заказов</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Распределение сумм заказов</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: center;">
+                {% if amounts_chart %}
+                <img src="data:image/png;base64,{{ amounts_chart }}" alt="Распределение сумм заказов" style="max-width: 100%; height: auto;">
+                {% else %}
+                <p style="color: #666; padding: 2rem;">Нет данных для отображения</p>
+                {% endif %}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- Customer Age Distribution -->
+<h2> Распределение возрастов клиентов</h2>
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <thead>
+        <tr bgcolor="#f0f0f0">
+            <th>Распределение возрастов</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: center;">
+                {% if age_chart %}
+                <img src="data:image/png;base64,{{ age_chart }}" alt="Распределение возрастов" style="max-width: 100%; height: auto;">
+                {% else %}
+                <p style="color: #666; padding: 2rem;">Нет данных для отображения</p>
+                {% endif %}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
 {% endblock %}
