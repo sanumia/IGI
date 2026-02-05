@@ -1,0 +1,365 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Контакты | TravelDream{% endblock %}
+
+{% block extra_css %}
+<style>
+  .contacts-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .contacts-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    color: white;
+  }
+  
+  .contacts-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .team-section {
+    margin: 40px 0;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+    position: relative;
+  }
+  
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 2px;
+  }
+  
+  .team-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    margin: 30px 0;
+  }
+  
+  .employee-card {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    flex: 1;
+    min-width: 300px;
+    max-width: 350px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .employee-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+  }
+  
+  .employee-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  }
+  
+  .employee-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 20px;
+    display: block;
+    border: 4px solid #f8f9fa;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .employee-card:hover .employee-photo {
+    transform: scale(1.05);
+    border-color: #667eea;
+  }
+  
+  .employee-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  
+  .employee-position {
+    font-size: 1.1rem;
+    color: #667eea;
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+  
+  .employee-description {
+    color: #7f8c8d;
+    line-height: 1.6;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+  }
+  
+  .employee-contacts {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+  
+  .contact-item:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+  }
+  
+  .contact-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+  
+  .contact-text {
+    color: #2c3e50;
+    font-weight: 500;
+  }
+  
+  .contact-link {
+    color: #667eea;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .contact-link:hover {
+    color: #764ba2;
+    text-decoration: none;
+  }
+  
+  .office-info {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 20px;
+    padding: 30px;
+    margin: 40px 0;
+    text-align: center;
+  }
+  
+  .office-info h3 {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+  
+  .office-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .office-detail {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .office-detail h4 {
+    color: #667eea;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .office-detail p {
+    color: #7f8c8d;
+    margin: 0;
+    line-height: 1.5;
+  }
+  
+  .no-employees {
+    text-align: center;
+    padding: 60px 20px;
+    color: #7f8c8d;
+  }
+  
+  .no-employees h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  @media (max-width: 768px) {
+    .team-grid {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .employee-card {
+      min-width: 280px;
+      max-width: 100%;
+    }
+    
+    .office-details {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="contacts-container">
+  <div class="contacts-header">
+    <h1>Наша команда</h1>
+    <p>Профессионалы, готовые помочь вам организовать идеальное путешествие</p>
+  </div>
+  
+  <div class="team-section">
+    <h2 class="section-title">Сотрудники</h2>
+    
+    {% if employees %}
+    <div class="team-grid">
+      {% for employee in employees %}
+      <div class="employee-card">
+        {% if employee.photo %}
+        <img src="{{ employee.photo.url }}" alt="{{ employee.name }}" class="employee-photo">
+        {% else %}
+        <div class="employee-photo" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: 700;">
+          {{ employee.name|first|upper }}
+        </div>
+        {% endif %}
+        
+        <h3 class="employee-name">{{ employee.name }}</h3>
+        <div class="employee-position">{{ employee.position }}</div>
+        <p class="employee-description">{{ employee.description }}</p>
+        
+        <div class="employee-contacts">
+          {% if employee.phone %}
+          <div class="contact-item">
+            <div class="contact-icon">📞</div>
+            <div class="contact-text">
+              <a href="tel:{{ employee.phone }}" class="contact-link">{{ employee.phone }}</a>
+            </div>
+          </div>
+          {% endif %}
+          
+          {% if employee.email %}
+          <div class="contact-item">
+            <div class="contact-icon">✉️</div>
+            <div class="contact-text">
+              <a href="mailto:{{ employee.email }}" class="contact-link">{{ employee.email }}</a>
+            </div>
+          </div>
+          {% endif %}
+          
+          {% if employee.telegram %}
+          <div class="contact-item">
+            <div class="contact-icon">💬</div>
+            <div class="contact-text">
+              <a href="https://t.me/{{ employee.telegram }}" class="contact-link" target="_blank">@{{ employee.telegram }}</a>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-employees">
+      <h3>Информация о сотрудниках</h3>
+      <p>Данные о сотрудниках будут добавлены в ближайшее время</p>
+    </div>
+    {% endif %}
+  </div>
+  
+  <div class="office-info">
+    <h3>Офис и контакты</h3>
+    <p>Мы всегда рады помочь вам с выбором и организацией путешествия</p>
+    
+    <div class="office-details">
+      <div class="office-detail">
+        <h4>📍 Адрес</h4>
+        <p>
+          {% if agency and agency.address %}
+            {{ agency.address }}
+          {% else %}
+            г. Минск, ул. Городецкая, 123
+          {% endif %}
+        </p>
+      </div>
+      
+      <div class="office-detail">
+        <h4>📞 Телефон</h4>
+        <p>
+          {% if agency and agency.phone_number %}
+            <a href="tel:{{ agency.phone_number }}" class="contact-link">{{ agency.phone_number }}</a>
+          {% else %}
+            <a href="tel:+375443232323" class="contact-link">+375 44 323-23-23</a>
+          {% endif %}
+        </p>
+      </div>
+      
+      <div class="office-detail">
+        <h4>✉️ Email</h4>
+        <p>
+          {% if agency and agency.email %}
+            <a href="mailto:{{ agency.email }}" class="contact-link">{{ agency.email }}</a>
+          {% else %}
+            <a href="mailto:info@traveldream.ru" class="contact-link">info@traveldream.ru</a>
+          {% endif %}
+        </p>
+      </div>
+      
+      <div class="office-detail">
+        <h4>🕒 Режим работы</h4>
+        <p>
+          Пн-Пт: 9:00-18:00<br>
+          Сб: 10:00-16:00<br>
+          Вс: выходной
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <div style="text-align: center; margin-top: 40px; padding: 20px; color: #7f8c8d;">
+    <small>Последнее обновление: {% now "d.m.Y H:i" %}</small>
+  </div>
+</div>
+{% endblock %}

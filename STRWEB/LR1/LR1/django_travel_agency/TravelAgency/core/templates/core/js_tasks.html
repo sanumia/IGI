@@ -1,0 +1,307 @@
+{% extends 'core/base.html' %} {% load static %} {% block title %}Задания по JavaScript | TravelDream{% endblock %} {% block extra_css %}
+<style>
+    .js-tasks-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .task-section {
+        margin-bottom: 40px;
+        padding: 30px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .task-section h2 {
+        color: #667eea;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 10px;
+    }
+    
+    .slider-container {
+        margin: 20px 0;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 20px;
+        background: #f8f9fa;
+    }
+    
+    .slide {
+        text-align: center;
+    }
+    
+    .slide img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+    
+    .slide-caption {
+        margin-top: 15px;
+        font-size: 1.1rem;
+        color: #333;
+    }
+    
+    .form-generator-container {
+        margin: 20px 0;
+    }
+    /* Стили для параллакс карточек */
+    
+    .parallax-demo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 2rem 0;
+    }
+    
+    .tour-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        transform-style: preserve-3d;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+    }
+    
+    .tour-image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+        transform-origin: center center;
+        display: block;
+        pointer-events: none;
+    }
+    
+    .tour-content {
+        padding: 25px;
+    }
+    
+    .tour-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 15px;
+        line-height: 1.4;
+    }
+    
+    .tour-description {
+        color: #7f8c8d;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    
+    .tour-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #10b981;
+        margin-bottom: 15px;
+    }
+    
+    .parallax-info {
+        background: #f0f7ff;
+        border-left: 4px solid #667eea;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 5px;
+    }
+    
+    .parallax-info p {
+        margin: 5px 0;
+        color: #555;
+    }
+</style>
+{% endblock %} {% block content %}
+<div class="js-tasks-container">
+    <h1 style="text-align: center; margin-bottom: 40px;">Задания по JavaScript</h1>
+
+    <!-- Задание 1: Слайдер -->
+    <div class="task-section">
+        <h2>Задание 1: Слайдер</h2>
+        <div class="slider-container" id="slider1">
+            <div class="slide">
+                <a href="{% url 'core:country_list' %}">
+                    <img src="{% static 'vendor/img/slides/slide-1.jpg' %}" alt="Слайд 1">
+                    <div class="slide-caption">Страны и направления</div>
+                </a>
+            </div>
+            <div class="slide">
+                <a href="{% url 'core:hotel_list' %}">
+                    <img src="{% static 'vendor/img/slides/slide-2.jpg' %}" alt="Слайд 2">
+                    <div class="slide-caption">Отели и размещение</div>
+                </a>
+            </div>
+            <div class="slide">
+                <a href="{% url 'core:tour_list' %}">
+                    <img src="{% static 'vendor/img/slides/slide-3.jpg' %}" alt="Слайд 3">
+                    <div class="slide-caption">Туры и путешествия</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Задание 4: Генератор элементов формы -->
+    <div class="task-section">
+        <h2>Задание 4: Генератор элементов формы (Input Range)</h2>
+        <div class="form-generator-container" id="formGeneratorContainer"></div>
+    </div>
+
+    <!-- Задание: Проверка даты рождения -->
+    <div class="task-section">
+        <h2>Проверка даты рождения и возраста</h2>
+        <div id="birthdateCheckerContainer"></div>
+    </div>
+
+    <!-- Задание: Экспортируемые товары -->
+    <div class="task-section">
+        <h2>Экспортируемые товары (Классы и наследование)</h2>
+        <div style="margin-bottom: 20px;">
+            <label>
+                <input type="radio" name="inheritanceType" value="prototype" checked>
+                Прототипное наследование
+            </label>
+            <label style="margin-left: 20px;">
+                <input type="radio" name="inheritanceType" value="class">
+                Классы ES6
+            </label>
+        </div>
+        <div id="exportGoodsContainer"></div>
+    </div>
+
+    <!-- Задание: Дополнительные API -->
+    <div class="task-section">
+        <h2>Демонстрация дополнительных API</h2>
+        <div id="apiDemoContainer"></div>
+    </div>
+
+    <!-- Задание: Графики Chart.js -->
+    <div class="task-section">
+        <h2>Графики разложения ln(1-x) в ряд Тейлора</h2>
+        <div id="taylorChartContainer"></div>
+    </div>
+
+    <!-- Задание: Эффект параллакса для карточек -->
+    <div class="task-section">
+        <h2>Эффект параллакса для карточек туров</h2>
+
+        <div class="parallax-demo-grid">
+            <div class="tour-card">
+                <img src="{% static 'vendor/img/slides/slide-1.jpg' %}" alt="Тур 1" class="tour-image">
+                <div class="tour-content">
+                    <h3 class="tour-title">Париж, Франция</h3>
+                    <p class="tour-description">Романтическое путешествие в столицу моды и искусства. Посетите Эйфелеву башню, Лувр и насладитесь французской кухней.</p>
+                    <div class="tour-price">от 4500</div>
+                </div>
+            </div>
+            <div class="tour-card">
+                <img src="{% static 'vendor/img/slides/slide-2.jpg' %}" alt="Тур 2" class="tour-image">
+                <div class="tour-content">
+                    <h3 class="tour-title">Токио, Япония</h3>
+                    <p class="tour-description">Погрузитесь в культуру Страны восходящего солнца. Современные технологии и древние традиции в одном путешествии.</p>
+                    <div class="tour-price">от 6500</div>
+                </div>
+            </div>
+            <div class="tour-card">
+                <img src="{% static 'vendor/img/slides/slide-3.jpg' %}" alt="Тур 3" class="tour-image">
+                <div class="tour-content">
+                    <h3 class="tour-title">Бали, Индонезия</h3>
+                    <p class="tour-description">Тропический рай с белоснежными пляжами, экзотической природой и расслабляющей атмосферой для идеального отдыха.</p>
+                    <div class="tour-price">от 5500</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Задание: Анимации при скроллинге -->
+    <div class="task-section" style="min-height: 2000px;">
+        <h2>Анимации при скроллинге</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 30px;">
+            Прокрутите страницу вниз, чтобы увидеть анимации. При прокрутке вверх анимации сбрасываются.
+        </p>
+        <div id="scrollAnimationsContainer"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="{% static 'js/slider.js' %}"></script>
+<script src="{% static 'js/form-generator.js' %}"></script>
+<script src="{% static 'js/birthdate-checker.js' %}"></script>
+<script src="{% static 'js/export-goods.js' %}"></script>
+<script src="{% static 'js/api-demo.js' %}"></script>
+<script src="{% static 'js/taylor-series-chart.js' %}"></script>
+<script src="{% static 'js/scroll-animations.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Инициализация слайдера
+        const sliderContainer = document.getElementById('slider1');
+        if (sliderContainer) {
+            const slider = new Slider(sliderContainer, {
+                loop: true,
+                navs: true,
+                pags: true,
+                auto: true,
+                stopMouseHover: true,
+                delay: 5000
+            });
+        }
+
+        // Инициализация генератора элементов формы
+        const formGeneratorContainer = document.getElementById('formGeneratorContainer');
+        if (formGeneratorContainer) {
+            const formGenerator = new FormElementGenerator('formGeneratorContainer');
+        }
+
+        // Инициализация проверки даты рождения
+        if (document.getElementById('birthdateCheckerContainer')) {
+            new BirthdateChecker();
+        }
+
+        // Инициализация экспортируемых товаров
+        const exportGoodsContainer = document.getElementById('exportGoodsContainer');
+        if (exportGoodsContainer) {
+            const inheritanceTypeRadios = document.querySelectorAll('input[name="inheritanceType"]');
+            let goodsManager = new ExportGoodsManager('exportGoodsContainer', false);
+
+            inheritanceTypeRadios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    const useClassSyntax = e.target.value === 'class';
+                    exportGoodsContainer.innerHTML = '';
+                    goodsManager = new ExportGoodsManager('exportGoodsContainer', useClassSyntax);
+                });
+            });
+        }
+
+        // Инициализация API демо
+        if (document.getElementById('apiDemoContainer')) {
+            new APIDemo('apiDemoContainer');
+        }
+
+        // Инициализация графиков
+        if (document.getElementById('taylorChartContainer')) {
+            // Проверяем, загружена ли библиотека Chart.js
+            if (typeof Chart !== 'undefined') {
+                new TaylorSeriesChart('taylorChartContainer');
+            } else {
+                // Ждем загрузки Chart.js
+                const checkChart = setInterval(() => {
+                    if (typeof Chart !== 'undefined') {
+                        clearInterval(checkChart);
+                        new TaylorSeriesChart('taylorChartContainer');
+                    }
+                }, 100);
+            }
+        }
+
+        // Инициализация анимаций при скроллинге
+        if (document.getElementById('scrollAnimationsContainer')) {
+            new ScrollAnimations();
+        }
+    });
+</script>
+{% endblock %}

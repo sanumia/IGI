@@ -1,154 +1,391 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}Сертификат агентства{% endblock %}
 
+{% block extra_css %}
+<style>
+  /* Стили для печати */
+  @media print {
+    body { 
+      background: white !important; 
+      padding-top: 0 !important;
+    }
+    .site-nav, .preloader, footer { 
+      display: none !important; 
+    }
+    .certificate-container {
+      margin: 0 !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+    }
+  }
+
+  .certificate-container {
+    max-width: 800px;
+    margin: 20px auto;
+    background: white;
+    padding: 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+  }
+
+  .certificate {
+    position: relative;
+    background: white;
+    padding: 60px 50px;
+    border: 3px solid #dc3545;
+    border-radius: 0;
+    font-family: 'Times New Roman', serif;
+    line-height: 1.4;
+  }
+
+  .certificate::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    border: 2px solid #007bff;
+    border-radius: 0;
+  }
+
+  .certificate-header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 20px;
+  }
+
+  .certificate-header .header-text {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: normal;
+  }
+
+  .certificate-title {
+    text-align: center;
+    margin: 30px 0;
+  }
+
+  .certificate-title .main-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .certificate-title .subtitle {
+    font-size: 32px;
+    font-weight: bold;
+    color: #dc3545;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .certificate-title .description {
+    font-size: 16px;
+    color: #333;
+    font-weight: normal;
+  }
+
+  .certificate-content {
+    position: relative;
+    margin: 40px 0;
+  }
+
+  .certificate-content::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="%23e3f2fd" stroke-width="2"/><circle cx="50" cy="50" r="35" fill="none" stroke="%23e3f2fd" stroke-width="1"/><circle cx="50" cy="50" r="25" fill="none" stroke="%23e3f2fd" stroke-width="1"/></svg>') no-repeat center;
+    background-size: contain;
+    opacity: 0.3;
+    z-index: 0;
+  }
+
+  .certificate-info {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  .certificate-info .location-date {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    font-size: 16px;
+    color: #333;
+  }
+
+  .certificate-info .company-info {
+    text-align: center;
+    margin: 30px 0;
+  }
+
+  .certificate-info .company-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  .certificate-info .company-inn {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  .certificate-info .registry-number {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .certificate-signature {
+    margin-top: 60px;
+    position: relative;
+  }
+
+  .signature-line {
+    border-bottom: 1px solid #333;
+    width: 300px;
+    margin: 0 auto 10px;
+    height: 40px;
+    position: relative;
+  }
+
+  .signature-stamp {
+    position: absolute;
+    right: 50px;
+    top: -20px;
+    width: 80px;
+    height: 80px;
+    border: 2px solid #007bff;
+    border-radius: 50%;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    text-align: center;
+    color: #007bff;
+    font-weight: bold;
+  }
+
+  .signature-name {
+    text-align: left;
+    margin-left: 50px;
+    font-size: 16px;
+    color: #333;
+  }
+
+  .signature-title {
+    text-align: left;
+    margin-left: 50px;
+    font-size: 14px;
+    color: #333;
+    margin-top: 5px;
+  }
+
+  .certificate-footer {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .footer-logo {
+    width: 60px;
+    height: 60px;
+    background: #007bff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .footer-info {
+    text-align: right;
+    font-size: 12px;
+    color: #333;
+    line-height: 1.3;
+  }
+
+  .footer-info .association-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .print-button {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    z-index: 1000;
+  }
+
+  .print-button:hover {
+    background: #0056b3;
+  }
+
+  @media (max-width: 768px) {
+    .certificate {
+      padding: 30px 20px;
+    }
+    
+    .certificate-title .main-title {
+      font-size: 18px;
+    }
+    
+    .certificate-title .subtitle {
+      font-size: 24px;
+    }
+    
+    .certificate-info .location-date {
+      flex-direction: column;
+      text-align: center;
+      gap: 10px;
+    }
+    
+    .signature-line {
+      width: 200px;
+    }
+    
+    .signature-stamp {
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      font-size: 8px;
+    }
+    
+    .certificate-footer {
+      flex-direction: column;
+      gap: 20px;
+      text-align: center;
+    }
+    
+    .footer-info {
+      text-align: center;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="certificate">
-<h1>Сертификат агентства</h1>
-<p class="meta">Официальные реквизиты и документы турагентства TravelDream</p>
+<!-- <button class="print-button" onclick="window.print()"> Печать</button> -->
 
-{% if agency %}
-<h2> Общая информация</h2>
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f0f0f0">
-            <th>Параметр</th>
-            <th>Значение</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><strong>Название агентства</strong></td>
-            <td>{{ agency.agency_name }}</td>
-        </tr>
-        <tr>
-            <td><strong>Юридическое название</strong></td>
-            <td>{{ agency.legal_name }}</td>
-        </tr>
-        <tr>
-            <td><strong>ИНН</strong></td>
-            <td>{{ agency.tax_id }}</td>
-        </tr>
-        <tr>
-            <td><strong>ОГРН</strong></td>
-            <td>{{ agency.registration_number }}</td>
-        </tr>
-        <tr>
-            <td><strong>Адрес</strong></td>
-            <td>{{ agency.address }}</td>
-        </tr>
-        <tr>
-            <td><strong>Телефон</strong></td>
-            <td>{{ agency.phone_number }}</td>
-        </tr>
-        <tr>
-            <td><strong>Email</strong></td>
-            <td>{{ agency.email }}</td>
-        </tr>
-    </tbody>
-</table>
+<div class="certificate-container">
+  <div class="certificate">
+    <!-- Заголовок сертификата -->
+    <div class="certificate-header">
+      <div class="header-text">
+        СЕРТИФИКАТ О ЧЛЕНСТВЕ В РТА (РЕЕСТР ТУРИСТИЧЕСКИХ АГЕНТСТВ)<br>
+        АССОЦИАЦИИ ТУРПОМОЩЬ
+      </div>
+    </div>
 
-<h2> Банковские реквизиты</h2>
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f0f0f0">
-            <th>Параметр</th>
-            <th>Значение</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><strong>Банк</strong></td>
-            <td>{{ agency.bank_name }}</td>
-        </tr>
-        <tr>
-            <td><strong>Расчетный счет</strong></td>
-            <td>{{ agency.bank_account_number }}</td>
-        </tr>
-        <tr>
-            <td><strong>Корреспондентский счет</strong></td>
-            <td>{{ agency.correspondent_account }}</td>
-        </tr>
-        <tr>
-            <td><strong>БИК</strong></td>
-            <td>{{ agency.bic }}</td>
-        </tr>
-    </tbody>
-</table>
+    <!-- Основной заголовок -->
+    <div class="certificate-title">
+      <div class="main-title">ЕДИНЫЙ РЕЕСТР ТУРАГЕНТОВ</div>
+      <div class="subtitle">СВИДЕТЕЛЬСТВО</div>
+      <div class="description">о внесении сведений</div>
+    </div>
 
-<h2> Ответственные лица</h2>
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f0f0f0">
-            <th>Должность</th>
-            <th>ФИО</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><strong>Директор</strong></td>
-            <td>{{ agency.director_name }}</td>
-        </tr>
-    </tbody>
-</table>
+    <!-- Содержимое сертификата -->
+    <div class="certificate-content">
+      <div class="certificate-info">
+        <div class="location-date">
+          <span>г. Москва</span>
+          <span>{% now "d F Y" %}</span>
+        </div>
+        
+        <div class="company-info">
+          {% if agency %}
+            <div class="company-name">{{ agency.legal_name|default:"Общество с ограниченной ответственностью «TravelDream»" }}</div>
+            <div class="company-inn">(ИНН {{ agency.tax_id|default:"1234567890" }})</div>
+            <div class="registry-number">Реестровый номер: {{ agency.license_number|default:"8241" }}</div>
+          {% else %}
+            <div class="company-name">Общество с ограниченной ответственностью «TravelDream»</div>
+            <div class="company-inn">(ИНН 1234567890)</div>
+            <div class="registry-number">Реестровый номер: 8241</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
 
-<h2> Лицензия</h2>
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f0f0f0">
-            <th>Параметр</th>
-            <th>Значение</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><strong>Номер лицензии</strong></td>
-            <td>{{ agency.license_number }}</td>
-        </tr>
-        <tr>
-            <td><strong>Кем выдана</strong></td>
-            <td>{{ agency.license_issued_by }}</td>
-        </tr>
-        <tr>
-            <td><strong>Дата выдачи</strong></td>
-            <td>{{ agency.license_issue_date|date:"d.m.Y" }}</td>
-        </tr>
-    </tbody>
-</table>
+    <!-- Подпись и печать -->
+    <div class="certificate-signature">
+      <div class="signature-line">
+        <div class="signature-stamp">
+          ТУРПОМОЩЬ<br>
+          🌍
+        </div>
+      </div>
+      <div class="signature-name">
+        {% if agency %}
+          {{ agency.director_name|default:"Иванов И.И." }}
+        {% else %}
+          Иванов И.И.
+        {% endif %}
+      </div>
+      <div class="signature-title">
+        Директор Ассоциации "ТУРПОМОЩЬ"
+      </div>
+    </div>
 
-<h2> Логотип</h2>
-{% if agency.logo %}
-    <p><img src="{{ agency.logo.url }}" alt="Логотип" style="max-width: 200px; height: auto;"></p>
-{% else %}
-    <p><em>Логотип не загружен</em></p>
-{% endif %}
-
-<h2> Служебная информация</h2>
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f5f5f5">
-            <th>Параметр</th>
-            <th>Значение</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><strong>Создано</strong></td>
-            <td>{{ agency.created_at|date:"d.m.Y H:i" }}</td>
-        </tr>
-        <tr>
-            <td><strong>Обновлено</strong></td>
-            <td>{{ agency.updated_at|date:"d.m.Y H:i" }}</td>
-        </tr>
-    </tbody>
-</table>
-{% else %}
-<p><em>Данные агентства отсутствуют.</em></p>
-{% endif %}
-
-<hr>
-<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
+    <!-- Футер с контактной информацией -->
+    <div class="certificate-footer">
+      <div class="footer-logo">
+        🌍<br>
+        ТУР
+      </div>
+      <div class="footer-info">
+        <div class="association-name">
+          Ассоциация "Объединение туроператоров в сфере выездного туризма "ТУРПОМОЩЬ""
+        </div>
+        <div>101000, г. Москва, ул. Мясницкая, дом 47</div>
+        <div>Тел. +7 (499) 678-12-03</div>
+        <div>e-mail: office@tourpom.ru</div>
+      </div>
+    </div>
+  </div>
 </div>
+<!-- 
+<script>
+// Функция для печати
+function printCertificate() {
+  window.print();
+}
+
+// Добавляем обработчик для кнопки печати
+document.addEventListener('DOMContentLoaded', function() {
+  const printButton = document.querySelector('.print-button');
+  if (printButton) {
+    printButton.addEventListener('click', printCertificate);
+  }
+});
+</script> -->
 {% endblock %}
 
 

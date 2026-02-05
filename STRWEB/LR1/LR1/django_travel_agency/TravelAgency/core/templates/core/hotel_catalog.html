@@ -1,0 +1,315 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Каталог отелей | TravelDream{% endblock %}
+
+{% block extra_css %}
+<style>
+  .catalog-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .catalog-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    color: white;
+  }
+  
+  .catalog-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .catalog-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+  
+  /* CSS Grid Layout for hotels */
+  .hotels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+  
+  .hotel-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  
+  .hotel-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  }
+  
+  .hotel-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .hotel-card:hover .hotel-image {
+    transform: scale(1.05);
+  }
+  
+  .hotel-content {
+    padding: 25px;
+  }
+  
+  .hotel-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 15px;
+  }
+  
+  .stars {
+    color: #ffc107;
+    font-size: 1.2rem;
+  }
+  
+  .rating-text {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-left: 5px;
+  }
+  
+  .hotel-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  
+  .hotel-location {
+    color: #667eea;
+    font-weight: 600;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .hotel-description {
+    color: #7f8c8d;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .hotel-amenities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .amenity {
+    background: #f8f9fa;
+    color: #667eea;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  
+  .hotel-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+  }
+  
+  .hotel-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #10b981;
+  }
+  
+  .price-period {
+    font-size: 0.9rem;
+    color: #6b7280;
+  }
+  
+  .hotel-btn {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    width: 100%;
+    text-align: center;
+  }
+  
+  .hotel-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+  
+  .filters-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+  }
+  
+  .filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  .filter-btn {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .filter-btn:hover,
+  .filter-btn.active {
+    background: #667eea;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .no-hotels {
+    text-align: center;
+    padding: 60px 20px;
+    color: #7f8c8d;
+  }
+  
+  .no-hotels h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  @media (max-width: 768px) {
+    .hotels-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .catalog-header h1 {
+      font-size: 2rem;
+    }
+    
+    .filter-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="catalog-container">
+  <div class="catalog-header">
+    <h1>Каталог отелей</h1>
+    <p>Найдите идеальное место для отдыха</p>
+  </div>
+  
+  <div class="filters-section">
+    <div class="filter-buttons">
+      <a href="{% url 'core:hotel_list' %}" class="filter-btn {% if not request.GET.category %}active{% endif %}">Все отели</a>
+      <a href="?category=luxury" class="filter-btn {% if request.GET.category == 'luxury' %}active{% endif %}">Люкс</a>
+      <a href="?category=business" class="filter-btn {% if request.GET.category == 'business' %}active{% endif %}">Бизнес</a>
+      <a href="?category=resort" class="filter-btn {% if request.GET.category == 'resort' %}active{% endif %}">Курорт</a>
+      <a href="?category=boutique" class="filter-btn {% if request.GET.category == 'boutique' %}active{% endif %}">Бутик</a>
+    </div>
+  </div>
+
+  <!-- Hotels Grid -->
+  {% if hotels %}
+  <div class="hotels-grid">
+    {% for hotel in hotels %}
+    <div class="hotel-card">
+      {% if hotel.image %}
+      <img src="{{ hotel.image.url }}" alt="{{ hotel.name }}" class="hotel-image">
+      {% else %}
+      <div class="hotel-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+        🏨
+      </div>
+      {% endif %}
+      
+      <div class="hotel-content">
+        <div class="hotel-rating">
+          <div class="stars">
+            {% for i in "12345" %}
+              {% if forloop.counter <= hotel.rating %}
+                ★
+              {% else %}
+                ☆
+              {% endif %}
+            {% endfor %}
+          </div>
+          <span class="rating-text">{{ hotel.rating }}/5</span>
+        </div>
+        
+        <h3 class="hotel-title">{{ hotel.name }}</h3>
+        <div class="hotel-location">
+          <span>📍</span>
+          <span>{{ hotel.location }}</span>
+        </div>
+        <p class="hotel-description">{{ hotel.description }}</p>
+        
+        <div class="hotel-amenities">
+          {% for amenity in hotel.amenities.all %}
+          <span class="amenity">{{ amenity.name }}</span>
+          {% endfor %}
+        </div>
+        
+        <div class="hotel-details">
+          <div>
+            <div class="hotel-price">от {{ hotel.price_per_night }} ₽</div>
+            <div class="price-period">за ночь</div>
+          </div>
+        </div>
+        
+        <a href="{{ hotel.get_absolute_url }}" class="hotel-btn">Забронировать</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="no-hotels">
+    <h3>Отели не найдены</h3>
+    <p>Попробуйте изменить параметры поиска</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

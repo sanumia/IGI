@@ -1,0 +1,254 @@
+{% extends 'core/base.html' %} {% load static %} {% block title %}Каталог туров | TravelDream{% endblock %} {% block extra_css %}
+<style>
+    .catalog-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .catalog-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding: 40px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        color: white;
+    }
+    
+    .catalog-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    .catalog-header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+    
+    .tours-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin: 2rem 0;
+    }
+    
+    .tour-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        transform-style: preserve-3d;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+    }
+    
+    .tour-image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+        transform-origin: center center;
+        display: block;
+        pointer-events: none;
+    }
+    
+    .tour-content {
+        padding: 25px;
+    }
+    
+    .tour-category {
+        display: inline-block;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .tour-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 15px;
+        line-height: 1.4;
+    }
+    
+    .tour-description {
+        color: #7f8c8d;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .tour-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+    
+    .tour-duration {
+        color: #667eea;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .tour-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #10b981;
+    }
+    
+    .tour-btn {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        text-decoration: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-block;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        width: 100%;
+        text-align: center;
+    }
+    
+    .tour-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+    
+    .filters-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .filter-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+    }
+    
+    .filter-btn {
+        background: white;
+        color: #667eea;
+        border: 2px solid #667eea;
+        padding: 10px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .filter-btn:hover,
+    .filter-btn.active {
+        background: #667eea;
+        color: white;
+        text-decoration: none;
+    }
+    
+    .no-tours {
+        text-align: center;
+        padding: 60px 20px;
+        color: #7f8c8d;
+    }
+    
+    .no-tours h3 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+    
+    @media (max-width: 768px) {
+        .tours-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        .catalog-header h1 {
+            font-size: 2rem;
+        }
+        .filter-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+</style>
+{% endblock %}{% block content %}
+<div class="catalog-container">
+    <div class="catalog-header">
+        <h1>Каталог туров</h1>
+        <p>Откройте для себя удивительные направления по всему миру</p>
+    </div>
+
+    <div class="filters-section">
+        <div class="filter-buttons">
+            <a href="{% url 'core:tour_list' %}" class="filter-btn {% if not request.GET.category %}active{% endif %}">Все туры</a>
+            <a href="?category=beach" class="filter-btn {% if request.GET.category == 'beach' %}active{% endif %}">Пляжный отдых</a>
+            <a href="?category=cultural" class="filter-btn {% if request.GET.category == 'cultural' %}active{% endif %}">Культурные туры</a>
+            <a href="?category=adventure" class="filter-btn {% if request.GET.category == 'adventure' %}active{% endif %}">Приключения</a>
+            <a href="?category=wellness" class="filter-btn {% if request.GET.category == 'wellness' %}active{% endif %}">Оздоровление</a>
+        </div>
+    </div>
+
+    {% if tours %}
+    <div class="tours-grid">
+        {% for tour in tours %}
+        <div class="tour-card">
+            {% if tour.image %}
+            <img src="{{ tour.image.url }}" alt="{{ tour.title }}" class="tour-image"> {% else %}
+            <div class="tour-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+                🏖️
+            </div>
+            {% endif %}
+
+            <div class="tour-content">
+                <span class="tour-category">{{ tour.get_category_display }}</span>
+                <h3 class="tour-title">{{ tour.title }}</h3>
+                <p class="tour-description">{{ tour.description }}</p>
+
+                <div class="tour-details">
+                    <div class="tour-duration">
+                        <span>⏱️</span>
+                        <span>{{ tour.duration }} дней</span>
+                    </div>
+                    <div class="tour-price">
+                        от {{ tour.price }} ₽
+                    </div>
+                </div>
+
+                <a href="{{ tour.get_absolute_url }}" class="tour-btn">Подробнее</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-tours">
+        <h3>Туры не найдены</h3>
+        <p>Попробуйте изменить параметры поиска</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

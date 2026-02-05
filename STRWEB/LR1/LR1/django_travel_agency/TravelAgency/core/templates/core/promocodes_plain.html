@@ -1,111 +1,343 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
-{% block title %}Промокоды и купоны{% endblock %}
+{% block title %}Промокоды и купоны | TravelDream{% endblock %}
 
-{% block extra_css %}{% endblock %}
+{% block extra_css %}
+<style>
+  .promocodes-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .promocodes-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    color: white;
+  }
+  
+  .promocodes-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .promocodes-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+  
+  .promocodes-section {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    text-align: center;
+    position: relative;
+  }
+  
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 2px;
+  }
+  
+  /* Modern Table Styles */
+  .promocodes-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin: 20px 0;
+  }
+  
+  .promocodes-table th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    font-weight: 600;
+    text-align: left;
+    font-size: 1.1rem;
+    vertical-align: middle;
+  }
+  
+  .promocodes-table td {
+    padding: 20px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #4a5568;
+    vertical-align: middle;
+    line-height: 1.6;
+  }
+  
+  .promocodes-table tr:hover td {
+    background: #f7fafc;
+  }
+  
+  .promocodes-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .promocodes-table td:empty {
+    background: #f8f9fa;
+    color: #6c757d;
+    font-style: italic;
+  }
+  
+  .promocodes-table td:empty::after {
+    content: '—';
+  }
+  
+  .promocodes-table strong {
+    color: #2c3e50;
+    font-weight: 600;
+  }
+  
+  .promo-code {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    color: #667eea;
+    border: 2px dashed #667eea;
+    display: inline-block;
+  }
+  
+  .discount-percentage {
+    color: #10b981;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  
+  .discount-amount {
+    color: #10b981;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  
+  .status-active {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .status-expired {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .status-used {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .no-promocodes {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6b7280;
+  }
+  
+  .no-promocodes h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #2c3e50;
+  }
+  
+  .update-info {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    color: #6c757d;
+  }
+  
+  @media (max-width: 768px) {
+    .promocodes-container {
+      padding: 10px;
+    }
+    
+    .promocodes-section {
+      padding: 20px;
+    }
+    
+    .promocodes-header h1 {
+      font-size: 2rem;
+    }
+    
+    .promocodes-table {
+      font-size: 0.9rem;
+    }
+    
+    .promocodes-table th,
+    .promocodes-table td {
+      padding: 15px 10px;
+    }
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<h1>Промокоды и купоны</h1>
-<p>Специальные предложения и скидки для наших клиентов</p>
-
-<h2> Действующие промокоды</h2>
-{% if active_promos %}
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f0f0f0">
-            <th>Промокод</th>
-            <th>Описание акции</th>
-            <th>Размер скидки</th>
-            <th>Период действия</th>
-            <th>Ограничения</th>
-            <th>Использования</th>
+<div class="promocodes-container">
+  <div class="promocodes-header">
+    <h1>Промокоды и купоны</h1>
+    <p>Специальные предложения и скидки для наших клиентов</p>
+  </div>
+  <div class="promocodes-section">
+    <h2 class="section-title">Действующие промокоды</h2>
+    {% if active_promos %}
+    <table class="promocodes-table">
+      <thead>
+        <tr>
+          <th>Промокод</th>
+          <th>Описание акции</th>
+          <th>Размер скидки</th>
+          <th>Период действия</th>
+          <th>Ограничения</th>
+          <th>Использования</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for promo in active_promos %}
         <tr>
-            <td><strong>{{ promo.code }}</strong></td>
-            <td>{{ promo.description }}</td>
-            <td>
-                {% if promo.discount_type == 'percentage' %}
-                    <span style="color: green; font-weight: bold;">-{{ promo.discount_value }}%</span>
-                {% else %}
-                    <span style="color: green; font-weight: bold;">-{{ promo.discount_value }} руб.</span>
-                {% endif %}
-            </td>
-            <td>
-                <small>{{ promo.start_date|date:"d.m.Y" }} — {{ promo.end_date|date:"d.m.Y" }}</small>
-            </td>
-            <td>
-                {% if promo.min_order_amount %}
-                    <small>Мин. сумма: {{ promo.min_order_amount }} руб.</small>
-                {% else %}
-                    <small>Без ограничений</small>
-                {% endif %}
-            </td>
-            <td>
-                {% if promo.max_uses %}
-                    <small>{{ promo.current_uses }}/{{ promo.max_uses }}</small>
-                {% else %}
-                    <small>{{ promo.current_uses }} использований</small>
-                {% endif %}
-            </td>
+          <td><span class="promo-code">{{ promo.code }}</span></td>
+          <td>{{ promo.description }}</td>
+          <td>
+            {% if promo.discount_type == 'percentage' %}
+              <span class="discount-percentage">-{{ promo.discount_value }}%</span>
+            {% else %}
+              <span class="discount-amount">-{{ promo.discount_value }} руб.</span>
+            {% endif %}
+          </td>
+          <td>
+            <small>{{ promo.start_date|date:"d.m.Y" }} — {{ promo.end_date|date:"d.m.Y" }}</small>
+          </td>
+          <td>
+            {% if promo.min_order_amount %}
+              <small>Мин. сумма: {{ promo.min_order_amount }} руб.</small>
+            {% else %}
+              <small>Без ограничений</small>
+            {% endif %}
+          </td>
+          <td>
+            {% if promo.max_uses %}
+              <small>{{ promo.current_uses }}/{{ promo.max_uses }}</small>
+            {% else %}
+              <small>{{ promo.current_uses }} использований</small>
+            {% endif %}
+          </td>
         </tr>
         {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<p><em>В данный момент нет действующих промокодов.</em></p>
-{% endif %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="no-promocodes">
+      <h3>В данный момент нет действующих промокодов</h3>
+      <p>Следите за обновлениями на нашем сайте</p>
+    </div>
+    {% endif %}
+  </div>
 
-<h2> Архив промокодов</h2>
-{% if archived_promos %}
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f5f5f5">
-            <th>Промокод</th>
-            <th>Описание акции</th>
-            <th>Размер скидки</th>
-            <th>Период действия</th>
-            <th>Использования</th>
-            <th>Статус</th>
+  <div class="promocodes-section">
+    <h2 class="section-title">Архив промокодов</h2>
+    {% if archived_promos %}
+    <table class="promocodes-table">
+      <thead>
+        <tr>
+          <th>Промокод</th>
+          <th>Описание акции</th>
+          <th>Размер скидки</th>
+          <th>Период действия</th>
+          <th>Использования</th>
+          <th>Статус</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for promo in archived_promos %}
         <tr>
-            <td><strong>{{ promo.code }}</strong></td>
-            <td>{{ promo.description }}</td>
-            <td>
-                {% if promo.discount_type == 'percentage' %}
-                    <span style="color: #666;">-{{ promo.discount_value }}%</span>
-                {% else %}
-                    <span style="color: #666;">-{{ promo.discount_value }} руб.</span>
-                {% endif %}
-            </td>
-            <td>
-                <small>{{ promo.start_date|date:"d.m.Y" }} — {{ promo.end_date|date:"d.m.Y" }}</small>
-            </td>
-            <td>
-                {% if promo.max_uses %}
-                    <small>{{ promo.current_uses }}/{{ promo.max_uses }}</small>
-                {% else %}
-                    <small>{{ promo.current_uses }} использований</small>
-                {% endif %}
-            </td>
-            <td>
-                <small style="color: #999;">{{ promo.get_status_display }}</small>
-            </td>
+          <td><span class="promo-code">{{ promo.code }}</span></td>
+          <td>{{ promo.description }}</td>
+          <td>
+            {% if promo.discount_type == 'percentage' %}
+              <span style="color: #6b7280;">-{{ promo.discount_value }}%</span>
+            {% else %}
+              <span style="color: #6b7280;">-{{ promo.discount_value }} руб.</span>
+            {% endif %}
+          </td>
+          <td>
+            <small>{{ promo.start_date|date:"d.m.Y" }} — {{ promo.end_date|date:"d.m.Y" }}</small>
+          </td>
+          <td>
+            {% if promo.max_uses %}
+              <small>{{ promo.current_uses }}/{{ promo.max_uses }}</small>
+            {% else %}
+              <small>{{ promo.current_uses }} использований</small>
+            {% endif %}
+          </td>
+          <td>
+            {% if promo.status == 'expired' %}
+              <span class="status-expired">{{ promo.get_status_display }}</span>
+            {% elif promo.status == 'used' %}
+              <span class="status-used">{{ promo.get_status_display }}</span>
+            {% else %}
+              <span class="status-active">{{ promo.get_status_display }}</span>
+            {% endif %}
+          </td>
         </tr>
         {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<p><em>Архив промокодов пуст.</em></p>
-{% endif %}
-
-<hr>
-<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
+      </tbody>
+    </table>
+    {% else %}
+    <div class="no-promocodes">
+      <h3>Архив промокодов пуст</h3>
+      <p>Здесь будут отображаться завершенные акции</p>
+    </div>
+    {% endif %}
+  </div>
+  
+  <div class="update-info">
+    <p><strong>Последнее обновление:</strong> {% now "d.m.Y H:i" %}</p>
+  </div>
+</div>
 {% endblock %}
 
 

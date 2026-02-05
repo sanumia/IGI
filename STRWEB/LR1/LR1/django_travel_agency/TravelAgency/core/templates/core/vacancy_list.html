@@ -1,59 +1,295 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}Вакансии | TravelDream{% endblock %}
 
-{% block extra_css %}{% endblock %}
+{% block extra_css %}
+<style>
+  .vacancies-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .vacancies-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    color: white;
+  }
+  
+  .vacancies-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .vacancies-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+  
+  .vacancies-header a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .vacancies-header a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Float Layout for Vacancies */
+  .vacancies-grid {
+    margin: 30px 0;
+  }
+  
+  .float-card {
+    float: left;
+    width: calc(50% - 20px);
+    margin: 10px;
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .float-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+  }
+  
+  .float-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+  }
+  
+  .float-card .caps {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    display: block;
+  }
+  
+  .vacancy-meta {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .vacancy-tags {
+    margin: 15px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .tag {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .tag-experience {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+  }
+  
+  .tag-new {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+  }
+  
+  .salary-info {
+    margin: 15px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  
+  .salary-amount {
+    color: #16a34a;
+  }
+  
+  .salary-negotiable {
+    color: #6b7280;
+    font-style: italic;
+  }
+  
+  .status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 10px 0;
+  }
+  
+  .status-active {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+  }
+  
+  .status-inactive {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
+  }
+  
+  .vacancy-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  }
+  
+  .vacancy-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+  
+  .float-clear {
+    clear: both;
+  }
+  
+  .no-vacancies {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin: 30px 0;
+  }
+  
+  .no-vacancies h3 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .no-vacancies p {
+    color: #6b7280;
+    font-size: 1rem;
+  }
+  
+  .update-info {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    color: #6c757d;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .float-card {
+      width: 100%;
+      margin: 10px 0;
+    }
+    
+    .vacancies-header h1 {
+      font-size: 2rem;
+    }
+    
+    .vacancy-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .vacancies-container {
+      padding: 10px;
+    }
+    
+    .float-card {
+      padding: 20px;
+    }
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<h1> Вакансии в TravelDream</h1>
-<p><a href="{% url 'core:home' %}"> Главная</a> › Вакансии</p>
-
-{% if vacancies %}
-<h2> Список вакансий</h2>
-<div>
+<div class="vacancies-container">
+  <div class="vacancies-header">
+    <h1>Вакансии в TravelDream</h1>
+    <p><a href="{% url 'core:home' %}">Главная</a> › Вакансии</p>
+  </div>
+  {% if vacancies %}
+  <div class="vacancies-grid">
     {% for vacancy in vacancies %}
     <div class="float-card">
-        <div class="caps"><strong>{{ vacancy.title }}</strong></div>
-        <div style="color:#64748b; font-size:.9rem;">{{ vacancy.get_department_display }} • {{ vacancy.get_job_type_display }}</div>
-        <div style="margin:.25rem 0;">
-            <span class="btn" style="padding:2px 8px; font-size:.8rem;">{{ vacancy.experience_required }}</span>
-            {% if vacancy.is_new %}<span class="btn" style="background:#10b981; padding:2px 8px; font-size:.8rem;">Новая</span>{% endif %}
-        </div>
-        <div>
-            {% if vacancy.salary %}
-            <strong style="color:#16a34a;">{{ vacancy.salary }}</strong>
-            {% else %}
-            <span style="color:#666;">По договоренности</span>
-            {% endif %}
-        </div>
-        <div style="margin-top:8px;">
-            <span style="background:{% if vacancy.is_active %}#28a745{% else %}#6c757d{% endif %}; color:#fff; padding:2px 8px; border-radius:6px; font-size:.8rem;">{% if vacancy.is_active %}Активна{% else %}Закрыта{% endif %}</span>
-        </div>
-        <a href="{{ vacancy.get_absolute_url }}" class="btn" style="margin-top:10px;">Подробнее</a>
+      <div class="caps">{{ vacancy.title }}</div>
+      <div class="vacancy-meta">
+        <span>{{ vacancy.get_department_display }}</span>
+        <span>•</span>
+        <span>{{ vacancy.get_job_type_display }}</span>
+      </div>
+      
+      <div class="vacancy-tags">
+        <span class="tag tag-experience">{{ vacancy.experience_required }}</span>
+        {% if vacancy.is_new %}
+        <span class="tag tag-new">Новая</span>
+        {% endif %}
+      </div>
+      
+      <div class="salary-info">
+        {% if vacancy.salary %}
+        <span class="salary-amount">{{ vacancy.salary }}</span>
+        {% else %}
+        <span class="salary-negotiable">По договоренности</span>
+        {% endif %}
+      </div>
+      
+      <div>
+        <span class="status-badge {% if vacancy.is_active %}status-active{% else %}status-inactive{% endif %}">
+          {% if vacancy.is_active %}Активна{% else %}Закрыта{% endif %}
+        </span>
+      </div>
+      
+      <a href="{{ vacancy.get_absolute_url }}" class="vacancy-btn">Подробнее</a>
     </div>
     {% endfor %}
     <div class="float-clear"></div>
- </div>
-{% else %}
-<!-- Empty Vacancies -->
-<h2> Вакансии не найдены</h2>
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f0f0f0">
-            <th>Состояние вакансий</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td style="text-align: center; padding: 3rem; color: #666;">
-                <h3> В данный момент открытых вакансий нет</h3>
-                <p>Следите за обновлениями на нашем сайте</p>
-            </td>
-        </tr>
-    </tbody>
-</table>
-{% endif %}
-
-<hr>
-<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
+  </div>
+  {% else %}
+  <div class="no-vacancies">
+    <h3>В данный момент открытых вакансий нет</h3>
+    <p>Следите за обновлениями на нашем сайте</p>
+  </div>
+  {% endif %}
+  
+  <div class="update-info">
+    <p><strong>Последнее обновление:</strong> {% now "d.m.Y H:i" %}</p>
+  </div>
+</div>
 {% endblock %}

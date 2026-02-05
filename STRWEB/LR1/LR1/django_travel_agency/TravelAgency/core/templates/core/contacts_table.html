@@ -1,0 +1,142 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Таблица контактов | TravelDream{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contacts-table-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .preloader-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.9);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+    .preloader-overlay.active {
+        display: flex;
+    }
+
+    .preloader {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 16px 0;
+    }
+
+    .preloader .ring {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        box-sizing: border-box;
+        border: 3px solid rgba(0,0,0,.08);
+        border-top-color: #007bff;
+        border-right-color: #007bff;
+        transform-origin: 50% 50%;
+        backface-visibility: hidden;
+        will-change: transform;
+        animation: spinPulse 1.4s linear infinite;
+    }
+
+    @keyframes spinPulse {
+        0% {
+            transform: rotate(0deg) scale(1);
+        }
+        50% {
+            transform: rotate(180deg) scale(1.12);
+        }
+        100% {
+            transform: rotate(360deg) scale(1);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="preloader-overlay" id="preloader">
+    <div class="preloader">
+        <div class="ring"></div>
+        <span>Загрузка...</span>
+    </div>
+</div>
+
+<div class="contacts-table-container">
+    <h1 style="text-align: center; margin-bottom: 30px;">Таблица контактов</h1>
+    {% if not has_employees %}
+    <p style="text-align:center; color:#ef4444; margin-bottom:20px;">В базе пока нет активных сотрудников — добавьте сотрудников в админке, чтобы увидеть их в таблице.</p>
+    {% endif %}
+        
+    <div id="contactsTableContainer" data-api-url="{{ contacts_api_url }}"></div>
+</div>
+
+<script src="{% static 'js/contacts-table.js' %}"></script>
+<script>
+    // Показываем прелоадер
+    function showPreloader() {
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+            preloader.classList.add('active');
+        }
+    }
+
+    function hidePreloader() {
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+            preloader.classList.remove('active');
+        }
+    }
+
+    // Инициализация таблицы после загрузки страницы
+    document.addEventListener('DOMContentLoaded', function() {
+        showPreloader();
+        
+        const container = document.getElementById('contactsTableContainer');
+        const apiUrl = container ? container.dataset.apiUrl : null;
+
+        if (!apiUrl) {
+            console.error('API url not found');
+            hidePreloader();
+            if (container) {
+                container.innerHTML = '<p style="text-align: center; padding: 20px; color: #ef4444;">Не удалось определить адрес API</p>';
+            }
+            return;
+        }
+
+        fetch(apiUrl, { headers: { 'Accept': 'application/json' } })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Сервер вернул статус ' + response.status);
+                }
+                return response.json();
+            })
+            .then(payload => {
+                const employees = Array.isArray(payload.employees) ? payload.employees : [];
+                if (employees.length > 0) {
+                    new ContactsTable('contactsTableContainer', employees);
+                } else {
+                    container.innerHTML = '<p style="text-align: center; padding: 20px;">Нет данных для отображения</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error initializing table:', error);
+                container.innerHTML = '<p style="text-align: center; padding: 20px; color: #ef4444;">Ошибка загрузки данных: ' + error.message + '</p>';
+            })
+            .finally(() => {
+                hidePreloader();
+            });
+    });
+</script>
+{% endblock %}
+

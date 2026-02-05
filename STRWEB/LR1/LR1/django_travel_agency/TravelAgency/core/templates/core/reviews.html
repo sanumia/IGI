@@ -1,0 +1,596 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Отзывы клиентов | TravelDream{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ========================================
+     СТИЛИ СТРАНИЦЫ ОТЗЫВОВ
+     ======================================== */
+  
+  .reviews-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .reviews-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    color: white;
+  }
+  
+  .reviews-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .reviews-header p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin: 0;
+  }
+  
+  /* ========================================
+     ФОРМА ДОБАВЛЕНИЯ ОТЗЫВА
+     ======================================== */
+  
+  .review-form-section {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border: 1px solid #e2e8f0;
+  }
+  
+  .form-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    text-align: center;
+    position: relative;
+  }
+  
+  .form-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 2px;
+  }
+  
+  /* ========================================
+     СТИЛИ КОМПОНЕНТОВ ФОРМЫ
+     ======================================== */
+  
+  .form-group {
+    margin-bottom: 25px;
+  }
+  
+  .form-label {
+    display: block;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+  
+  /* Стили для текстового поля */
+  .form-textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 15px 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #2c3e50;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+    resize: vertical;
+  }
+  
+  .form-textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+  
+  .form-textarea::placeholder {
+    color: #a0aec0;
+    font-style: italic;
+  }
+  
+  /* Стили для поля выбора отеля */
+  .form-select {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 1rem;
+    color: #2c3e50;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .form-select:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+  
+  .form-select:hover {
+    border-color: #cbd5e0;
+  }
+  
+  /* Стили для поля выбора рейтинга */
+  .form-rating {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 1rem;
+    color: #2c3e50;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .form-rating:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+  
+  .form-rating:hover {
+    border-color: #cbd5e0;
+  }
+  
+  /* Стили для кнопки отправки */
+  .form-submit {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    display: block;
+    margin: 0 auto;
+    min-width: 200px;
+  }
+  
+  .form-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  }
+  
+  .form-submit:active {
+    transform: translateY(0);
+  }
+  
+  .form-submit:disabled {
+    background: #cbd5e0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  /* ========================================
+     ПСЕВДОКЛАССЫ ДЛЯ ФОРМ
+     ======================================== */
+  
+  /* Стили для обязательных полей */
+  .form-textarea:required,
+  .form-select:required,
+  .form-rating:required {
+    border-left: 4px solid #667eea;
+  }
+  
+  /* Стили для необязательных полей */
+  .form-textarea:optional,
+  .form-select:optional,
+  .form-rating:optional {
+    border-left: 4px solid #e2e8f0;
+  }
+  
+  /* Стили для отключенных полей */
+  .form-textarea:disabled,
+  .form-select:disabled,
+  .form-rating:disabled {
+    background: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  
+  /* Стили для невалидных полей */
+  .form-textarea:invalid,
+  .form-select:invalid,
+  .form-rating:invalid {
+    border-color: #e53e3e;
+    background: #fdf2f2;
+  }
+  
+  /* Стили для валидных полей */
+  .form-textarea:valid,
+  .form-select:valid,
+  .form-rating:valid {
+    border-color: #38a169;
+    background: #f0fff4;
+  }
+  
+  /* Стили для полей вне диапазона */
+  .form-textarea:out-of-range,
+  .form-select:out-of-range,
+  .form-rating:out-of-range {
+    border-color: #d69e2e;
+    background: #fffbf0;
+  }
+  
+  /* ========================================
+     СПИСОК ОТЗЫВОВ
+     ======================================== */
+  
+  .reviews-list {
+    margin-top: 40px;
+  }
+  
+  .reviews-section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+    position: relative;
+  }
+  
+  .reviews-section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 2px;
+  }
+  
+  .review-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+  }
+  
+  .review-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+  
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .review-author {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .author-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+  
+  .author-info h4 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  
+  .author-info p {
+    margin: 0;
+    color: #718096;
+    font-size: 0.9rem;
+  }
+  
+  .review-rating {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .rating-stars {
+    font-size: 1.5rem;
+    color: #fbbf24;
+  }
+  
+  .rating-value {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  
+  .review-content {
+    color: #2c3e50;
+    line-height: 1.7;
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+  
+  .review-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .review-date {
+    color: #718096;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .review-hotel {
+    background: #f7fafc;
+    color: #4a5568;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  
+  /* ========================================
+     СООБЩЕНИЯ
+     ======================================== */
+  
+  .messages {
+    margin-bottom: 30px;
+  }
+  
+  .alert {
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    font-weight: 500;
+  }
+  
+  .alert-success {
+    background: #f0fff4;
+    color: #22543d;
+    border: 1px solid #9ae6b4;
+  }
+  
+  .alert-error {
+    background: #fdf2f2;
+    color: #742a2a;
+    border: 1px solid #feb2b2;
+  }
+  
+  /* ========================================
+     АДАПТИВНОСТЬ
+     ======================================== */
+  
+  @media (max-width: 768px) {
+    .reviews-container {
+      padding: 10px;
+    }
+    
+    .reviews-header h1 {
+      font-size: 2rem;
+    }
+    
+    .review-form-section {
+      padding: 20px;
+    }
+    
+    .review-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .review-meta {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .form-submit {
+      width: 100%;
+    }
+  }
+  
+  /* ========================================
+     ПУСТОЕ СОСТОЯНИЕ
+     ======================================== */
+  
+  .no-reviews {
+    text-align: center;
+    padding: 60px 20px;
+    color: #718096;
+  }
+  
+  .no-reviews h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #4a5568;
+  }
+  
+  .no-reviews p {
+    font-size: 1rem;
+    margin: 0;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="reviews-container">
+  <!-- Заголовок страницы -->
+  <div class="reviews-header">
+    <h1>Отзывы наших клиентов</h1>
+    <p>Поделитесь своим опытом путешествий с TravelDream</p>
+  </div>
+
+  <!-- Сообщения -->
+  {% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Форма добавления отзыва -->
+  <div class="review-form-section">
+    <h2 class="form-title">Оставить отзыв</h2>
+    
+    <form method="post" action="{% url 'core:reviews' %}">
+      {% csrf_token %}
+      
+      <div class="form-group">
+        <label for="{{ form.hotel.id_for_label }}" class="form-label">
+          Выберите отель (необязательно)
+        </label>
+        <select name="{{ form.hotel.name }}" id="{{ form.hotel.id_for_label }}" class="form-select">
+          <option value="">-- Выберите отель --</option>
+          {% for hotel in hotels %}
+          <option value="{{ hotel.id }}">{{ hotel.name }} ({{ hotel.country.name }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="{{ form.rating.id_for_label }}" class="form-label">
+          Ваша оценка
+        </label>
+        <select name="{{ form.rating.name }}" id="{{ form.rating.id_for_label }}" class="form-rating" required>
+          {% for value, label in form.rating.field.choices %}
+          <option value="{{ value }}" {% if value == form.rating.value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="{{ form.text.id_for_label }}" class="form-label">
+          Ваш отзыв
+        </label>
+        <textarea 
+          name="{{ form.text.name }}" 
+          id="{{ form.text.id_for_label }}" 
+          class="form-textarea" 
+          placeholder="Расскажите о своем опыте путешествия..."
+          required
+        >{{ form.text.value|default:'' }}</textarea>
+      </div>
+      
+      <button type="submit" class="form-submit">
+        {% if user.is_authenticated %}
+          Отправить отзыв
+        {% else %}
+          Войти для отправки отзыва
+        {% endif %}
+      </button>
+    </form>
+  </div>
+
+  <!-- Список отзывов -->
+  <div class="reviews-list">
+    <h2 class="reviews-section-title">Отзывы клиентов</h2>
+    
+    {% if reviews %}
+      {% for review in reviews %}
+      <div class="review-card">
+        <div class="review-header">
+          <div class="review-author">
+            <div class="author-avatar">
+              {{ review.get_author_name|first|upper }}
+            </div>
+            <div class="author-info">
+              <h4>{{ review.get_author_name }}</h4>
+              {% if review.hotel %}
+              <p>Отель: {{ review.hotel.name }}</p>
+              {% endif %}
+            </div>
+          </div>
+          <div class="review-rating">
+            <div class="rating-stars">{{ review.get_rating_display }}</div>
+            <div class="rating-value">{{ review.rating }}/5</div>
+          </div>
+        </div>
+        
+        <div class="review-content">
+          {{ review.text|linebreaks }}
+        </div>
+        
+        <div class="review-meta">
+          <div class="review-date">
+            <span>📅</span>
+            <span>{{ review.created_at|date:"d.m.Y H:i" }}</span>
+          </div>
+          {% if review.hotel %}
+          <div class="review-hotel">
+            🏨 {{ review.hotel.name }}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+    <div class="no-reviews">
+      <h3>Пока нет отзывов</h3>
+      <p>Станьте первым, кто поделится своим опытом!</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

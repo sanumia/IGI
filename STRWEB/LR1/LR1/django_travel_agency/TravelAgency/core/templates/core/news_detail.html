@@ -1,119 +1,356 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}{{ news.title }} | TravelDream{% endblock %}
 
-{% block extra_css %}{% endblock %}
+{% block extra_css %}
+<style>
+  /* ========================================
+     СТИЛИ СТРАНИЦЫ ДЕТАЛЬНОГО ПРОСМОТРА НОВОСТИ
+     ======================================== */
+  
+  .news-detail-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .news-breadcrumb {
+    background: #f8f9fa;
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    border-left: 4px solid #007bff;
+  }
+  
+  .news-breadcrumb a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  
+  .news-breadcrumb a:hover {
+    text-decoration: underline;
+  }
+  
+  .news-detail-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin-bottom: 30px;
+  }
+  
+  .news-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px;
+    text-align: center;
+    position: relative;
+  }
+  
+  .news-category {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .news-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.3;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .news-meta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    font-size: 1rem;
+    opacity: 0.9;
+  }
+  
+  .news-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .news-image-section {
+    padding: 0;
+    position: relative;
+  }
+  
+  .news-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .news-content {
+    padding: 40px;
+  }
+  
+  .news-summary {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 15px;
+    border-left: 5px solid #007bff;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #2c3e50;
+  }
+  
+  .news-full-content {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #2c3e50;
+  }
+  
+  .news-full-content p {
+    margin-bottom: 20px;
+  }
+  
+  .news-actions {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .btn {
+    padding: 12px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,123,255,0.4);
+    color: white;
+    text-decoration: none;
+  }
+  
+  .btn-secondary {
+    background: linear-gradient(45deg, #6c757d, #5a6268);
+    color: white;
+    box-shadow: 0 4px 15px rgba(108,117,125,0.3);
+  }
+  
+  .btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108,117,125,0.4);
+    color: white;
+    text-decoration: none;
+  }
+  
+  .btn-success {
+    background: linear-gradient(45deg, #28a745, #1e7e34);
+    color: white;
+    box-shadow: 0 4px 15px rgba(40,167,69,0.3);
+  }
+  
+  .btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40,167,69,0.4);
+    color: white;
+    text-decoration: none;
+  }
+  
+  .news-stats {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+  }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  
+  .stat-item {
+    text-align: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #007bff;
+    margin-bottom: 5px;
+  }
+  
+  .stat-label {
+    color: #6c757d;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  @media (max-width: 768px) {
+    .news-detail-container {
+      padding: 10px;
+    }
+    
+    .news-title {
+      font-size: 2rem;
+    }
+    
+    .news-meta {
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .news-content {
+      padding: 20px;
+    }
+    
+    .action-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .btn {
+      width: 100%;
+      max-width: 300px;
+    }
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<h1> {{ news.title }}</h1>
-<p><a href="{% url 'news_list' %}"> Новости</a> › {{ news.title|truncatechars:30 }}</p>
+<div class="news-detail-container">
+  <!-- Хлебные крошки -->
+  <div class="news-breadcrumb">
+    <a href="{% url 'core:home' %}">Главная</a> › 
+    <a href="{% url 'core:news_list' %}">Новости</a> › 
+    <span>{{ news.title|truncatechars:50 }}</span>
+  </div>
 
-<!-- News Meta Information -->
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f0f0f0">
-            <th colspan="2">Информация о новости</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><strong>Категория</strong></td>
-            <td><span style="background: #007bff; color: white; padding: 2px 6px; font-size: 0.85rem;">{{ news.get_category_display }}</span></td>
-        </tr>
-        <tr>
-            <td><strong>Дата публикации</strong></td>
-            <td>{{ news.created_at|date:"d.m.Y H:i" }}</td>
-        </tr>
-        <tr>
-            <td><strong>Просмотры</strong></td>
-            <td> {{ news.views }}</td>
-        </tr>
+  <!-- Основная карточка новости -->
+  <div class="news-detail-card">
+    <!-- Заголовок новости -->
+    <div class="news-header">
+      <div class="news-category">{{ news.get_category_display }}</div>
+      <h1 class="news-title">{{ news.title }}</h1>
+      <div class="news-meta">
+        <div class="news-meta-item">
+          <span>📅</span>
+          <span>{{ news.created_at|date:"d.m.Y H:i" }}</span>
+        </div>
+        <div class="news-meta-item">
+          <span>👁️</span>
+          <span>{{ news.views }} просмотров</span>
+        </div>
         {% if news.author %}
-        <tr>
-            <td><strong>Автор</strong></td>
-            <td>{{ news.author.get_full_name }}</td>
-        </tr>
+        <div class="news-meta-item">
+          <span>✍️</span>
+          <span>{{ news.author.get_full_name|default:news.author.username }}</span>
+        </div>
         {% endif %}
-    </tbody>
-</table>
+      </div>
+    </div>
 
-<hr>
+    <!-- Изображение новости -->
+    {% if news.image %}
+    <div class="news-image-section">
+      <img src="{{ news.image.url }}" alt="{{ news.title }}" class="news-image">
+    </div>
+    {% endif %}
 
-<!-- News Image -->
-{% if news.image %}
-<h2> Изображение</h2>
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f0f0f0">
-            <th>Изображение к новости</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td style="text-align: center;">
-                <img src="{{ news.image.url }}" alt="{{ news.title }}" style="max-width: 100%; height: auto; max-height: 400px;">
-            </td>
-        </tr>
-    </tbody>
-</table>
-<hr>
-{% endif %}
+    <!-- Содержимое новости -->
+    <div class="news-content">
+      <!-- Краткое описание -->
+      <div class="news-summary">
+        <strong>Краткое описание:</strong><br>
+        {{ news.summary }}
+      </div>
 
-<!-- News Summary -->
-<h2> Краткое описание</h2>
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f0f0f0">
-            <th>Аннотация</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td style="font-size: 1.1rem; line-height: 1.6;">{{ news.summary }}</td>
-        </tr>
-    </tbody>
-</table>
+      <!-- Полный текст -->
+      <div class="news-full-content">
+        {{ news.content|linebreaks }}
+      </div>
+    </div>
+  </div>
 
-<hr>
+  <!-- Статистика новости -->
+  <div class="news-stats">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-value">{{ news.views }}</div>
+        <div class="stat-label">Просмотров</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">{{ news.created_at|date:"d.m.Y" }}</div>
+        <div class="stat-label">Дата публикации</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">{{ news.get_category_display }}</div>
+        <div class="stat-label">Категория</div>
+      </div>
+      {% if news.author %}
+      <div class="stat-item">
+        <div class="stat-value">{{ news.author.get_full_name|default:news.author.username }}</div>
+        <div class="stat-label">Автор</div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
 
-<!-- News Content -->
-<h2> Полный текст</h2>
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f0f0f0">
-            <th>Содержание</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td class="article-columns" style="font-size: 1.05rem; line-height: 1.8;">
-                <p class="lede selection-demo">{{ news.summary }}</p>
-                {{ news.content|linebreaks }}
-            </td>
-        </tr>
-    </tbody>
-</table>
+  <!-- Действия -->
+  <div class="news-actions">
+    <h3 style="margin-bottom: 20px; color: #2c3e50;">Дополнительные действия</h3>
+    <div class="action-buttons">
+      <a href="{% url 'core:news_list' %}" class="btn btn-secondary">
+        📰 Все новости
+      </a>
+      <a href="{% url 'core:promos_plain' %}" class="btn btn-primary">
+        🎁 Промокоды
+      </a>
+      <button onclick="window.print()" class="btn btn-success">
+        🖨️ Печать
+      </button>
+    </div>
+  </div>
 
-<hr>
-
-<!-- Navigation -->
-<h2> Навигация</h2>
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f5f5f5">
-            <th>Действия</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td style="text-align: center;">
-                <a href="{% url 'core:promos_plain' %}" style="background: #007bff; color: white; text-decoration: none; padding: 10px 20px; margin-right: 10px; display: inline-block;"> Промокоды</a>
-                <a href="{% url 'news_list' %}" style="background: #6c757d; color: white; text-decoration: none; padding: 10px 20px; display: inline-block;"> Назад к новостям</a>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-<hr>
-<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
+  <!-- Информация об обновлении -->
+  <div style="text-align: center; margin-top: 30px; padding: 20px; color: #6c757d; font-size: 0.9rem;">
+    <small>Последнее обновление: {% now "d.m.Y H:i" %}</small>
+  </div>
+</div>
 {% endblock %}

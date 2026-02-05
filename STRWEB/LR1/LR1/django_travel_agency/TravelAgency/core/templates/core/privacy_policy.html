@@ -1,21 +1,211 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}Политика конфиденциальности | TravelDream{% endblock %}
 
-{% block extra_css %}{% endblock %}
+{% block extra_css %}
+<style>
+  .privacy-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .privacy-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    color: white;
+  }
+  
+  .privacy-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .privacy-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    line-height: 1.6;
+  }
+  
+  .privacy-content {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+  }
+  
+  .privacy-content h2 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 30px 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #667eea;
+    position: relative;
+  }
+  
+  .privacy-content h2::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+  }
+  
+  .privacy-content p {
+    color: #4a5568;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    font-size: 1rem;
+  }
+  
+  .privacy-content ul {
+    margin: 20px 0;
+    padding-left: 0;
+  }
+  
+  .privacy-content li {
+    color: #4a5568;
+    line-height: 1.7;
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+  }
+  
+  .privacy-content li::before {
+    content: '•';
+    color: #667eea;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+  }
+  
+  /* Modern Table Styles */
+  .privacy-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin: 20px 0;
+  }
+  
+  .privacy-table th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    font-weight: 600;
+    text-align: left;
+    font-size: 1.1rem;
+    vertical-align: middle;
+  }
+  
+  .privacy-table td {
+    padding: 20px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #4a5568;
+    vertical-align: middle;
+    line-height: 1.6;
+  }
+  
+  .privacy-table tr:hover td {
+    background: #f7fafc;
+  }
+  
+  .privacy-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .privacy-table td:empty {
+    background: #f8f9fa;
+    color: #6c757d;
+    font-style: italic;
+  }
+  
+  .privacy-table td:empty::after {
+    content: '—';
+  }
+  
+  .privacy-table strong {
+    color: #2c3e50;
+    font-weight: 600;
+  }
+  
+  .highlight-box {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-left: 4px solid #667eea;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+  }
+  
+  .highlight-box p {
+    margin: 0;
+    color: #495057;
+    font-weight: 500;
+  }
+  
+  .update-info {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    color: #6c757d;
+  }
+  
+  @media (max-width: 768px) {
+    .privacy-container {
+      padding: 10px;
+    }
+    
+    .privacy-content {
+      padding: 20px;
+    }
+    
+    .privacy-header h1 {
+      font-size: 2rem;
+    }
+    
+    .privacy-table {
+      font-size: 0.9rem;
+    }
+    
+    .privacy-table th,
+    .privacy-table td {
+      padding: 15px 10px;
+    }
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<h1>Политика конфиденциальности</h1>
-<p>Настоящая Политика конфиденциальности описывает, какие данные собирает и как обрабатывает турагентство TravelDream при использовании нашего сайта и сервисов бронирования туров.</p>
-
-<h2> 1. Какие данные мы собираем</h2>
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f0f0f0">
-            <th>Категория данных</th>
-            <th>Описание</th>
-        </tr>
-    </thead>
+<div class="privacy-container">
+  <div class="privacy-header">
+    <h1>Политика конфиденциальности</h1>
+    <p>Настоящая Политика конфиденциальности описывает, какие данные собирает и как обрабатывает турагентство TravelDream при использовании нашего сайта и сервисов бронирования туров.</p>
+  </div>
+  
+  <div class="privacy-content">
+    <h2>1. Какие данные мы собираем</h2>
+    <table class="privacy-table">
+        <thead>
+            <tr>
+                <th>Категория данных</th>
+                <th>Описание</th>
+            </tr>
+        </thead>
     <tbody>
         <tr>
             <td><strong>Идентификационные данные</strong></td>
@@ -60,14 +250,14 @@
     </tbody>
 </table>
 
-<h2> 2. Цели обработки</h2>
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f0f0f0">
-            <th>Цель</th>
-            <th>Описание</th>
-        </tr>
-    </thead>
+    <h2>2. Цели обработки</h2>
+    <table class="privacy-table">
+        <thead>
+            <tr>
+                <th>Цель</th>
+                <th>Описание</th>
+            </tr>
+        </thead>
     <tbody>
         <tr>
             <td><strong>Заключение договоров</strong></td>
@@ -121,14 +311,14 @@
 <h2>⏰ 7. Срок хранения</h2>
 <p>Мы храним данные столько, сколько требуется для целей обработки: срок действия договора и законодательно установленные сроки хранения отчётности и бухгалтерских документов, после чего данные удаляются или обезличиваются.</p>
 
-<h2> 8. Права субъекта данных</h2>
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f0f0f0">
-            <th>Право</th>
-            <th>Описание</th>
-        </tr>
-    </thead>
+    <h2>8. Права субъекта данных</h2>
+    <table class="privacy-table">
+        <thead>
+            <tr>
+                <th>Право</th>
+                <th>Описание</th>
+            </tr>
+        </thead>
     <tbody>
         <tr>
             <td><strong>Доступ к данным</strong></td>
@@ -163,14 +353,14 @@
 <h2> 10. Безопасность</h2>
 <p>Мы применяем организационные и технические меры защиты: ограничение доступа, аутентификация, шифрование каналов передачи и мониторинг инцидентов.</p>
 
-<h2> 11. Контакты оператора</h2>
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f0f0f0">
-            <th>Контакт</th>
-            <th>Значение</th>
-        </tr>
-    </thead>
+    <h2>11. Контакты оператора</h2>
+    <table class="privacy-table">
+        <thead>
+            <tr>
+                <th>Контакт</th>
+                <th>Значение</th>
+            </tr>
+        </thead>
     <tbody>
         <tr>
             <td><strong>Организация</strong></td>
@@ -191,9 +381,12 @@
     </tbody>
 </table>
 
-<h2> 12. Обновления политики</h2>
-<p>Мы можем периодически обновлять эту Политику. Текущая версия доступна на этой странице.</p>
-
-<hr>
-<p><small>Дата обновления: {% now "d.m.Y" %}</small></p>
+    <h2>12. Обновления политики</h2>
+    <p>Мы можем периодически обновлять эту Политику. Текущая версия доступна на этой странице.</p>
+  </div>
+  
+  <div class="update-info">
+    <p><strong>Дата обновления:</strong> {% now "d.m.Y" %}</p>
+  </div>
+</div>
 {% endblock %}

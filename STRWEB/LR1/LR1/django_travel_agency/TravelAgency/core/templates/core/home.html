@@ -5,176 +5,1146 @@
 
 {% block extra_css %}
 <style>
-  /* CSS-only staged travel animation: plane → ship → car */
-  :root{ --brand:#007bff; --skyTop:#8ec5ff; --skyBottom:#eaf6ff; --seaTop:#4bb4e6; --seaBottom:#bfe9ff; --roadTop:#87d37c; --roadBottom:#c8e6c9; --sand:#f4d7a1; --palm:#2e7d32; --trunk:#8d6e63; }
-
-  .travel-showcase{ position:relative; width:100%; height:360px; margin:28px 0; border-radius:12px; overflow:hidden; border:1px solid #e6e9ee; background:#eaf6ff; }
-  .travel-timeline{ position:absolute; inset:0; --t:0; animation:timeline 18s ease-in-out infinite; }
-
-  /* Background phases */
-  .travel-bg{ position:absolute; inset:0; z-index:1; }
-  .bg-sky{ background:linear-gradient(var(--skyTop), var(--skyBottom)); opacity:1; animation:phase-sky 18s linear infinite; }
-  .bg-sea{ background:linear-gradient(var(--seaTop), var(--seaBottom)); opacity:0; animation:phase-sea 18s linear infinite; }
-  .bg-road{ background:linear-gradient(var(--roadTop), var(--roadBottom)); opacity:0; animation:phase-road 18s linear infinite; }
-
-  @keyframes phase-sky{ 0%,29%{opacity:1} 33%,100%{opacity:0} }
-  @keyframes phase-sea{ 0%,29%{opacity:0} 33%,62%{opacity:1} 66%,100%{opacity:0} }
-  @keyframes phase-road{ 0%,62%{opacity:0} 66%,100%{opacity:1} }
-
-  /* Shared object base */
-  .obj{ position:absolute; transform:translate(-50%, -50%); will-change:transform, opacity; z-index:5; }
-  .label{ position:absolute; white-space:nowrap; font-weight:700; font-size:14px; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.35); letter-spacing:.5px; }
-
-  /* Person (head + body) reused */
-  .person{ position:absolute; width:14px; height:22px; left:50%; top:50%; transform:translate(-50%,-50%); }
-  .person::before{ content:""; display:block; width:12px; height:12px; background:#ffe0b2; border-radius:50%; margin:0 auto 2px; box-shadow:0 0 0 1px rgba(0,0,0,.08) inset; }
-  .person::after{ content:""; display:block; width:10px; height:8px; background:#37474f; border-radius:2px; margin:0 auto; }
-
-  /* Plane */
-  .plane{ left:-10%; top:35%; opacity:1; animation:plane-move 18s ease-in-out infinite; z-index:4; }
-  .plane .body{ position:relative; width:150px; height:36px; background:#ffffff; border-radius:22px 30px 30px 22px; box-shadow:0 2px 8px rgba(0,0,0,.25); }
-  .plane .nose{ position:absolute; right:-10px; top:0; width:24px; height:36px; background:#ffffff; border-radius:50% 40% 40% 50%/50% 50% 50% 50%; box-shadow:inset 0 0 0 1px rgba(0,0,0,.05); }
-  .plane .tail{ position:absolute; left:0; top:-16px; width:28px; height:24px; background:#ffffff; transform:skewX(-12deg); border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,.15); }
-  .plane .wing{ position:absolute; left:44px; top:18px; width:78px; height:14px; background:#ffffff; transform:skewX(-18deg); border-radius:0 0 12px 12px; box-shadow:0 2px 4px rgba(0,0,0,.15); }
-  .plane .wing.rear{ left:28px; top:8px; width:58px; height:12px; opacity:.9; }
-  .plane .tailplane{ position:absolute; left:6px; top:-6px; width:36px; height:10px; background:#ffffff; transform:skewX(-10deg); border-radius:6px; box-shadow:0 2px 4px rgba(0,0,0,.15); }
-  .plane .engine{ position:absolute; left:68px; top:28px; width:22px; height:12px; background:#cfd8dc; border-radius:6px; box-shadow:inset 0 0 0 1px #b0bec5; }
-  .plane .window{ position:absolute; left:24px; top:10px; width:24px; height:16px; background:#b3e5fc; border-radius:3px; box-shadow:0 0 0 2px #e1f5fe inset; }
-  .plane .portholes{ position:absolute; left:60px; top:10px; display:flex; gap:6px; }
-  .plane .portholes i{ display:block; width:8px; height:8px; background:#bbdefb; border-radius:50%; box-shadow:0 0 0 1px #e3f2fd inset; }
-  .plane .stripe{ position:absolute; right:0; top:0; bottom:0; width:46px; background:linear-gradient(90deg, transparent 0 6px, var(--brand) 6px); border-radius:0 30px 30px 0; }
-  .plane .label{ left:60px; top:-20px; color:var(--brand); text-shadow:none; }
-  .plane .person{ left:48px; top:20px; }
-  @keyframes plane-move{ /* visible 0-33% */
-    0%{ opacity:1; left:-10%; top:35%; transform:translate(-50%,-50%) rotate(-3deg); }
-    25%{ opacity:1; left:40%; top:30%; transform:translate(-50%,-50%) rotate(-2deg); }
-    33%{ opacity:1; left:105%; top:24%; transform:translate(-50%,-50%) rotate(-1deg); }
-    34%{ opacity:0; }
-    100%{ opacity:0; }
+  /* ========================================
+     СОВРЕМЕННЫЕ СТИЛИ ГЛАВНОЙ СТРАНИЦЫ
+     ======================================== */
+  
+  :root { 
+    --brand: #667eea; 
+    --brand-secondary: #764ba2;
+    --text-primary: #2d3748;
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f7fafc;
+    --border-color: #e2e8f0;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+    --shadow-xl: 0 20px 25px rgba(0,0,0,0.1);
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  }
+  
+  /* ========================================
+     ГЕРОЙ СЕКЦИЯ
+     ======================================== */
+  
+  .hero-section {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 80px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin: -20px -20px 40px -20px;
+  }
+  
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .summary-ellipsis::first-letter {
+    text-transform: uppercase;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #007bff;
+}
+  
+  .hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    line-height: 1.2;
+  }
+  
+  /* ========================================
+     СТИЛИЗАЦИЯ ЗАГОЛОВКА ГЕРОЯ
+     ======================================== */
+  
+  .hero-title .small-caps {
+    font-variant: small-caps;
+    font-size: 0.75em;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+    text-transform: lowercase;
+    display: block;
+    margin-bottom: 15px;
+    font-family: 'Playfair Display', serif;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    position: relative;
+    padding-bottom: 8px;
+  }
+  
+  .hero-title .small-caps::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    border-radius: 1px;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 40px;
+    opacity: 0.9;
+    font-weight: 300;
+  }
+  
+  /* ========================================
+     ПОИСКОВАЯ ФОРМА
+     ======================================== */
+  
+  .search-form {
+    display: flex;
+    max-width: 500px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 50px;
+    padding: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  }
+  
+  .search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 15px 25px;
+    color: white;
+    font-size: 1.1rem;
+    outline: none;
+  }
+  
+  .search-input::placeholder {
+    color: rgba(255,255,255,0.7);
+  }
+  
+  .search-btn {
+    background: white;
+    color: var(--brand);
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+  }
+  
+  .search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  }
+  
+  /* ========================================
+     КОНТЕНТНЫЕ СЕКЦИИ
+     ======================================== */
+  
+  .content-section {
+    background: white;
+    margin: 40px 0;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+  }
+  
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: 30px;
+    position: relative;
+  }
+  
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: var(--gradient-primary);
+    border-radius: 2px;
+  }
+  
+  /* ========================================
+     КАРТОЧКИ
+     ======================================== */
+  
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+  }
+  
+  /* ========================================
+     ТАБЛИЦЫ
+     ======================================== */
+  
+  .modern-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+  
+  .modern-table th {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 20px;
+    font-weight: 600;
+    text-align: left;
+  }
+  
+  .modern-table td {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-secondary);
+  }
+  
+  .modern-table tr:hover td {
+    background: var(--bg-secondary);
+  }
+  
+  .modern-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  /* ========================================
+     КНОПКИ
+     ======================================== */
+  
+  .btn-primary {
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    color: white;
+    text-decoration: none;
+  }
+  
+  /* ========================================
+     АДАПТИВНОСТЬ
+     ======================================== */
+  
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2.5rem;
+    }
+    
+    .search-form {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .content-section {
+      padding: 20px;
+      margin: 20px 0;
+    }
+  }
+  
+  /* ========================================
+     CSS-АНИМАЦИЯ ПУТЕШЕСТВИЙ: САМОЛЕТ → КОРАБЛЬ → АВТОМОБИЛЬ
+     ======================================== */
+  
+  :root { 
+    --brand: #007bff; 
+    --skyTop: #8ec5ff; 
+    --skyBottom: #eaf6ff; 
+    --seaTop: #4bb4e6; 
+    --seaBottom: #bfe9ff; 
+    --roadTop: #87d37c; 
+    --roadBottom: #c8e6c9; 
+    --sand: #f4d7a1; 
+    --palm: #2e7d32; 
+    --trunk: #8d6e63; 
   }
 
-  /* Sea / ship */
-  .sea-layer{ position:absolute; left:0; right:0; bottom:0; height:46%; background:linear-gradient(180deg, rgba(255,255,255,.0), rgba(0,0,0,.05)), repeating-linear-gradient( -6deg, rgba(255,255,255,.18) 0 6px, rgba(255,255,255,0) 6px 18px); opacity:0; animation:sea-vis 18s linear infinite; z-index:2; }
-  @keyframes sea-vis{ 0%,29%{opacity:0} 33%,62%{opacity:1} 66%,100%{opacity:0} }
-
-  .ship{ left:-15%; top:64%; opacity:0; animation:ship-move 18s ease-in-out infinite; z-index:4; }
-  .ship .hull{ position:relative; width:160px; height:34px; background:#455a64; border-radius:0 0 12px 12px; box-shadow:0 3px 6px rgba(0,0,0,.25); }
-  .ship .hull::after{ content:""; position:absolute; left:0; right:0; bottom:-6px; height:6px; background:linear-gradient(90deg, #263238 0 40%, #546e7a 40% 70%, #263238 70%); border-radius:0 0 12px 12px; }
-  .ship .deck{ position:absolute; left:18px; top:-22px; width:90px; height:22px; background:#eceff1; border-radius:6px 6px 0 0; box-shadow:0 2px 0 #cfd8dc inset; }
-  .ship .mast{ position:absolute; left:72px; top:-60px; width:4px; height:60px; background:#8d6e63; }
-  .ship .sail{ position:absolute; left:76px; top:-56px; width:58px; height:52px; background:linear-gradient(180deg, #fff, #e0f2f1); -webkit-clip-path:polygon(0 0, 100% 50%, 0 100%); clip-path:polygon(0 0, 100% 50%, 0 100%); box-shadow:0 0 0 1px rgba(0,0,0,.06) inset; }
-  .ship .label{ left:30px; top:-34px; color:var(--brand); text-shadow:none; }
-  .ship .person{ left:64px; top:-6px; }
-  @keyframes ship-move{ /* visible 33-66% */
-    0%,29%{ opacity:0; }
-    33%{ opacity:1; left:-15%; top:64%; }
-    50%{ opacity:1; left:48%; top:62%; }
-    62%{ opacity:1; left:110%; top:64%; }
-    66%,100%{ opacity:0; }
+  .travel-showcase { 
+    position: relative; 
+    width: 100%; 
+    height: 360px; 
+    margin: 28px 0; 
+    border-radius: 12px; 
+    overflow: hidden; 
+    border: 1px solid #e6e9ee; 
+    background: #eaf6ff; 
+  }
+  
+  .travel-timeline { 
+    position: absolute; 
+    inset: 0; 
+    --t: 0; 
+    animation: timeline 18s ease-in-out infinite; 
   }
 
-  /* Road / car */
-  .road-wrap{ position:absolute; left:0; right:0; bottom:0; height:48%; pointer-events:none; opacity:0; animation:road-vis 18s linear infinite; z-index:3; }
-  @keyframes road-vis{ 0%,62%{opacity:0} 66%,100%{opacity:1} }
-  .road{ position:absolute; left:0; right:0; bottom:18%; height:38%; background:#455a64; box-shadow:0 -8px 0 #9ccc65 inset, 0 8px 0 #9ccc65 inset; z-index:3; }
-  .road::before{ content:""; position:absolute; left:-200%; right:-200%; top:50%; height:4px; transform:translateY(-50%); background:repeating-linear-gradient(90deg, #fff 0 24px, transparent 24px 48px); animation:dash 2s linear infinite; }
-  @keyframes dash{ to{ transform:translateY(-50%) translateX(-48px); } }
+  /* ========================================
+     ФАЗЫ ФОНА
+     ======================================== */
+  
+  .travel-bg { 
+    position: absolute; 
+    inset: 0; 
+    z-index: 1; 
+  }
+  
+  .bg-sky { 
+    background: linear-gradient(var(--skyTop), var(--skyBottom)); 
+    opacity: 1; 
+    animation: phase-sky 18s linear infinite; 
+  }
+  
+  .bg-sea { 
+    background: linear-gradient(var(--seaTop), var(--seaBottom)); 
+    opacity: 0; 
+    animation: phase-sea 18s linear infinite; 
+  }
+  
+  .bg-road { 
+    background: linear-gradient(var(--roadTop), var(--roadBottom)); 
+    opacity: 0; 
+    animation: phase-road 18s linear infinite; 
+  }
 
-.car{ left:-12%; top:76%; opacity:0; animation:car-move 18s ease-in-out infinite; z-index:5; }
-  .car .body{ position:relative; width:150px; height:42px; background:var(--brand); border-radius:10px 20px 10px 10px; box-shadow:0 2px 8px rgba(0,0,0,.28); }
-  .car .roof{ position:absolute; left:24px; top:-20px; width:76px; height:24px; background:var(--brand); border-radius:12px 12px 0 0; }
-  .car .pillar{ position:absolute; left:60px; top:-20px; width:4px; height:24px; background:#0d47a1; opacity:.25; }
-  .car .win{ position:absolute; left:30px; top:-12px; width:58px; height:16px; background:#b3e5fc; border-radius:6px; box-shadow:0 0 0 2px #e1f5fe inset; }
-  .car .bumper{ position:absolute; right:-6px; top:8px; width:10px; height:26px; background:#0d47a1; border-radius:4px; opacity:.35; }
-  .car .light{ position:absolute; right:-6px; top:10px; width:10px; height:8px; background:#ffd54f; border-radius:2px; box-shadow:0 0 6px 2px rgba(255,213,79,.6); }
-  .car .grille{ position:absolute; left:6px; top:10px; width:20px; height:12px; background:repeating-linear-gradient(0deg, #e3f2fd 0 2px, #0d47a1 2px 4px); border-radius:2px; opacity:.5; }
-  /* .car .shadow{ position:absolute; left:10px; right:10px; bottom:-16px; height:8px; background:radial-gradient(ellipse at center, rgba(0,0,0,.35), rgba(0,0,0,0)); filter:blur(2px); } */
-  .car .body .wheel{ position:absolute; bottom:-12px; width:28px; height:28px; background:#212121; border-radius:50%; box-shadow:0 0 0 4px #424242 inset; animation:wheel 1s linear infinite; }
-  .car .body .wheel.w1{ left:20px; }
-  .car .body .wheel.w2{ right:18px; }
-  .car .label{ left:58px; top:46px; }
-  .car .person{ left:64px; top:-6px; }
-  @keyframes wheel{ to{ transform:rotate(360deg); } }
-@keyframes car-move{ /* visible 66-100% */
-  0%,62%{ opacity:0; }
-  66%{ opacity:1; left:-12%; top:76%; }
-  83%{ opacity:1; left:48%; top:76%; }
-  100%{ opacity:1; left:112%; top:76%; }
+  @keyframes phase-sky { 
+    0%, 29% { opacity: 1 } 
+    33%, 100% { opacity: 0 } 
+  }
+  
+  @keyframes phase-sea { 
+    0%, 29% { opacity: 0 } 
+    33%, 62% { opacity: 1 } 
+    66%, 100% { opacity: 0 } 
+  }
+  
+  @keyframes phase-road { 
+    0%, 62% { opacity: 0 } 
+    66%, 100% { opacity: 1 } 
+  }
+
+  /* ========================================
+     БАЗОВЫЕ ОБЪЕКТЫ
+     ======================================== */
+  
+  .obj { 
+    position: absolute; 
+    transform: translate(-50%, -50%); 
+    will-change: transform, opacity; 
+    z-index: 5; 
+  }
+  
+  .label { 
+    position: absolute; 
+    white-space: nowrap; 
+    font-weight: 700; 
+    font-size: 14px; 
+    color: #fff; 
+    text-shadow: 0 1px 2px rgba(0,0,0,.35); 
+    letter-spacing: .5px; 
+  }
+
+  /* ========================================
+     ПЕРСОНАЖ (ГОЛОВА + ТЕЛО) ПЕРЕИСПОЛЬЗУЕТСЯ
+     ======================================== */
+  
+  .person { 
+    position: absolute; 
+    width: 14px; 
+    height: 22px; 
+    left: 50%; 
+    top: 50%; 
+    transform: translate(-50%,-50%); 
+  }
+  
+  .person::before { 
+    content: ""; 
+    display: block; 
+    width: 12px; 
+    height: 12px; 
+    background: #ffe0b2; 
+    border-radius: 50%; 
+    margin: 0 auto 2px; 
+    box-shadow: 0 0 0 1px rgba(0,0,0,.08) inset; 
+  }
+  
+  .person::after { 
+    content: ""; 
+    display: block; 
+    width: 10px; 
+    height: 8px; 
+    background: #37474f; 
+    border-radius: 2px; 
+    margin: 0 auto; 
+  }
+
+  /* ========================================
+     САМОЛЕТ
+     ======================================== */
+  
+  .plane { 
+    left: -10%; 
+    top: 35%; 
+    opacity: 1; 
+    animation: plane-move 18s ease-in-out infinite; 
+    z-index: 4; 
+  }
+  
+  .plane .body { 
+    position: relative; 
+    width: 150px; 
+    height: 36px; 
+    background: #ffffff; 
+    border-radius: 22px 30px 30px 22px; 
+    box-shadow: 0 2px 8px rgba(0,0,0,.25); 
+  }
+  
+  .plane .nose { 
+    position: absolute; 
+    right: -10px; 
+    top: 0; 
+    width: 24px; 
+    height: 36px; 
+    background: #ffffff; 
+    border-radius: 50% 40% 40% 50%/50% 50% 50% 50%; 
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.05); 
+  }
+  
+  .plane .tail { 
+    position: absolute; 
+    left: 0; 
+    top: -16px; 
+    width: 28px; 
+    height: 24px; 
+    background: #ffffff; 
+    transform: skewX(-12deg); 
+    border-radius: 4px; 
+    box-shadow: 0 2px 4px rgba(0,0,0,.15); 
+  }
+  
+  .plane .wing { 
+    position: absolute; 
+    left: 44px; 
+    top: 18px; 
+    width: 78px; 
+    height: 14px; 
+    background: #ffffff; 
+    transform: skewX(-18deg); 
+    border-radius: 0 0 12px 12px; 
+    box-shadow: 0 2px 4px rgba(0,0,0,.15); 
+  }
+  
+  .plane .wing.rear { 
+    left: 28px; 
+    top: 8px; 
+    width: 58px; 
+    height: 12px; 
+    opacity: .9; 
+  }
+  
+  .plane .tailplane { 
+    position: absolute; 
+    left: 6px; 
+    top: -6px; 
+    width: 36px; 
+    height: 10px; 
+    background: #ffffff; 
+    transform: skewX(-10deg); 
+    border-radius: 6px; 
+    box-shadow: 0 2px 4px rgba(0,0,0,.15); 
+  }
+  
+  .plane .engine { 
+    position: absolute; 
+    left: 68px; 
+    top: 28px; 
+    width: 22px; 
+    height: 12px; 
+    background: #cfd8dc; 
+    border-radius: 6px; 
+    box-shadow: inset 0 0 0 1px #b0bec5; 
+  }
+  
+  .plane .window { 
+    position: absolute; 
+    left: 24px; 
+    top: 10px; 
+    width: 24px; 
+    height: 16px; 
+    background: #b3e5fc; 
+    border-radius: 3px; 
+    box-shadow: 0 0 0 2px #e1f5fe inset; 
+  }
+  
+  .plane .portholes { 
+    position: absolute; 
+    left: 60px; 
+    top: 10px; 
+    display: flex; 
+    gap: 6px; 
+  }
+  
+  .plane .portholes i { 
+    display: block; 
+    width: 8px; 
+    height: 8px; 
+    background: #bbdefb; 
+    border-radius: 50%; 
+    box-shadow: 0 0 0 1px #e3f2fd inset; 
+  }
+  
+  .plane .stripe { 
+    position: absolute; 
+    right: 0; 
+    top: 0; 
+    bottom: 0; 
+    width: 46px; 
+    background: linear-gradient(90deg, transparent 0 6px, var(--brand) 6px); 
+    border-radius: 0 30px 30px 0; 
+  }
+  
+  .plane .label { 
+    left: 60px; 
+    top: -20px; 
+    color: var(--brand); 
+    text-shadow: none; 
+  }
+  
+  .plane .person { 
+    left: 48px; 
+    top: 20px; 
+  }
+  
+  @keyframes plane-move { 
+    /* visible 0-33% */
+    0% { 
+      opacity: 1; 
+      left: -10%; 
+      top: 35%; 
+      transform: translate(-50%,-50%) rotate(-3deg); 
+    }
+    25% { 
+      opacity: 1; 
+      left: 40%; 
+      top: 30%; 
+      transform: translate(-50%,-50%) rotate(-2deg); 
+    }
+    33% { 
+      opacity: 1; 
+      left: 105%; 
+      top: 24%; 
+      transform: translate(-50%,-50%) rotate(-1deg); 
+    }
+    34% { 
+      opacity: 0; 
+    }
+    100% { 
+      opacity: 0; 
+    }
+  }
+
+  /* ========================================
+     МОРЕ / КОРАБЛЬ
+     ======================================== */
+  
+  .sea-layer { 
+    position: absolute; 
+    left: 0; 
+    right: 0; 
+    bottom: 0; 
+    height: 46%; 
+    background: linear-gradient(180deg, rgba(255,255,255,.0), rgba(0,0,0,.05)), repeating-linear-gradient( -6deg, rgba(255,255,255,.18) 0 6px, rgba(255,255,255,0) 6px 18px); 
+    opacity: 0; 
+    animation: sea-vis 18s linear infinite; 
+    z-index: 2; 
+  }
+  
+  @keyframes sea-vis { 
+    0%, 29% { opacity: 0 } 
+    33%, 62% { opacity: 1 } 
+    66%, 100% { opacity: 0 } 
+  }
+
+  .ship { 
+    left: -15%; 
+    top: 64%; 
+    opacity: 0; 
+    animation: ship-move 18s ease-in-out infinite; 
+    z-index: 4; 
+  }
+  
+  .ship .hull { 
+    position: relative; 
+    width: 160px; 
+    height: 34px; 
+    background: #455a64; 
+    border-radius: 0 0 12px 12px; 
+    box-shadow: 0 3px 6px rgba(0,0,0,.25); 
+  }
+  
+  .ship .hull::after { 
+    content: ""; 
+    position: absolute; 
+    left: 0; 
+    right: 0; 
+    bottom: -6px; 
+    height: 6px; 
+    background: linear-gradient(90deg, #263238 0 40%, #546e7a 40% 70%, #263238 70%); 
+    border-radius: 0 0 12px 12px; 
+  }
+  
+  .ship .deck { 
+    position: absolute; 
+    left: 18px; 
+    top: -22px; 
+    width: 90px; 
+    height: 22px; 
+    background: #eceff1; 
+    border-radius: 6px 6px 0 0; 
+    box-shadow: 0 2px 0 #cfd8dc inset; 
+  }
+  
+  .ship .mast { 
+    position: absolute; 
+    left: 72px; 
+    top: -60px; 
+    width: 4px; 
+    height: 60px; 
+    background: #8d6e63; 
+  }
+  
+  .ship .sail { 
+    position: absolute; 
+    left: 76px; 
+    top: -56px; 
+    width: 58px; 
+    height: 52px; 
+    background: linear-gradient(180deg, #fff, #e0f2f1); 
+    -webkit-clip-path: polygon(0 0, 100% 50%, 0 100%); 
+    clip-path: polygon(0 0, 100% 50%, 0 100%); 
+    box-shadow: 0 0 0 1px rgba(0,0,0,.06) inset; 
+  }
+  
+  .ship .label { 
+    left: 30px; 
+    top: -34px; 
+    color: var(--brand); 
+    text-shadow: none; 
+  }
+  
+  .ship .person { 
+    left: 64px; 
+    top: -6px; 
+  }
+  
+  @keyframes ship-move { 
+    /* visible 33-66% */
+    0%, 29% { 
+      opacity: 0; 
+    }
+    33% { 
+      opacity: 1; 
+      left: -15%; 
+      top: 64%; 
+    }
+    50% { 
+      opacity: 1; 
+      left: 48%; 
+      top: 62%; 
+    }
+    62% { 
+      opacity: 1; 
+      left: 110%; 
+      top: 64%; 
+    }
+    66%, 100% { 
+      opacity: 0; 
+    }
+  }
+
+  /* ========================================
+     ДОРОГА / АВТОМОБИЛЬ
+     ======================================== */
+  
+  .road-wrap { 
+    position: absolute; 
+    left: 0; 
+    right: 0; 
+    bottom: 0; 
+    height: 48%; 
+    pointer-events: none; 
+    opacity: 0; 
+    animation: road-vis 18s linear infinite; 
+    z-index: 3; 
+  }
+  
+  @keyframes road-vis { 
+    0%, 62% { opacity: 0 } 
+    66%, 100% { opacity: 1 } 
+  }
+  
+  .road { 
+    position: absolute; 
+    left: 0; 
+    right: 0; 
+    bottom: 18%; 
+    height: 38%; 
+    background: #455a64; 
+    box-shadow: 0 -8px 0 #9ccc65 inset, 0 8px 0 #9ccc65 inset; 
+    z-index: 3; 
+  }
+  
+  .road::before { 
+    content: ""; 
+    position: absolute; 
+    left: -200%; 
+    right: -200%; 
+    top: 50%; 
+    height: 4px; 
+    transform: translateY(-50%); 
+    background: repeating-linear-gradient(90deg, #fff 0 24px, transparent 24px 48px); 
+    animation: dash 2s linear infinite; 
+  }
+  
+  @keyframes dash { 
+    to { 
+      transform: translateY(-50%) translateX(-48px); 
+    } 
+  }
+
+  .car { 
+    left: -12%; 
+    top: 76%; 
+    opacity: 0; 
+    animation: car-move 18s ease-in-out infinite; 
+    z-index: 5; 
+  }
+  
+  .car .body { 
+    position: relative; 
+    width: 150px; 
+    height: 42px; 
+    background: var(--brand); 
+    border-radius: 10px 20px 10px 10px; 
+    box-shadow: 0 2px 8px rgba(0,0,0,.28); 
+  }
+  
+  .car .roof { 
+    position: absolute; 
+    left: 24px; 
+    top: -20px; 
+    width: 76px; 
+    height: 24px; 
+    background: var(--brand); 
+    border-radius: 12px 12px 0 0; 
+  }
+  
+  .car .pillar { 
+    position: absolute; 
+    left: 60px; 
+    top: -20px; 
+    width: 4px; 
+    height: 24px; 
+    background: #0d47a1; 
+    opacity: .25; 
+  }
+  
+  .car .win { 
+    position: absolute; 
+    left: 30px; 
+    top: -12px; 
+    width: 58px; 
+    height: 16px; 
+    background: #b3e5fc; 
+    border-radius: 6px; 
+    box-shadow: 0 0 0 2px #e1f5fe inset; 
+  }
+  
+  .car .bumper { 
+    position: absolute; 
+    right: -6px; 
+    top: 8px; 
+    width: 10px; 
+    height: 26px; 
+    background: #0d47a1; 
+    border-radius: 4px; 
+    opacity: .35; 
+  }
+  
+  .car .light { 
+    position: absolute; 
+    right: -6px; 
+    top: 10px; 
+    width: 10px; 
+    height: 8px; 
+    background: #ffd54f; 
+    border-radius: 2px; 
+    box-shadow: 0 0 6px 2px rgba(255,213,79,.6); 
+  }
+  
+  .car .grille { 
+    position: absolute; 
+    left: 6px; 
+    top: 10px; 
+    width: 20px; 
+    height: 12px; 
+    background: repeating-linear-gradient(0deg, #e3f2fd 0 2px, #0d47a1 2px 4px); 
+    border-radius: 2px; 
+    opacity: .5; 
+  }
+  
+  .car .body .wheel { 
+    position: absolute; 
+    bottom: -12px; 
+    width: 28px; 
+    height: 28px; 
+    background: #212121; 
+    border-radius: 50%; 
+    box-shadow: 0 0 0 4px #424242 inset; 
+    animation: wheel 1s linear infinite; 
+  }
+  
+  .car .body .wheel.w1 { 
+    left: 20px; 
+  }
+  
+  .car .body .wheel.w2 { 
+    right: 18px; 
+  }
+  
+  .car .label { 
+    left: 58px; 
+    top: 46px; 
+  }
+  
+  .car .person { 
+    left: 64px; 
+    top: -6px; 
+  }
+  
+  @keyframes wheel { 
+    to { 
+      transform: rotate(360deg); 
+    } 
+  }
+  
+  @keyframes car-move { 
+    /* visible 66-100% */
+    0%, 62% { 
+      opacity: 0; 
+    }
+    66% { 
+      opacity: 1; 
+      left: -12%; 
+      top: 76%; 
+    }
+    83% { 
+      opacity: 1; 
+      left: 48%; 
+      top: 76%; 
+    }
+    100% { 
+      opacity: 1; 
+      left: 112%; 
+      top: 76%; 
+    }
+  }
+
+ /* ===== VARIABLES ===== */
+:root {
+  --trunk: #8B4513;    /* Цвет ствола пальмы */
+  --palm: #228B22;     /* Цвет пальмовых листьев */
+  --brand: #007bff;    /* Брендовый цвет */
 }
 
-  /* Palms */
-  .palm{ position:absolute; bottom:18%; width:8px; height:120px; background:var(--trunk); border-radius:4px; transform-origin:bottom center; filter:drop-shadow(0 2px 2px rgba(0,0,0,.2)); opacity:0; animation:palm-vis 18s linear infinite, sway 3s ease-in-out infinite; z-index:1; }
-  @keyframes palm-vis{ 0%,62%{opacity:0} 66%,100%{opacity:1} }
-  @keyframes sway{ 0%,100%{ transform:rotate(-2deg);} 50%{ transform:rotate(2deg);} }
-  .palm::before, .palm::after{ content:""; position:absolute; left:50%; top:-6px; width:0; height:0; border-left:32px solid transparent; border-right:32px solid transparent; border-bottom:26px solid var(--palm); transform:translateX(-50%) rotate(12deg); transform-origin:bottom center; }
-  .palm::after{ transform:translateX(-50%) rotate(-12deg); }
+/* ===== ANIMATIONS ===== */
 
-  /* Timeline driver (no visual) */
-  @keyframes timeline{ to{ --t:1; } }
+/* Timeline driver */
+@keyframes timeline {
+  to { --t: 1; }
+}
 
-  /* Decorative clouds during sky phase */
-  .cloud{ position:absolute; top:14%; width:120px; height:38px; background:#fff; border-radius:19px; filter:blur(.4px); box-shadow: 40px 6px 0 6px #ffffff, 80px -2px 0 10px #ffffff; opacity:.9; animation:cloud 18s linear infinite; z-index:2; }
-  .cloud.c2{ top:24%; left:30%; animation-delay:-4s; transform:scale(.9); }
-  .cloud.c3{ top:18%; left:60%; animation-delay:-8s; transform:scale(1.1); }
-  @keyframes cloud{ 0%,29%{ left:-20%; opacity:.9 } 33%,100%{ left:120%; opacity:0 } }
+/* Palm visibility animation */
+@keyframes palm-vis {
+  0%, 62% { opacity: 0; }
+  66%, 100% { opacity: 1; }
+}
 
-  /* Preloader: smooth spin + pulse without snapping */
-  .preloader{ display:flex; align-items:center; justify-content:center; gap:10px; padding:16px 0; }
-  .preloader .ring{ width:40px; height:40px; border-radius:50%; box-sizing:border-box; border:3px solid rgba(0,0,0,.08); border-top-color:var(--brand); border-right-color:var(--brand); transform-origin:50% 50%; backface-visibility:hidden; will-change:transform; animation:spinPulse 1.4s linear infinite; }
-  @keyframes spinPulse{
-    0%{ transform:rotate(0deg) scale(1); }
-    50%{ transform:rotate(180deg) scale(1.12); }
-    100%{ transform:rotate(360deg) scale(1); }
+/* Palm swaying animation */
+@keyframes sway {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+/* Cloud animation - ЗАМЕДЛЕННАЯ */
+@keyframes cloud {
+  0%, 29% { 
+    left: -20%; 
+    opacity: 0.9; 
   }
-  @media (prefers-reduced-motion: reduce){ .preloader .ring{ animation:none; } }
+  33%, 100% { 
+    left: 120%; 
+    opacity: 0; 
+  }
+}
+
+/* Preloader spin pulse animation */
+@keyframes spinPulse {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.12); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+/* ===== PALM TREE STYLES ===== */
+.palm {
+  position: absolute;
+  bottom: 18%;
+  width: 8px;
+  height: 120px;
+  background: var(--trunk);
+  border-radius: 4px;
+  transform-origin: bottom center;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
+  opacity: 0;
+  animation: palm-vis 18s linear infinite, 
+             sway 3s ease-in-out infinite;
+  z-index: 1;
+}
+
+/* Palm leaves */
+.palm::before,
+.palm::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -6px;
+  width: 0;
+  height: 0;
+  border-left: 32px solid transparent;
+  border-right: 32px solid transparent;
+  border-bottom: 26px solid var(--palm);
+  transform: translateX(-50%) rotate(12deg);
+  transform-origin: bottom center;
+}
+
+.palm::after {
+  transform: translateX(-50%) rotate(-12deg);
+}
+
+.cloud {
+  position: absolute;
+  top: 14%;
+  width: 120px;
+  height: 38px;
+  background: #fff;
+  border-radius: 19px;
+  filter: blur(0.4px);
+  box-shadow: 40px 6px 0 6px #ffffff,
+              80px -2px 0 10px #ffffff;
+  opacity: 0.9;
+  left: -30%;
+  animation: cloud 20s linear infinite;
+  z-index: 2;
+}
+
+.cloud.c2 {
+  top: 24%;
+  animation-delay: 5s;
+  transform: scale(0.9);
+}
+
+.cloud.c3 {
+  top: 18%;
+  animation-delay: 10s;
+  transform: scale(1.1);
+}
+
+@keyframes cloud {
+  0% { 
+    left: -30%; /* Начинается за левым краем */
+    opacity: 0.9; 
+  }
+  100% { 
+    left: 120%; /* Заканчивается за правым краем */
+    opacity: 0.9; 
+  }
+}
+
+
+/* ===== PRELOADER STYLES ===== */
+.preloader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 0;
+}
+
+.preloader .ring {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  border: 3px solid rgba(0, 0, 0, 0.08);
+  border-top-color: var(--brand);
+  border-right-color: var(--brand);
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+  will-change: transform;
+  animation: spinPulse 1.4s linear infinite;
+}
+
 
 </style>
 {% endblock %}
 {% block content %}
-<h1 id="top" class="caps">Откройте мир с TravelDream</h1>
+<!-- Слайдер -->
+<div class="slider-container" id="mainSlider" style="margin: 20px 0;">
+    <div class="slide">
+        <a href="{% url 'core:country_list' %}">
+            <img src="{% static 'vendor/img/slides/slide-1.jpg' %}" alt="Слайд 1" style="width: 100%; height: 400px; object-fit: cover;">
+            <div class="slide-caption" style="text-align: center; padding: 15px; background: rgba(0,0,0,0.7); color: white; position: absolute; bottom: 0; left: 0; right: 0;">Страны и направления</div>
+        </a>
+    </div>
+    <div class="slide">
+        <a href="{% url 'core:hotel_list' %}">
+            <img src="{% static 'vendor/img/slides/slide-2.jpg' %}" alt="Слайд 2" style="width: 100%; height: 400px; object-fit: cover;">
+            <div class="slide-caption" style="text-align: center; padding: 15px; background: rgba(0,0,0,0.7); color: white; position: absolute; bottom: 0; left: 0; right: 0;">Отели и размещение</div>
+        </a>
+    </div>
+    <div class="slide">
+        <a href="{% url 'core:tour_list' %}">
+            <img src="{% static 'vendor/img/slides/slide-3.jpg' %}" alt="Слайд 3" style="width: 100%; height: 400px; object-fit: cover;">
+            <div class="slide-caption" style="text-align: center; padding: 15px; background: rgba(0,0,0,0.7); color: white; position: absolute; bottom: 0; left: 0; right: 0;">Туры и путешествия</div>
+        </a>
+    </div>
+</div>
 
-<p>Лучшие направления, незабываемые впечатления и комфортный отдых</p>
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">
+            <span class="small-caps">Добро пожаловать в мир путешествий</span>
+            Откройте мир с TravelDream
+        </h1>
+        <p class="hero-subtitle">Лучшие направления, незабываемые впечатления и комфортный отдых</p>
+        
+        <form action="{% url 'core:tour_list' %}" method="get" class="search-form">
+            <input type="text" name="search" placeholder="Куда хотите поехать?" class="search-input">
+            <button type="submit" class="search-btn">Найти туры</button>
+        </form>
+    </div>
+</section>
 
-<!-- Рекламный баннер -->
-<img src="{% static 'vendor/img/banner1.jpg' %}" 
-     alt="Специальное предложение" 
-     style="max-width: 100%; height: auto;">
-
-<form action="{% url 'core:tour_list' %}" method="get">
-    <input type="text" name="search" placeholder="Куда хотите поехать?" style="width: 300px; padding: 8px; margin-right: 10px;">
-    <button type="submit" style="padding: 8px 16px; background: #007bff; color: white; border: none; cursor: pointer;">Найти туры</button>
-</form>
+<!-- Banner Section -->
+<section class="content-section">
+    <img src="{% static 'vendor/img/banner1.jpg' %}" 
+         alt="Специальное предложение" 
+         style="width: 100%; height: auto; border-radius: 12px; box-shadow: var(--shadow-lg);">
+</section>
 
 <hr>
 
 <!-- Последняя новость -->
 {% if latest_news %}
-<section class="last-article" style="background: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 10px; border-left: 4px solid #007bff;">
-    <span class="badge-new">New</span>
-    <h2 style="color: #007bff; margin-top: 0;"> Последняя новость</h2>
-    <details>
-        <summary style="cursor: pointer; color: #007bff;">
-            <strong>{{ latest_news.title }}</strong> · {{ latest_news.get_category_display }} · {{ latest_news.created_at|date:"d.m.Y H:i" }}
-        </summary>
-        <div style="display: flex; gap: 20px; align-items: flex-start; margin-top: 12px;">
+<section class="last-article" style="position: relative; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 30px; margin: 30px 0; border-radius: 15px; border-left: 5px solid #007bff; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden;">
+    <span class="badge-new" style="position: absolute; right: 20px; top: 20px; background: linear-gradient(45deg, #ff1744, #ff5722); color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(255,23,68,0.3);">New</span>
+    
+    <div style="position: relative; z-index: 2;">
+        <h2 style="color: #007bff; margin-top: 0; margin-bottom: 20px; font-size: 1.8rem; font-weight: 700;">Последняя новость</h2>
+        
+        <div style="display: flex; gap: 25px; align-items: flex-start; margin-top: 20px;">
             {% if latest_news.image %}
-            <div style="flex-shrink: 0;">
+            <div style="flex-shrink: 0; position: relative;">
                 <img src="{{ latest_news.image.url }}" 
                      alt="{{ latest_news.title }}" 
-                     style="width: 200px; height: 150px; object-fit: cover; border-radius: 8px;">
+                     style="width: 250px; height: 180px; object-fit: cover; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+                <div style="position: absolute; bottom: -10px; right: -10px; background: #007bff; color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: 600;">
+                    {{ latest_news.get_category_display }}
+                </div>
             </div>
             {% endif %}
-            <div style="flex: 1;">
-                <p class="summary-ellipsis" style="line-height: 1.6; margin: 10px 0; color: #333;">
+            <div style="flex: 1; position: relative;">
+                <h3 style="color: #333; margin: 0 0 15px 0; font-size: 1.4rem; font-weight: 600; line-height: 1.3;">
+                    {{ latest_news.title }}
+                </h3>
+                <p style="color: #666; font-size: 0.9rem; margin: 0 0 15px 0;">
+                    <i class="fas fa-calendar-alt" style="margin-right: 5px;"></i>
+                    {{ latest_news.created_at|date:"d.m.Y H:i" }}
+                </p>
+                <p class="summary-ellipsis" style="line-height: 1.6; margin: 15px 0; color: #555; font-size: 1rem;">
                     {{ latest_news.summary }}
                 </p>
                 <a href="{% url 'core:news_detail' latest_news.slug %}" 
-                   style="background: #007bff; color: white; text-decoration: none; padding: 8px 16px; border-radius: 5px; display: inline-block; margin-top: 10px;">
-                    Читать полностью
+                   style="background: linear-gradient(45deg, #007bff, #0056b3); color: white; text-decoration: none; padding: 12px 24px; border-radius: 25px; display: inline-block; margin-top: 15px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,123,255,0.3);">
+                    Читать полностью →
                 </a>
             </div>
         </div>
-    </details>
+    </div>
+    
+    <!-- Декоративные элементы -->
+    <div style="position: absolute; top: -50px; right: -50px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(0,123,255,0.1) 0%, transparent 70%); border-radius: 50%; z-index: 1;"></div>
+    <div style="position: absolute; bottom: -30px; left: -30px; width: 60px; height: 60px; background: radial-gradient(circle, rgba(0,123,255,0.05) 0%, transparent 70%); border-radius: 50%; z-index: 1;"></div>
 </section>
 {% endif %}
 
@@ -182,67 +1152,71 @@
 <!-- Якорная навигация по странице -->
 <p><a href="#popular">Перейти к популярным направлениям</a> · <a href="#top">Вверх</a></p>
 
-<h2>Почему выбирают нас</h2>
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f0f0f0">
-            <th>Преимущество</th>
-            <th>Описание</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><strong>Быстрое бронирование</strong></td>
-            <td>Забронируйте тур за несколько минут с нашей простой системой</td>
-        </tr>
-        <tr>
-            <td><strong>Лучшие цены</strong></td>
-            <td>Гарантируем самые выгодные предложения на рынке</td>
-        </tr>
-        <tr>
-            <td><strong>Безопасность</strong></td>
-            <td>Ваши данные и платежи полностью защищены</td>
-        </tr>
-        <tr>
-            <td><strong>Поддержка 24/7</strong></td>
-            <td>Наша команда всегда готова помочь вам</td>
-        </tr>
-    </tbody>
-</table>
+<section class="content-section">
+    <h2 class="section-title">Почему выбирают нас</h2>
+    <table class="modern-table">
+        <thead>
+            <tr>
+                <th>Преимущество</th>
+                <th>Описание</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Быстрое бронирование</strong></td>
+                <td>Забронируйте тур за несколько минут с нашей простой системой</td>
+            </tr>
+            <tr>
+                <td><strong>Лучшие цены</strong></td>
+                <td>Гарантируем самые выгодные предложения на рынке</td>
+            </tr>
+            <tr>
+                <td><strong>Безопасность</strong></td>
+                <td>Ваши данные и платежи полностью защищены</td>
+            </tr>
+            <tr>
+                <td><strong>Поддержка 24/7</strong></td>
+                <td>Наша команда всегда готова помочь вам</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
 
 
-<h2 id="popular"> Наши достижения</h2>
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f0f0f0">
-            <th>Показатель</th>
-            <th>Значение</th>
-            <th>Описание</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><strong>Довольных клиентов</strong></td>
-            <td><strong style="color: #007bff; font-size: 1.2em;">10,000+</strong></td>
-            <td>Количество клиентов, которые доверяют нам</td>
-        </tr>
-        <tr>
-            <td><strong>Стран назначения</strong></td>
-            <td><strong style="color: #007bff; font-size: 1.2em;">50+</strong></td>
-            <td>Количество стран, куда мы организуем туры</td>
-        </tr>
-        <tr>
-            <td><strong>Лет опыта</strong></td>
-            <td><strong style="color: #007bff; font-size: 1.2em;">15</strong></td>
-            <td>Годы успешной работы в туристической сфере</td>
-        </tr>
-        <tr>
-            <td><strong>Положительных отзывов</strong></td>
-            <td><strong style="color: #007bff; font-size: 1.2em;">99%</strong></td>
-            <td>Процент довольных клиентов по отзывам</td>
-        </tr>
-    </tbody>
-</table>
+<section class="content-section" id="popular">
+    <h2 class="section-title">Наши достижения</h2>
+    <table class="modern-table">
+        <thead>
+            <tr>
+                <th>Показатель</th>
+                <th>Значение</th>
+                <th>Описание</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Довольных клиентов</strong></td>
+                <td><strong style="color: var(--brand); font-size: 1.4em;">10,000+</strong></td>
+                <td>Количество клиентов, которые доверяют нам</td>
+            </tr>
+            <tr>
+                <td><strong>Стран назначения</strong></td>
+                <td><strong style="color: var(--brand); font-size: 1.4em;">50+</strong></td>
+                <td>Количество стран, куда мы организуем туры</td>
+            </tr>
+            <tr>
+                <td><strong>Лет опыта</strong></td>
+                <td><strong style="color: var(--brand); font-size: 1.4em;">15</strong></td>
+                <td>Годы успешной работы в туристической сфере</td>
+            </tr>
+            <tr>
+                <td><strong>Положительных отзывов</strong></td>
+                <td><strong style="color: var(--brand); font-size: 1.4em;">99%</strong></td>
+                <td>Процент довольных клиентов по отзывам</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
 
 <hr>
 
@@ -429,14 +1403,14 @@
 
 <!-- Партнеры -->
 {% if partners %}
-<section style="margin: 30px 0;">
-    <h2 style="text-align: center; color: #007bff; margin-bottom: 25px;"> Наши партнеры</h2>
-    <div class="partners" style="max-width: 1000px; margin: 0 auto;">
+<section style="margin: 50px 0; padding: 40px 0; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 20px;">
+    <h2 style="text-align: center; color: #007bff; margin-bottom: 40px; font-size: 2.2rem; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">Наши партнеры</h2>
+    <div class="partners" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
         {% for partner in partners %}
         <div class="partner-tile" title="{{ partner.name }}">
-            <a href="{{ partner.website_url }}" target="_blank" rel="noopener" style="text-decoration:none; text-align:center;">
-                <img src="{{ partner.logo.url }}" alt="{{ partner.name }}" style="width:80px; height:80px; object-fit:contain; border-radius:999px; background:#fff;">
-                <div class="partner-name" style="display:block; margin-top:8px; color:#111;">{{ partner.name }}</div>
+            <a href="{{ partner.website_url }}" target="_blank" rel="noopener" style="text-decoration:none; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
+                <img src="{{ partner.logo.url }}" alt="{{ partner.name }}">
+                <div class="partner-name">{{ partner.name }}</div>
             </a>
         </div>
         {% endfor %}
@@ -467,25 +1441,27 @@
     {% endif %}
 
     {% if popular_countries %}
-    <h3 style="margin-top:16px;">Популярные страны</h3>
-    <table border="1" cellpadding="8" cellspacing="0" width="100%" style="border-collapse: collapse;">
-        <thead>
-            <tr style="background:#f0f0f0;">
-                <th>Страна</th>
-                <th>Кол-во отелей</th>
-                <th>Мин. цена тура</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for c in popular_countries %}
-            <tr>
-                <td>{{ c.name }}</td>
-                <td>{{ c.hotels_count }}</td>
-                <td>{% if c.min_price %}{{ c.min_price|floatformat:"0" }}{% else %}—{% endif %}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="content-section">
+        <h3 class="section-title">Популярные страны</h3>
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>Страна</th>
+                    <th>Кол-во отелей</th>
+                    <th>Мин. цена тура</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in popular_countries %}
+                <tr>
+                    <td><strong>{{ c.name }}</strong></td>
+                    <td>{{ c.hotels_count }}</td>
+                    <td>{% if c.min_price %}<strong style="color: var(--brand);">{{ c.min_price|floatformat:"0" }} ₽</strong>{% else %}—{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     {% endif %}
 </section>
 
@@ -594,4 +1570,20 @@
 
 <!-- Preloader moved to base template for global usage -->
 
+<script src="{% static 'js/slider.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sliderContainer = document.getElementById('mainSlider');
+        if (sliderContainer) {
+            const slider = new Slider(sliderContainer, {
+                loop: true,
+                navs: true,
+                pags: true,
+                auto: true,
+                stopMouseHover: true,
+                delay: 5000
+            });
+        }
+    });
+</script>
 {% endblock %} 

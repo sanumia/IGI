@@ -621,7 +621,7 @@ class AboutView(TemplateView):
 
 class NewsListView(ListView):
     model = News
-    template_name = 'news/news_list.html'
+    template_name = 'core/news_list.html'
     context_object_name = 'news_list'
     paginate_by = 5
 
@@ -642,7 +642,7 @@ class NewsListView(ListView):
 
 class NewsDetailView(DetailView):
     model = News
-    template_name = 'news/news_detail.html'
+    template_name = 'core/news_detail.html'
     context_object_name = 'news'
     slug_url_kwarg = 'slug'
 
@@ -1483,10 +1483,60 @@ class VacancyDetailView(DetailView):
 
 
 def agency_certificate(request):
-    """Страница сертификата без CSS. Показывает все поля AgencyDetails."""
+    """Страница официального сертификата турагентства в стиле РТА."""
     from .models import AgencyDetails
     agency = AgencyDetails.objects.first()
-    return render(request, 'core/certificate.html', {'agency': agency})
+
+    # Если данных агентства нет, создаем дефолтные значения
+    if not agency:
+        agency = type('AgencyDetails', (), {
+            'legal_name': 'Общество с ограниченной ответственностью «TravelDream»',
+            'tax_id': '1234567890',
+            'license_number': '8241',
+            'director_name': 'Иванов И.И.',
+            'agency_name': 'TravelDream',
+            'address': 'г. Москва, ул. Примерная, 123',
+            'phone_number': '+7 (999) 123-45-67',
+            'email': 'info@traveldream.ru'
+        })()
+
+    context = {
+        'agency': agency,
+        'certificate_date': timezone.now().strftime('%d %B %Y'),
+    }
+
+    return render(request, 'core/certificate.html', context)
+
+
+def reviews_page(request):
+    """Страница отзывов с формой добавления и списком отзывов."""
+    from .models import Review, Hotel
+    from .forms import ReviewForm
+    
+    reviews = Review.objects.filter(is_published=True).select_related('author', 'hotel').order_by('-created_at')
+    hotels = Hotel.objects.all().order_by('name')
+    
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            if request.user.is_authenticated:
+                review.author = request.user
+                review.save()
+                messages.success(request, 'Ваш отзыв успешно добавлен!')
+                return redirect('core:reviews')
+            else:
+                messages.error(request, 'Для добавления отзыва необходимо войти в систему.')
+    else:
+        form = ReviewForm()
+    
+    context = {
+        'reviews': reviews,
+        'form': form,
+        'hotels': hotels,
+    }
+    
+    return render(request, 'core/reviews.html', context)
 
 
 def promos_plain(request):
@@ -1543,3 +1593,58 @@ class GlossaryDetailView(DetailView):
         ).exclude(pk=term.pk)[:5]
         
         return context
+
+
+def contacts(request):
+    """Страница контактов с информацией о сотрудниках"""
+    # Получаем всех активных сотрудников
+    employees = Employee.objects.filter(is_active=True).order_by('name')
+    
+    # Получаем информацию об агентстве
+    try:
+        agency = AgencyDetails.objects.first()
+    except:
+        agency = None
+    
+    context = {
+        'employees': employees,
+        'agency': agency,
+    }
+    
+    return render(request, 'core/contacts.html', context)
+
+def contacts_table(request):
+    """Страница с таблицей контактов для заданий по JS"""
+    from .models import AgencyDetails
+    
+    employees_qs = Employee.objects.filter(is_active=True).order_by('name')
+    
+    context = {
+        'has_employees': employees_qs.exists(),
+        'contacts_api_url': reverse('core:contacts_table_data'),
+        'agency': AgencyDetails.objects.first(),
+    }
+    
+    return render(request, 'core/contacts_table.html', context)
+
+
+def contacts_table_data(request):
+    """API с данными сотрудников для таблицы контактов"""
+    employees_qs = Employee.objects.filter(is_active=True).order_by('name')
+    employees_data = [
+        {
+            'id': emp.id,
+            'name': emp.name,
+            'photo': request.build_absolute_uri(emp.photo.url) if emp.photo else None,
+            'bio': emp.bio,
+            'phone': emp.phone,
+            'email': emp.email
+        }
+        for emp in employees_qs
+    ]
+
+    return JsonResponse({'employees': employees_data, 'count': len(employees_data)})
+
+def js_tasks_page(request):
+    """Отдельная страница для заданий по JS"""
+    return render(request, 'core/js_tasks.html', {})

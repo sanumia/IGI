@@ -1,108 +1,313 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}Словарь терминов | TravelDream{% endblock %}
 
-{% block extra_css %}{% endblock %}
+{% block extra_css %}
+<style>
+/* ========================================
+   ОСНОВНЫЕ КОНТЕЙНЕРЫ
+   ======================================== */
+
+.glossary-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* ========================================
+   ЗАГОЛОВОК СТРАНИЦЫ
+   ======================================== */
+
+.glossary-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 30px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  color: white;
+}
+
+.glossary-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* ========================================
+   ФИЛЬТРЫ ПО КАТЕГОРИЯМ
+   ======================================== */
+
+.filters-section {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+}
+
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.filter-btn {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+  padding: 10px 20px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  background: #667eea;
+  color: white;
+  text-decoration: none;
+}
+
+/* ========================================
+   СПИСОК FAQ/ТЕРМИНОВ
+   ======================================== */
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ========================================
+   ЭЛЕМЕНТ FAQ (DETAILS)
+   ======================================== */
+
+.faq-item {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* ========================================
+   ЗАГОЛОВОК FAQ (SUMMARY)
+   ======================================== */
+
+.faq-question {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px 25px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.faq-question:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+.faq-question h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  flex: 1;
+}
+
+/* ========================================
+   МЕТКИ В ЗАГОЛОВКЕ FAQ
+   ======================================== */
+
+.faq-category {
+  background: rgba(255,255,255,0.2);
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-left: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.faq-date {
+  color: rgba(255,255,255,0.8);
+  font-size: 0.9rem;
+  margin-left: 15px;
+}
+
+.faq-icon {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+  margin-left: 15px;
+}
+
+/* ========================================
+   СОСТОЯНИЕ РАСКРЫТОГО FAQ
+   ======================================== */
+
+.faq-item[open] .faq-icon {
+  transform: rotate(180deg);
+}
+
+/* ========================================
+   СКРЫТИЕ ДЕФОЛТНОГО МАРКЕРА SUMMARY
+   ======================================== */
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+summary {
+  list-style: none;
+}
+
+/* ========================================
+   СОДЕРЖИМОЕ FAQ (ОТВЕТ)
+   ======================================== */
+
+.faq-answer {
+  padding: 0 25px;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background: #f8f9fa;
+}
+
+.faq-item[open] .faq-answer {
+  padding: 25px;
+  max-height: 500px;
+}
+
+.faq-answer p {
+  margin: 0 0 15px 0;
+  line-height: 1.6;
+  color: #555;
+}
+
+.faq-answer p:last-child {
+  margin-bottom: 0;
+}
+
+/* ========================================
+   СОСТОЯНИЕ "НЕТ ТЕРМИНОВ"
+   ======================================== */
+
+.no-terms {
+  text-align: center;
+  padding: 60px 20px;
+  color: #7f8c8d;
+}
+
+.no-terms h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+/* ========================================
+   АДАПТИВНЫЙ ДИЗАЙН (МОБИЛЬНЫЕ УСТРОЙСТВА)
+   ======================================== */
+
+@media (max-width: 768px) {
+  .faq-question {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .faq-category,
+  .faq-date {
+    margin-left: 0;
+  }
+  
+  .faq-icon {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+  }
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<h1> Словарь терминов и понятий</h1>
-<p>Разъяснение туристических терминов и часто задаваемых вопросов</p>
+<div class="glossary-container">
+  <div class="glossary-header">
+    <h1>Словарь терминов и понятий</h1>
+    <p>Разъяснение туристических терминов и часто задаваемых вопросов</p>
+  </div>
+  
+  <div class="filters-section">
+    <div class="filter-buttons">
+      <a href="{% url 'core:glossary' %}" class="filter-btn {% if not request.GET.category %}active{% endif %}">Все термины</a>
+      {% for value, label in term_categories %}
+      <a href="?category={{ value }}" class="filter-btn {% if request.GET.category == value %}active{% endif %}">{{ label }}</a>
+      {% endfor %}
+    </div>
+  </div>
 
-<!-- Category Filters -->
-<h2> Фильтр по категориям</h2>
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f0f0f0">
-            <th>Категория</th>
-            <th>Ссылка</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><strong>Все термины</strong></td>
-            <td><a href="{% url 'core:glossary' %}" style="background: #007bff; color: white; text-decoration: none; padding: 5px 10px;">{% if not request.GET.category %} {% endif %}Показать все</a></td>
-        </tr>
-        {% for value, label in term_categories %}
-        <tr>
-            <td><strong>{{ label }}</strong></td>
-            <td><a href="?category={{ value }}" style="background: #6c757d; color: white; text-decoration: none; padding: 5px 10px;">{% if request.GET.category == value %} {% endif %}Фильтр</a></td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+  <!-- FAQ List -->
+  {% if terms %}
+  <div class="faq-list">
+    {% for term in terms %}
+    <details class="faq-item">
+      <summary class="faq-question">
+        <h3>{{ term.term }}</h3>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="faq-category">{{ term.get_category_display }}</span>
+          <span class="faq-date">{{ term.created_at|date:"d.m.Y" }}</span>
+          <span class="faq-icon">▼</span>
+        </div>
+      </summary>
+      <div class="faq-answer">
+        <p>{{ term.definition }}</p>
+        {% if term.short_definition and term.short_definition != term.definition %}
+        <p><strong>Краткое определение:</strong> {{ term.short_definition }}</p>
+        {% endif %}
+      </div>
+    </details>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="no-terms">
+    <h3>Термины не найдены</h3>
+    <p>Попробуйте изменить параметры поиска</p>
+  </div>
+  {% endif %}
 
-<hr>
+  <!-- Pagination -->
+  {% if is_paginated %}
+  <div style="text-align: center; margin: 40px 0;">
+    <div style="display: inline-flex; gap: 10px; align-items: center; background: white; padding: 15px 25px; border-radius: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+      {% if page_obj.has_previous %}
+        <a href="?page=1" style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; text-decoration: none; padding: 8px 15px; border-radius: 20px; font-weight: 600; transition: all 0.3s ease;">Первая</a>
+        <a href="?page={{ page_obj.previous_page_number }}" style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; text-decoration: none; padding: 8px 15px; border-radius: 20px; font-weight: 600; transition: all 0.3s ease;">← Назад</a>
+      {% endif %}
 
-<!-- Terms List -->
-<h2> Список терминов</h2>
-{% if terms %}
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f0f0f0">
-            <th>Термин/Вопрос</th>
-            <th>Категория</th>
-            <th>Краткое определение</th>
-            <th>Дата добавления</th>
-            <th>Действие</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for term in terms %}
-        <tr>
-            <td><strong>{{ term.term }}</strong></td>
-            <td><span style="background: #007bff; color: white; padding: 2px 6px; font-size: 0.8em;">{{ term.get_category_display }}</span></td>
-            <td>{{ term.short_definition|default:term.definition|truncatechars:100 }}</td>
-            <td>{{ term.created_at|date:"d.m.Y" }}</td>
-            <td><a href="{{ term.get_absolute_url }}" style="background: #007bff; color: white; text-decoration: none; padding: 5px 10px;"> Подробнее</a></td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <tbody>
-        <tr>
-            <td style="text-align: center; padding: 3rem; color: #666;">
-                <h3> Термины не найдены</h3>
-                <p>Попробуйте изменить параметры поиска</p>
-            </td>
-        </tr>
-    </tbody>
-</table>
-{% endif %}
+      <span style="background: #f8f9fa; color: #667eea; padding: 8px 15px; border-radius: 20px; font-weight: 600; margin: 0 10px;">
+        Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+      </span>
 
-<!-- Pagination -->
-{% if is_paginated %}
-<hr>
-<h3> Навигация по страницам</h3>
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="#f5f5f5">
-            <th>Навигация</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td style="text-align: center;">
-                {% if page_obj.has_previous %}
-                    <a href="?page=1" style="background: #007bff; color: white; text-decoration: none; padding: 5px 10px; margin-right: 5px;">Первая</a>
-                    <a href="?page={{ page_obj.previous_page_number }}" style="background: #007bff; color: white; text-decoration: none; padding: 5px 10px; margin-right: 5px;">Назад</a>
-                {% endif %}
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; text-decoration: none; padding: 8px 15px; border-radius: 20px; font-weight: 600; transition: all 0.3s ease;">Вперед →</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}" style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; text-decoration: none; padding: 8px 15px; border-radius: 20px; font-weight: 600; transition: all 0.3s ease;">Последняя</a>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
 
-                <span style="background: #6c757d; color: white; padding: 5px 10px; margin: 0 5px;">
-                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
-                </span>
+  <div style="text-align: center; margin-top: 40px; padding: 20px; color: #7f8c8d;">
+    <small>Последнее обновление: {% now "d.m.Y H:i" %}</small>
+  </div>
+</div>
 
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" style="background: #007bff; color: white; text-decoration: none; padding: 5px 10px; margin-left: 5px;">Вперед</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}" style="background: #007bff; color: white; text-decoration: none; padding: 5px 10px; margin-left: 5px;">Последняя</a>
-                {% endif %}
-            </td>
-        </tr>
-    </tbody>
-</table>
-{% endif %}
-
-<hr>
-<p><small>Последнее обновление: {% now "d.m.Y H:i" %}</small></p>
+<!-- Раскрытие реализовано на чистом CSS через <details>/<summary> -->
 {% endblock %}

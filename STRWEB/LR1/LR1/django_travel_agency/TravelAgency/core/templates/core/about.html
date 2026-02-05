@@ -10,8 +10,33 @@
 <p>15 лет создаём незабываемые путешествия</p>
 
     {% if agency and agency.logo %}
-    <div style="text-align:center;margin:16px 0;">
-        <img src="{{ agency.logo.url }}" alt="Логотип" style="height:80px; transform: rotate(-2deg) scale(1.02); transition: transform .3s ease;">
+    <div style="text-align:center;margin:30px 0; position:relative;">
+        <div style="position:relative; display:inline-block;">
+            <img src="{{ agency.logo.url }}" alt="Логотип" 
+                 style="height:120px; 
+                        transform: rotate(-5deg) scale(1.1) perspective(1000px) rotateY(10deg); 
+                        transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)) brightness(1.1) contrast(1.1);
+                        border-radius: 20px;
+                        background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(240,248,255,0.9) 100%);
+                        padding: 15px;
+                        box-shadow: 0 15px 35px rgba(0,123,255,0.2), inset 0 1px 0 rgba(255,255,255,0.8);"
+                 onmouseover="this.style.transform='rotate(0deg) scale(1.2) perspective(1000px) rotateY(0deg)'; this.style.filter='drop-shadow(0 15px 30px rgba(0,0,0,0.3)) brightness(1.2) contrast(1.2)';"
+                 onmouseout="this.style.transform='rotate(-5deg) scale(1.1) perspective(1000px) rotateY(10deg)'; this.style.filter='drop-shadow(0 10px 20px rgba(0,0,0,0.2)) brightness(1.1) contrast(1.1)';">
+            
+            <!-- Декоративные элементы вокруг логотипа -->
+            <div style="position:absolute; top:-10px; left:-10px; width:20px; height:20px; background:radial-gradient(circle, #007bff 0%, transparent 70%); border-radius:50%; animation:pulse 2s infinite;"></div>
+            <div style="position:absolute; top:-5px; right:-15px; width:15px; height:15px; background:radial-gradient(circle, #28a745 0%, transparent 70%); border-radius:50%; animation:pulse 2s infinite 0.5s;"></div>
+            <div style="position:absolute; bottom:-8px; left:-5px; width:12px; height:12px; background:radial-gradient(circle, #ffc107 0%, transparent 70%); border-radius:50%; animation:pulse 2s infinite 1s;"></div>
+            <div style="position:absolute; bottom:-12px; right:-8px; width:18px; height:18px; background:radial-gradient(circle, #dc3545 0%, transparent 70%); border-radius:50%; animation:pulse 2s infinite 1.5s;"></div>
+        </div>
+        
+        <style>
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); opacity: 0.7; }
+                50% { transform: scale(1.2); opacity: 1; }
+            }
+        </style>
     </div>
     {% endif %}
 

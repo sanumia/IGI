@@ -1,0 +1,304 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Каталог стран | TravelDream{% endblock %}
+
+{% block extra_css %}
+<style>
+  .catalog-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .catalog-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    color: white;
+  }
+  
+  .catalog-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .catalog-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+  
+  /* CSS Grid Layout for countries */
+  .countries-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+  
+  .country-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  
+  .country-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  }
+  
+  .country-flag {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .country-card:hover .country-flag {
+    transform: scale(1.05);
+  }
+  
+  .country-content {
+    padding: 25px;
+  }
+  
+  .country-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  
+  .country-capital {
+    color: #667eea;
+    font-weight: 600;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .country-description {
+    color: #7f8c8d;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .country-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .info-item {
+    text-align: center;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+  
+  .info-label {
+    font-size: 0.8rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+  }
+  
+  .info-value {
+    font-weight: 600;
+    color: #2c3e50;
+  }
+  
+  .country-weather {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .weather-temp {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+  
+  .weather-desc {
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+  
+  .country-btn {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    width: 100%;
+    text-align: center;
+  }
+  
+  .country-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+  
+  .filters-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+  }
+  
+  .filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  .filter-btn {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .filter-btn:hover,
+  .filter-btn.active {
+    background: #667eea;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .no-countries {
+    text-align: center;
+    padding: 60px 20px;
+    color: #7f8c8d;
+  }
+  
+  .no-countries h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  @media (max-width: 768px) {
+    .countries-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .catalog-header h1 {
+      font-size: 2rem;
+    }
+    
+    .filter-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .country-info {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="catalog-container">
+  <div class="catalog-header">
+    <h1>Каталог стран</h1>
+    <p>Откройте для себя удивительные страны и их культуру</p>
+  </div>
+  
+  <div class="filters-section">
+    <div class="filter-buttons">
+      <a href="{% url 'core:country_list' %}" class="filter-btn {% if not request.GET.region %}active{% endif %}">Все страны</a>
+      <a href="?region=europe" class="filter-btn {% if request.GET.region == 'europe' %}active{% endif %}">Европа</a>
+      <a href="?region=asia" class="filter-btn {% if request.GET.region == 'asia' %}active{% endif %}">Азия</a>
+      <a href="?region=america" class="filter-btn {% if request.GET.region == 'america' %}active{% endif %}">Америка</a>
+      <a href="?region=africa" class="filter-btn {% if request.GET.region == 'africa' %}active{% endif %}">Африка</a>
+    </div>
+  </div>
+
+  <!-- Countries Grid -->
+  {% if countries %}
+  <div class="countries-grid">
+    {% for country in countries %}
+    <div class="country-card">
+      {% if country.flag %}
+      <img src="{{ country.flag.url }}" alt="{{ country.name }}" class="country-flag">
+      {% else %}
+      <div class="country-flag" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+        🌍
+      </div>
+      {% endif %}
+      
+      <div class="country-content">
+        <h3 class="country-name">{{ country.name }}</h3>
+        <div class="country-capital">
+          <span>🏛️</span>
+          <span>{{ country.capital }}</span>
+        </div>
+        <p class="country-description">{{ country.description }}</p>
+        
+        <div class="country-info">
+          <div class="info-item">
+            <div class="info-label">Население</div>
+            <div class="info-value">{{ country.population|floatformat:0 }} чел.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Площадь</div>
+            <div class="info-value">{{ country.area|floatformat:0 }} км²</div>
+          </div>
+        </div>
+        
+        {% if country.weather_data %}
+        <div class="country-weather">
+          <div class="weather-temp">{{ country.weather_data.temperature }}°C</div>
+          <div class="weather-desc">{{ country.weather_data.description }}</div>
+        </div>
+        {% endif %}
+        
+        <a href="{{ country.get_absolute_url }}" class="country-btn">Подробнее</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="no-countries">
+    <h3>Страны не найдены</h3>
+    <p>Попробуйте изменить параметры поиска</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

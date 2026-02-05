@@ -1,0 +1,459 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Добавить отзыв | TravelDream{% endblock %}
+
+{% block extra_css %}
+<style>
+  .review-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .review-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    color: white;
+  }
+  
+  .review-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .review-form {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+  }
+  
+  .form-group {
+    margin-bottom: 25px;
+  }
+  
+  .form-label {
+    display: block;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+  
+  .form-label.required::after {
+    content: ' *';
+    color: #e74c3c;
+    font-weight: bold;
+  }
+  
+  /* Input Styles */
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+  }
+  
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+  
+  input[type="text"]:valid,
+  input[type="email"]:valid,
+  input[type="number"]:valid {
+    border-color: #10b981;
+  }
+  
+  input[type="text"]:invalid,
+  input[type="email"]:invalid,
+  input[type="number"]:invalid {
+    border-color: #e74c3c;
+  }
+  
+  /* Textarea specific */
+  textarea {
+    min-height: 120px;
+    resize: vertical;
+    font-family: inherit;
+    line-height: 1.6;
+  }
+  
+  /* Select specific */
+  select {
+    cursor: pointer;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="%23667eea"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+    padding-right: 45px;
+  }
+  
+  /* Radio and Checkbox Styles */
+  .radio-group,
+  .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+  }
+  
+  .radio-item,
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    border: 2px solid transparent;
+  }
+  
+  .radio-item:hover,
+  .checkbox-item:hover {
+    background: #e9ecef;
+    border-color: #667eea;
+  }
+  
+  input[type="radio"],
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: #667eea;
+  }
+  
+  input[type="radio"]:checked + label,
+  input[type="checkbox"]:checked + label {
+    color: #667eea;
+    font-weight: 600;
+  }
+  
+  .radio-item:has(input[type="radio"]:checked),
+  .checkbox-item:has(input[type="checkbox"]:checked) {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-color: #667eea;
+  }
+  
+  /* Range Input */
+  input[type="range"] {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: #e2e8f0;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  }
+  
+  input[type="range"]::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  }
+  
+  .range-value {
+    text-align: center;
+    font-weight: 600;
+    color: #667eea;
+    margin-top: 10px;
+  }
+  
+  /* Submit Button */
+  .submit-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    width: 100%;
+  }
+  
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  }
+  
+  .submit-btn:active {
+    transform: translateY(0);
+  }
+  
+  /* Form Validation States */
+  .form-group.error input,
+  .form-group.error textarea,
+  .form-group.error select {
+    border-color: #e74c3c;
+    background: #fdf2f2;
+  }
+  
+  .form-group.success input,
+  .form-group.success textarea,
+  .form-group.success select {
+    border-color: #10b981;
+    background: #f0fdf4;
+  }
+  
+  .error-message {
+    color: #e74c3c;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    display: none;
+  }
+  
+  .form-group.error .error-message {
+    display: block;
+  }
+  
+  .success-message {
+    color: #10b981;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    display: none;
+  }
+  
+  .form-group.success .success-message {
+    display: block;
+  }
+  
+  /* Help Text */
+  .help-text {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    font-style: italic;
+  }
+  
+  @media (max-width: 768px) {
+    .review-container {
+      padding: 10px;
+    }
+    
+    .review-form {
+      padding: 20px;
+    }
+    
+    .review-header h1 {
+      font-size: 2rem;
+    }
+    
+    .radio-group,
+    .checkbox-group {
+      flex-direction: column;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="review-container">
+  <div class="review-header">
+    <h1>Добавить отзыв</h1>
+    <p>Поделитесь своим опытом путешествия с TravelDream</p>
+  </div>
+  
+  <form class="review-form" method="post">
+    {% csrf_token %}
+    
+    <!-- Example of text styling with first letter -->
+    <div style="margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+      <h3 class="small-caps">Пример оформления текста</h3>
+      <p class="narrow">Этот абзац демонстрирует красную строку, выравнивание по ширине и перенос слов. Первая буква будет выделена специальным стилем согласно нашим глобальным настройкам.</p>
+      
+      <!-- Example of custom markers list -->
+      <h4>Преимущества нашего сервиса:</h4>
+      <ul class="custom-markers">
+        <li>Быстрое бронирование</li>
+        <li>Лучшие цены</li>
+        <li>24/7 поддержка</li>
+        <li>Гарантия качества</li>
+      </ul>
+      
+      <!-- Example of quotes with language -->
+      <blockquote lang="ru">
+        Путешествие - это единственная трата, которая делает вас богаче.
+      </blockquote>
+      
+      <blockquote lang="en">
+        The world is a book and those who do not travel read only one page.
+      </blockquote>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label required" for="id_name">Ваше имя</label>
+      <input type="text" id="id_name" name="name" required>
+      <div class="error-message">Пожалуйста, введите ваше имя</div>
+      <div class="success-message">Отлично!</div>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label required" for="id_email">Email</label>
+      <input type="email" id="id_email" name="email" required>
+      <div class="error-message">Пожалуйста, введите корректный email</div>
+      <div class="success-message">Email корректен</div>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label required" for="id_rating">Оценка</label>
+      <div class="radio-group">
+        <div class="radio-item">
+          <input type="radio" id="rating_5" name="rating" value="5">
+          <label for="rating_5">5 - Отлично</label>
+        </div>
+        <div class="radio-item">
+          <input type="radio" id="rating_4" name="rating" value="4">
+          <label for="rating_4">4 - Хорошо</label>
+        </div>
+        <div class="radio-item">
+          <input type="radio" id="rating_3" name="rating" value="3">
+          <label for="rating_3">3 - Удовлетворительно</label>
+        </div>
+        <div class="radio-item">
+          <input type="radio" id="rating_2" name="rating" value="2">
+          <label for="rating_2">2 - Плохо</label>
+        </div>
+        <div class="radio-item">
+          <input type="radio" id="rating_1" name="rating" value="1">
+          <label for="rating_1">1 - Очень плохо</label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label required" for="id_tour">Тур</label>
+      <select id="id_tour" name="tour" required>
+        <option value="">Выберите тур</option>
+        <option value="1">Тур в Турцию</option>
+        <option value="2">Тур в Египет</option>
+        <option value="3">Тур в Таиланд</option>
+      </select>
+      <div class="help-text">Выберите тур, о котором хотите оставить отзыв</div>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label required" for="id_comment">Комментарий</label>
+      <textarea id="id_comment" name="comment" placeholder="Расскажите о вашем опыте путешествия..." required></textarea>
+      <div class="help-text">Минимум 10 символов</div>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label" for="id_recommend">Рекомендуете ли вы нас?</label>
+      <div class="checkbox-group">
+        <div class="checkbox-item">
+          <input type="checkbox" id="id_recommend" name="recommend">
+          <label for="id_recommend">Да, рекомендую друзьям</label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label" for="id_satisfaction">Уровень удовлетворенности (1-10)</label>
+      <input type="range" id="id_satisfaction" name="satisfaction" min="1" max="10" value="5">
+      <div class="range-value">5</div>
+    </div>
+    
+    <button type="submit" class="submit-btn">Отправить отзыв</button>
+  </form>
+</div>
+
+<script>
+// Range value display
+const rangeInput = document.getElementById('id_satisfaction');
+const rangeValue = document.querySelector('.range-value');
+
+rangeInput.addEventListener('input', function() {
+  rangeValue.textContent = this.value;
+});
+
+// Form validation
+const form = document.querySelector('.review-form');
+const inputs = form.querySelectorAll('input[required], textarea[required], select[required]');
+
+inputs.forEach(input => {
+  input.addEventListener('blur', function() {
+    validateField(this);
+  });
+  
+  input.addEventListener('input', function() {
+    if (this.classList.contains('error')) {
+      validateField(this);
+    }
+  });
+});
+
+function validateField(field) {
+  const formGroup = field.closest('.form-group');
+  const isValid = field.checkValidity();
+  
+  formGroup.classList.remove('error', 'success');
+  
+  if (isValid) {
+    formGroup.classList.add('success');
+  } else {
+    formGroup.classList.add('error');
+  }
+}
+
+// Form submission
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  let allValid = true;
+  inputs.forEach(input => {
+    validateField(input);
+    if (!input.checkValidity()) {
+      allValid = false;
+    }
+  });
+  
+  if (allValid) {
+    // Here you would normally submit the form
+    alert('Отзыв успешно отправлен!');
+  }
+});
+</script>
+{% endblock %}

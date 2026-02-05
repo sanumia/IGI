@@ -114,5 +114,15 @@ urlpatterns = [
     # Словарь терминов
     path('glossary/', views.GlossaryListView.as_view(), name='glossary'),
     path('glossary/<slug:slug>/', views.GlossaryDetailView.as_view(), name='glossary_term_detail'),
-    # path('contacts/', views.contacts, name='contacts'),
+    
+    # Контакты
+    path('contacts/', views.contacts, name='contacts'),
+    path('contacts/table/', views.contacts_table, name='contacts_table'),
+    path('contacts/table/data/', views.contacts_table_data, name='contacts_table_data'),
+    
+    # Отзывы
+    path('reviews/', views.reviews_page, name='reviews'),
+    
+    # Задания по JS
+    path('js-tasks/', views.js_tasks_page, name='js_tasks'),
 ]
